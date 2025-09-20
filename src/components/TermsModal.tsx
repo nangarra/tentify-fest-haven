@@ -55,6 +55,17 @@ const TermsModal = ({ trigger }: TermsModalProps) => {
             </section>
 
             <section>
+              <h3 className="font-semibold text-lg mb-2">Fylleförsäkring (tillägg 1 000 kr)</h3>
+              <ul className="space-y-2 text-muted-foreground">
+                <li>• Täcker kostnader för extraordinär städning/sanering p.g.a. kräkning, större spill och liknande.</li>
+                <li>• Täcker inte skador på tält eller utrustning (t.ex. hål, skärskador, brännhål, trasiga ramar/dragkedjor).</li>
+                <li>• Deposition och skadekostnader kan fortfarande debiteras separat vid fysisk skada.</li>
+                <li>• Övriga villkor (20 % förskott ej återbetalningsbart, deposition 1 500 kr, städavgift 800 kr vid ej städat) gäller fortsatt.</li>
+                <li>• Obs: Fylleförsäkringen påverkar inte depositionen och ersätter inte ansvar för materiella skador.</li>
+              </ul>
+            </section>
+
+            <section>
               <h3 className="font-semibold text-lg mb-2">Övriga villkor</h3>
               <ul className="space-y-2 text-muted-foreground">
                 <li>• Tentify förbehåller sig rätten att neka eller avbryta bokningar vid regelbrott eller säkerhetsrisk.</li>

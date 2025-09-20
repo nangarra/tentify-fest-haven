@@ -48,6 +48,13 @@ const extraItems = [
   }
 ];
 
+// Check if prices should be hidden until October 1st
+const isPricesHidden = () => {
+  const today = new Date();
+  const openingDate = new Date(2025, 9, 1); // October 1st, 2025 (month is 0-indexed)
+  return today < openingDate;
+};
+
 const ExtrasSection = () => {
   return (
     <section id="extra-tillbehor" className="py-20 bg-gradient-subtle">
@@ -71,7 +78,7 @@ const ExtrasSection = () => {
                     <item.icon className="w-6 h-6 text-accent-foreground" />
                   </div>
                   <Badge variant="secondary" className="text-sm font-semibold">
-                    {item.price}
+                    {isPricesHidden() ? "Pris publiceras 1 oktober" : item.price}
                   </Badge>
                 </div>
                 
