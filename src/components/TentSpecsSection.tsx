@@ -9,6 +9,8 @@ import {
   Flame,
   CheckCircle
 } from "lucide-react";
+import glampingNatur from "@/assets/glamping-talt-naturmiljo-skane.webp";
+import glampingInuti from "@/assets/glamping-talt-inuti-sovplats.webp";
 
 const specifications = [
   {
@@ -84,6 +86,32 @@ const TentSpecsSection = () => {
                 </p>
               </Card>
             ))}
+          </div>
+
+          {/* Image Gallery */}
+          <div className="grid md:grid-cols-2 gap-8 mb-12">
+            <div className="space-y-4">
+              <img 
+                src={glampingNatur} 
+                alt="Glamping-tält i naturmiljö - kvalitet och komfort året runt"
+                className="w-full h-64 object-cover rounded-lg shadow-card hover:shadow-elegant transition-smooth"
+                loading="lazy"
+              />
+              <h3 className="text-lg font-semibold text-center text-foreground">
+                Tält som passar alla årstider
+              </h3>
+            </div>
+            <div className="space-y-4">
+              <img 
+                src={glampingInuti} 
+                alt="Glamping-tält interiör med bekväm sovplats och komfort"
+                className="w-full h-64 object-cover rounded-lg shadow-card hover:shadow-elegant transition-smooth"
+                loading="lazy"
+              />
+              <h3 className="text-lg font-semibold text-center text-foreground">
+                Lyxig komfort inomhus
+              </h3>
+            </div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">

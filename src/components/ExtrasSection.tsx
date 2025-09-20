@@ -8,6 +8,7 @@ import {
   Utensils,
   Package
 } from "lucide-react";
+import glampingUtemoebler from "@/assets/glamping-talt-utemoebler-komfort.webp";
 
 const extraItems = [
   {
@@ -90,6 +91,21 @@ const ExtrasSection = () => {
                 </p>
               </Card>
             ))}
+          </div>
+
+          {/* Image showcase */}
+          <div className="mt-12 text-center">
+            <div className="max-w-2xl mx-auto space-y-4">
+              <img 
+                src={glampingUtemoebler} 
+                alt="Glamping-tält med utemöbler - extrakomfort för din upplevelse"
+                className="w-full h-64 object-cover rounded-lg shadow-card hover:shadow-elegant transition-smooth"
+                loading="lazy"
+              />
+              <h3 className="text-lg font-semibold text-foreground">
+                Bekväma utemöbler för maximal komfort
+              </h3>
+            </div>
           </div>
 
           <div className="text-center mt-12">
