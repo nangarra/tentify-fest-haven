@@ -57,26 +57,26 @@ const HeroSection = () => {
     <section id="hem" className="relative h-screen flex items-center justify-center overflow-hidden">
       {/* Background Video */}
       <div className="absolute inset-0">
-        <iframe 
-          src="https://drive.google.com/file/d/1AfAdsmH_1AGAYaVA5PzdASHdiQYrkxHx/preview" 
-          width="100%" 
-          height="100%" 
-          allow="autoplay"
+        <video 
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          poster={heroImage1}
+          className="w-full h-full object-cover"
           title="Tentify hero video"
-          className="w-full h-full border-0"
-          style={{ objectFit: 'cover' }}
-        />
-        {/* Video overlay for better text contrast */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/25 to-black/35" />
-        
-        {/* Fallback poster image */}
-        <div className="absolute inset-0 -z-10">
+        >
+          <source src="/tentify_.mp4" type="video/mp4" />
+          {/* Fallback for browsers that don't support video */}
           <img
             src={heroImage1}
             alt="Lyxigt glampingtält för festival med Tentify - komplett setup med möbler och komfort"
             className="w-full h-full object-cover"
           />
-        </div>
+        </video>
+        {/* Video overlay for better text contrast */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/25 to-black/35" />
       </div>
 
       {/* Hero Content */}
