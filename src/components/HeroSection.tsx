@@ -107,17 +107,10 @@ const HeroSection = () => {
       {/* Hero Content */}
       <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
         <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg">
-          Lyxiga glampingtält för festivaler – hyr ditt tält med Tentify
+          Lyxiga glampingtält för festivaler
         </h1>
-        
-        <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
-          Tentify gör din festivalupplevelse enklare och bekvämare. Färdiga glampingtält med allt inkluderat – du tar bara med mat och dryck, vi fixar resten.
-        </p>
 
         <div className="space-y-4">
-          <p className="text-lg text-white/80 mb-8 drop-shadow-md">
-            Hyra glampingtält har aldrig varit enklare. Tentify erbjuder färdiga lyxtält för festivaler och event. Allt du behöver ta med är mat och dryck – vi ordnar resten.
-          </p>
           
           <Button
             onClick={scrollToBooking}

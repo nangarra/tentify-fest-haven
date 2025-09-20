@@ -117,24 +117,6 @@ const GallerySection = () => {
             ))}
           </div>
 
-          <div className="text-center mt-12">
-            <Card className="p-6 bg-gradient-primary text-primary-foreground shadow-elegant">
-              <h3 className="text-xl font-semibold mb-4">
-                Vill du se mer?
-              </h3>
-              <p className="mb-4 opacity-90">
-                Följ oss på sociala medier för fler bilder och uppdateringar från våra events!
-              </p>
-              <div className="flex justify-center space-x-4">
-                <Button variant="secondary" size="sm">
-                  📸 Instagram
-                </Button>
-                <Button variant="secondary" size="sm">
-                  📘 Facebook
-                </Button>
-              </div>
-            </Card>
-          </div>
         </div>
       </div>
 
