@@ -57,12 +57,13 @@ const HeroSection = () => {
     <section id="hem" className="relative h-screen flex items-center justify-center overflow-hidden">
       {/* Background Video */}
       <div className="absolute inset-0">
-        <iframe
-          src="https://drive.google.com/file/d/1AfAdsmH_1AGAYaVA5PzdASHdiQYrkxHx/preview"
-          title="Tentify hero video"
-          className="w-full h-full object-cover border-0"
+        <iframe 
+          src="https://drive.google.com/file/d/1AfAdsmH_1AGAYaVA5PzdASHdiQYrkxHx/preview" 
+          width="100%" 
+          height="100%" 
           allow="autoplay"
-          loading="lazy"
+          title="Tentify hero video"
+          className="w-full h-full border-0"
           style={{ objectFit: 'cover' }}
         />
         {/* Video overlay for better text contrast */}

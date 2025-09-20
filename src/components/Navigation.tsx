@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import tentifyLogo from "@/assets/logo_tentify.gif";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,7 +33,13 @@ const Navigation = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <h1 className="text-2xl font-bold text-primary">Tentify</h1>
+            <button onClick={() => scrollToSection("hem")} className="flex items-center">
+              <img 
+                src={tentifyLogo} 
+                alt="Tentify - Lyxiga glampingtält för festivaler" 
+                className="h-10 w-auto"
+              />
+            </button>
           </div>
 
           {/* Desktop Menu */}
