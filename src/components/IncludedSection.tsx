@@ -10,6 +10,9 @@ import {
   Music
 } from "lucide-react";
 
+// Import image for left column
+import tentInteriorImage from "@/assets/festival-talt-inredning-lyxig-camping.webp";
+
 const includedItems = [
   {
     icon: Shield,
@@ -68,20 +71,35 @@ const IncludedSection = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {includedItems.map((item, index) => (
-              <Card key={index} className="p-6 shadow-card hover:shadow-elegant transition-smooth">
-                <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                  <item.icon className="w-6 h-6 text-primary" />
-                </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">
-                  {item.title}
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  {item.description}
-                </p>
-              </Card>
-            ))}
+          {/* Two-column layout: Image left, Items right */}
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left column - Image */}
+            <div className="relative">
+              <img
+                src={tentInteriorImage}
+                alt="Glampingtält interiör - bekväm säng och inredning för lyxig camping"
+                loading="lazy"
+                className="w-full h-96 md:h-[500px] object-cover rounded-lg shadow-elegant"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-lg" />
+            </div>
+            
+            {/* Right column - Items grid */}
+            <div className="grid md:grid-cols-2 gap-6">
+              {includedItems.map((item, index) => (
+                <Card key={index} className="p-6 shadow-card hover:shadow-elegant transition-smooth">
+                  <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                    <item.icon className="w-6 h-6 text-primary" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {item.description}
+                  </p>
+                </Card>
+              ))}
+            </div>
           </div>
 
           <div className="text-center mt-12">

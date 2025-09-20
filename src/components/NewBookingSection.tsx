@@ -7,8 +7,23 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Calculator, MapPin, Calendar, ChevronDown, ChevronUp } from "lucide-react";
+import { Calculator, MapPin, Calendar, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from "lucide-react";
 import TermsModal from "./TermsModal";
+
+// Import tent images for carousel
+import heroImage1 from "@/assets/lyxigt-glampingtalt-festival-tentify.webp";
+import heroImage2 from "@/assets/festival-talt-inredning-lyxig-camping.webp";
+import heroImage3 from "@/assets/glamping-talt-utomhusmobler-festival.webp";
+import heroImage4 from "@/assets/festival-glamping-talt-inuti-komfort.webp";
+import heroImage5 from "@/assets/tentify-glampingtalt-bekvamlighet-festival.webp";
+
+const carouselImages = [
+  { src: heroImage1, alt: "Lyxigt glampingtält för festival - komplett setup" },
+  { src: heroImage2, alt: "Glampingtält interiör - bekväm säng och inredning" },
+  { src: heroImage3, alt: "Glampingtält exteriör med tarp och utomhusmöbler" },
+  { src: heroImage4, alt: "Glampingtält möblerat - komfort och stil" },
+  { src: heroImage5, alt: "Glampingtält bekvämlighet - festival glamping" }
+];
 
 interface ExtraItem {
   id: string;
@@ -33,6 +48,7 @@ const NewBookingSection = () => {
   const [days, setDays] = useState<number>(4); // Default festival days
   const [showContactForm, setShowContactForm] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [currentImage, setCurrentImage] = useState(0);
   
   // Contact form fields
   const [contactData, setContactData] = useState({
@@ -101,6 +117,14 @@ const NewBookingSection = () => {
     alert(`Tack! Vi behandlar din order och mejlar dig inom de kommande dagarna med detaljerna.`);
   };
 
+  const nextImage = () => {
+    setCurrentImage((prev) => (prev + 1) % carouselImages.length);
+  };
+
+  const prevImage = () => {
+    setCurrentImage((prev) => (prev - 1 + carouselImages.length) % carouselImages.length);
+  };
+
   return (
     <section id="boka-talt" className="py-20 bg-background">
       <div className="container mx-auto px-4">
@@ -109,9 +133,61 @@ const NewBookingSection = () => {
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
               Boka ditt tält nu
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-lg text-muted-foreground mb-8">
               Gör din bokning snabbt och enkelt. Välj festival, tältstorlek och lägg till extra tillbehör.
             </p>
+            
+            {/* Mini Image Carousel */}
+            <div className="relative max-w-2xl mx-auto mb-8">
+              <div className="relative h-64 md:h-80 overflow-hidden rounded-lg shadow-elegant">
+                {carouselImages.map((image, index) => (
+                  <img
+                    key={index}
+                    src={image.src}
+                    alt={image.alt}
+                    loading="lazy"
+                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+                      index === currentImage ? "opacity-100" : "opacity-0"
+                    }`}
+                  />
+                ))}
+                
+                {/* Navigation Arrows */}
+                <button
+                  onClick={prevImage}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-smooth"
+                  aria-label="Föregående bild"
+                >
+                  <ChevronLeft className="w-5 h-5 text-white" />
+                </button>
+                <button
+                  onClick={nextImage}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-smooth"
+                  aria-label="Nästa bild"
+                >
+                  <ChevronRight className="w-5 h-5 text-white" />
+                </button>
+              </div>
+              
+              {/* Thumbnail Navigation */}
+              <div className="flex justify-center mt-4 space-x-2">
+                {carouselImages.map((image, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentImage(index)}
+                    className={`w-16 h-12 rounded overflow-hidden border-2 transition-smooth ${
+                      index === currentImage ? "border-primary" : "border-transparent opacity-70 hover:opacity-100"
+                    }`}
+                  >
+                    <img
+                      src={image.src}
+                      alt={image.alt}
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
           <Card className="p-8 shadow-elegant">

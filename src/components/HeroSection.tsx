@@ -55,67 +55,48 @@ const HeroSection = () => {
 
   return (
     <section id="hem" className="relative h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image Slider */}
+      {/* Background Video */}
       <div className="absolute inset-0">
-        {heroImages.map((image, index) => (
-          <div
-            key={index}
-            className={`absolute inset-0 transition-opacity duration-1000 ${
-              index === currentSlide ? "opacity-100" : "opacity-0"
-            }`}
-          >
-            <img
-              src={image.src}
-              alt={image.alt}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-hero" />
-          </div>
-        ))}
-      </div>
-
-      {/* Navigation Arrows */}
-      <button
-        onClick={prevSlide}
-        className="absolute left-4 z-20 p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-smooth"
-        aria-label="Föregående bild"
-      >
-        <ChevronLeft className="w-6 h-6 text-white" />
-      </button>
-      <button
-        onClick={nextSlide}
-        className="absolute right-4 z-20 p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-smooth"
-        aria-label="Nästa bild"
-      >
-        <ChevronRight className="w-6 h-6 text-white" />
-      </button>
-
-      {/* Slide Indicators */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex space-x-2">
-        {heroImages.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentSlide(index)}
-            className={`w-3 h-3 rounded-full transition-smooth ${
-              index === currentSlide ? "bg-white" : "bg-white/50"
-            }`}
-            aria-label={`Gå till bild ${index + 1}`}
+        <iframe
+          src="https://drive.google.com/file/d/1AfAdsmH_1AGAYaVA5PzdASHdiQYrkxHx/preview"
+          title="Tentify hero video"
+          className="w-full h-full object-cover border-0"
+          allow="autoplay"
+          loading="lazy"
+          style={{ objectFit: 'cover' }}
+        />
+        {/* Video overlay for better text contrast */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/25 to-black/35" />
+        
+        {/* Fallback poster image */}
+        <div className="absolute inset-0 -z-10">
+          <img
+            src={heroImage1}
+            alt="Lyxigt glampingtält för festival med Tentify - komplett setup med möbler och komfort"
+            className="w-full h-full object-cover"
           />
-        ))}
+        </div>
       </div>
 
       {/* Hero Content */}
       <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-        <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg">
+        <h1 
+          className="text-4xl md:text-6xl font-bold text-white mb-6"
+          style={{ 
+            textShadow: '0 2px 8px rgba(0,0,0,0.55), 0 1px 2px rgba(0,0,0,0.6)' 
+          }}
+        >
           Lyxiga glampingtält för festivaler
         </h1>
 
         <div className="space-y-4">
-          
           <Button
             onClick={scrollToBooking}
             size="lg"
             className="btn-hero text-lg px-12 py-6 hover:scale-105 transition-bounce"
+            style={{ 
+              textShadow: '0 1px 3px rgba(0,0,0,0.4)' 
+            }}
           >
             Boka ditt tält
           </Button>
