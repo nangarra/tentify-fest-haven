@@ -1,56 +1,56 @@
 import { Card } from "@/components/ui/card";
-import { 
-  Tent, 
-  Armchair, 
-  Lightbulb, 
-  Bed, 
-  Zap, 
-  Package,
-  Shield,
-  Music
-} from "lucide-react";
+
+// Import images for included items
+import tarpImage from "@/assets/tarp-ovan-taltet.png";
+import chairsTableImage from "@/assets/tva-stolar-bord.png";
+import mattaBlanketImage from "@/assets/matta-filt.png";
+import lanternSpeakerImage from "@/assets/lykta-med-hogtalare.png";
+import deluxeBedImage from "@/assets/deluxe-uppblasbar-sang.png";
+import electricityImage from "@/assets/el-indragen.png";
+import nightstandImage from "@/assets/nattduksbord.png";
+import goodiebagImage from "@/assets/goodiebag-picknickkorg.png";
 
 // Import image for left column
 import tentInteriorImage from "@/assets/festival-talt-inredning-lyxig-camping.webp";
 
 const includedItems = [
   {
-    icon: Shield,
+    image: tarpImage,
     title: "Tarp ovan tältet",
     description: "UV-skydd, regnskydd, svalare på dagen"
   },
   {
-    icon: Armchair,
+    image: chairsTableImage,
     title: "Två stolar + bord",
     description: "Kan användas inne eller ute"
   },
   {
-    icon: Package,
+    image: mattaBlanketImage,
     title: "Matta & filt",
     description: "Bekvämt och mysigt underlag"
   },
   {
-    icon: Music,
+    image: lanternSpeakerImage,
     title: "Lykta med högtalare",
     description: "Belysning och naturljud för atmosfär"
   },
   {
-    icon: Bed,
+    image: deluxeBedImage,
     title: "Deluxe uppblåsbar säng",
     description: "Singel eller dubbel, bekväm sömn"
   },
   {
-    icon: Zap,
+    image: electricityImage,
     title: "El indragen",
     description: "Praktisk elförsörjning i tältet"
   },
   {
-    icon: Lightbulb,
+    image: nightstandImage,
     title: "Nattduksbord",
     description: "Praktisk förvaring vid sängen"
   },
   {
-    icon: Package,
+    image: goodiebagImage,
     title: "Goodiebag & picknickkorg",
     description: "Toapapper, våtservetter, mobilladdare, 2 muggar, bestick, 2 glas"
   }
@@ -88,8 +88,12 @@ const IncludedSection = () => {
             <div className="grid md:grid-cols-2 gap-6">
               {includedItems.map((item, index) => (
                 <Card key={index} className="p-6 shadow-card hover:shadow-elegant transition-smooth">
-                  <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                    <item.icon className="w-6 h-6 text-primary" />
+                  <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4 p-2">
+                    <img 
+                      src={item.image} 
+                      alt={item.title}
+                      className="w-full h-full object-contain"
+                    />
                   </div>
                   <h3 className="text-lg font-semibold text-foreground mb-2">
                     {item.title}
