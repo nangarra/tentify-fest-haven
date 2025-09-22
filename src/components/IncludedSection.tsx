@@ -88,7 +88,7 @@ const IncludedSection = () => {
             <div className="grid md:grid-cols-2 gap-6">
               {includedItems.map((item, index) => (
                 <Card key={index} className="p-6 shadow-card hover:shadow-elegant transition-smooth">
-                  <div className="bg-primary/10 w-20 h-20 rounded-lg flex items-center justify-center mb-4 p-3">
+                  <div className="bg-primary/10 w-32 h-32 rounded-lg flex items-center justify-center mb-4 p-4">
                     <img 
                       src={item.image} 
                       alt={item.title}
