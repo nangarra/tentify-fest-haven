@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus, Minus } from "lucide-react";
 import { toast } from "sonner";
 import TermsModal from "./TermsModal";
 
@@ -34,7 +34,7 @@ interface ExtraItem {
   id: string;
   name: string;
   price: number;
-  type: 'once' | 'daily';
+  type: 'once' | 'daily' | 'counter';
 }
 
 const extraItems: ExtraItem[] = [
@@ -44,6 +44,7 @@ const extraItems: ExtraItem[] = [
   { id: "handduk", name: "Handduk", price: 80, type: "once" },
   { id: "vattenkokare", name: "Vattenkokare", price: 80, type: "once" },
   { id: "frukost", name: "Frukost", price: 79, type: "daily" },
+  { id: "extra-person", name: "Extra person i tältet", price: 500, type: "counter" },
   { id: "fylleforsakring", name: "Fylleförsäkring", price: 1000, type: "once" }
 ];
 
@@ -59,6 +60,7 @@ const NewBookingSection = () => {
   const [festival, setFestival] = useState("sweden-rock");
   const [tentSize, setTentSize] = useState("");
   const [selectedExtras, setSelectedExtras] = useState<string[]>([]);
+  const [extraPersons, setExtraPersons] = useState(0);
   const [bookingDays] = useState(4); // Sweden Rock is 4 days
   
   // Halvpall specific states
@@ -86,6 +88,20 @@ const NewBookingSection = () => {
         : [...prev, extraId]
     );
   };
+
+  const getMaxExtraPersons = () => {
+    if (tentSize === "singel") return 3;
+    if (tentSize === "dubbel") return 2;
+    return 0;
+  };
+
+  // Validate extra persons when tent size changes
+  useEffect(() => {
+    const maxPersons = getMaxExtraPersons();
+    if (extraPersons > maxPersons) {
+      setExtraPersons(maxPersons);
+    }
+  }, [tentSize, extraPersons]);
 
   const calculateDays = () => {
     if (bookingType === 'festival') {
@@ -140,7 +156,10 @@ const NewBookingSection = () => {
       return sum + extra.price;
     }, 0);
 
-    return basePrice + extrasTotal;
+    // Add extra persons cost (only for festival bookings)
+    const extraPersonsCost = bookingType === 'festival' ? extraPersons * 500 : 0;
+
+    return basePrice + extrasTotal + extraPersonsCost;
   };
 
   const calculateDeposit = () => Math.round(calculateTotal() * 0.2);
@@ -328,7 +347,7 @@ const NewBookingSection = () => {
                         label: "Singel (1 person)", 
                         price: "7 800 kr", 
                         available: inventory.singel,
-                        image: enkelsangImage,
+                        image: dubbelsangImage,
                         alt: "Glampingtält – enkelsäng"
                       },
                       { 
@@ -336,7 +355,7 @@ const NewBookingSection = () => {
                         label: "Dubbel (2 personer)", 
                         price: "9 200 kr", 
                         available: inventory.dubbel,
-                        image: dubbelsangImage,
+                        image: enkelsangImage,
                         alt: "Glampingtält – dubbelsäng"
                       }
                     ].map((option) => (
@@ -385,21 +404,57 @@ const NewBookingSection = () => {
                 {/* Extra items for festival */}
                 <div>
                   <Label className="text-base font-semibold mb-3 block">Extraval</Label>
-                  <div className="space-y-3">
-                    {extraItems.map((item) => (
-                      <div key={item.id} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={item.id}
-                          checked={selectedExtras.includes(item.id)}
-                          onCheckedChange={() => handleExtraToggle(item.id)}
-                        />
-                        <Label htmlFor={item.id} className="text-sm cursor-pointer flex-1">
-                          {item.name} - {item.price} kr{item.type === 'daily' ? '/dag' : ''}
-                          {item.id === 'frukost' && <span className="text-muted-foreground ml-1">(kaffe/te, 1 ägg, 2 mackor, gröt)</span>}
-                          {item.id === 'fylleforsakring' && <span className="text-muted-foreground ml-1">(sanering vid kräkning/större spill; täcker inte hål/brännhål/skador)</span>}
-                        </Label>
-                      </div>
-                    ))}
+                  <div className="space-y-4">
+                    {extraItems.map((item) => {
+                      if (item.type === 'counter') {
+                        return (
+                          <div key={item.id} className="space-y-2">
+                            <Label className="text-sm font-medium">
+                              {item.name} - {item.price} kr per extra person
+                            </Label>
+                            <div className="flex items-center space-x-3">
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="icon"
+                                onClick={() => setExtraPersons(Math.max(0, extraPersons - 1))}
+                                disabled={extraPersons === 0}
+                                className="h-8 w-8"
+                              >
+                                <Minus className="h-4 w-4" />
+                              </Button>
+                              <span className="w-8 text-center font-medium">{extraPersons}</span>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="icon"
+                                onClick={() => setExtraPersons(Math.min(getMaxExtraPersons(), extraPersons + 1))}
+                                disabled={extraPersons >= getMaxExtraPersons() || !tentSize}
+                                className="h-8 w-8"
+                              >
+                                <Plus className="h-4 w-4" />
+                              </Button>
+                            </div>
+                            <p className="text-xs text-muted-foreground">Max 4 personer per tält.</p>
+                          </div>
+                        );
+                      }
+                      
+                      return (
+                        <div key={item.id} className="flex items-center space-x-2">
+                          <Checkbox
+                            id={item.id}
+                            checked={selectedExtras.includes(item.id)}
+                            onCheckedChange={() => handleExtraToggle(item.id)}
+                          />
+                          <Label htmlFor={item.id} className="text-sm cursor-pointer flex-1">
+                            {item.name} - {item.price} kr{item.type === 'daily' ? '/dag' : ''}
+                            {item.id === 'frukost' && <span className="text-muted-foreground ml-1">(kaffe/te, 1 ägg, 2 mackor, gröt)</span>}
+                            {item.id === 'fylleforsakring' && <span className="text-muted-foreground ml-1">(sanering vid kräkning/större spill; täcker inte hål/brännhål/skador)</span>}
+                          </Label>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
