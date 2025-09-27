@@ -70,9 +70,10 @@ const Footer = () => {
             <div>
               <h4 className="font-semibold mb-4">Kontakt</h4>
               <div className="space-y-2 text-sm text-primary-foreground/80">
-                <p>📞 0701-234567</p>
+                <p>Nangarra Invest AB</p>
                 <p>📧 info@tentify.se</p>
-                <p>📍 Stockholm & omnejd</p>
+                <p>📍 Bas: Eslöv</p>
+                <p className="mt-3 text-xs">Vi svarar på e-post vanligtvis inom 24 timmar.</p>
                 <div className="flex space-x-4 mt-4">
                   <a href="#" className="hover:text-primary-foreground transition-smooth">📸</a>
                   <a href="#" className="hover:text-primary-foreground transition-smooth">📘</a>
@@ -97,7 +98,7 @@ const Footer = () => {
             
             <div className="mt-4 text-xs text-primary-foreground/60">
               <p>
-                Drömmer du om att bo bekvämt på nästa festival? Med Tentify hyr du färdiga glampingtält med allt inkluderat. Våra tält är utrustade med uppblåsbara sängar, stolar, bord, el, mattor, filtar och smarta detaljer som gör upplevelsen bekväm. Du slipper tänka på logistik och montering – allt står klart när du anländer. Tentify erbjuder tält på festivaler som Sweden Rock, men även för bröllop och privata event. Välj mellan singel- eller dubbeltält, lägg till extra tillbehör och upplev en lyxig campingkänsla. Boka enkelt online redan idag.
+                © 2024 Nangarra Invest AB. Alla rättigheter förbehållna. Drömmer du om att bo bekvämt på nästa festival? Med Tentify hyr du färdiga glampingtält med allt inkluderat. Våra tält är utrustade med uppblåsbara sängar, stolar, bord, el, mattor, filtar och smarta detaljer som gör upplevelsen bekväm. Du slipper tänka på logistik och montering – allt står klart när du anländer. Tentify erbjuder tält på festivaler som Sweden Rock, men även för bröllop och privata event. Välj mellan singel- eller dubbeltält, lägg till extra tillbehör och upplev en lyxig campingkänsla. Boka enkelt online redan idag.
               </p>
             </div>
           </div>

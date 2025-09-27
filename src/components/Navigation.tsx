@@ -12,7 +12,7 @@ const Navigation = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 80);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -29,7 +29,7 @@ const Navigation = () => {
   return (
     <nav
       className={`fixed top-0 w-full z-50 transition-smooth ${
-        isScrolled ? "navbar-blur shadow-card" : "bg-transparent"
+        isScrolled ? "navbar-blur shadow-card" : "bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)]"
       }`}
     >
       <div className="container mx-auto px-4">

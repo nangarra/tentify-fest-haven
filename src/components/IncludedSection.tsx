@@ -10,8 +10,9 @@ import electricityImage from "@/assets/el-indragen.png";
 import nightstandImage from "@/assets/nattduksbord.png";
 import goodiebagImage from "@/assets/goodiebag-picknickkorg.png";
 
-// Import image for left column
+// Import images for left column
 import tentInteriorImage from "@/assets/festival-talt-inredning-lyxig-camping.webp";
+import tentExteriorImage from "@/assets/glamping-talt-naturmiljo-skane.webp";
 
 const includedItems = [
   {
@@ -71,17 +72,31 @@ const IncludedSection = () => {
             </p>
           </div>
 
-          {/* Two-column layout: Image left, Items right */}
+          {/* Two-column layout: Images left, Items right */}
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left column - Image */}
-            <div className="relative">
-              <img
-                src={tentInteriorImage}
-                alt="Glampingtält interiör - bekväm säng och inredning för lyxig camping"
-                loading="lazy"
-                className="w-full h-96 md:h-[500px] object-cover rounded-lg shadow-elegant"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-lg" />
+            {/* Left column - Images */}
+            <div className="space-y-6">
+              {/* First image */}
+              <div className="relative">
+                <img
+                  src={tentInteriorImage}
+                  alt="Glampingtält – interiördetalj"
+                  loading="lazy"
+                  className="w-full h-64 md:h-80 object-cover rounded-lg shadow-elegant"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-lg" />
+              </div>
+              
+              {/* Second image */}
+              <div className="relative">
+                <img
+                  src={tentExteriorImage}
+                  alt="Glampingtält – exteriör/tarp"
+                  loading="lazy"
+                  className="w-full h-64 md:h-80 object-cover rounded-lg shadow-elegant"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-lg" />
+              </div>
             </div>
             
             {/* Right column - Items grid */}
@@ -107,11 +122,14 @@ const IncludedSection = () => {
           </div>
 
           <div className="text-center mt-12">
-            <Card className="p-8 bg-gradient-primary text-primary-foreground shadow-elegant">
-              <h3 className="text-2xl font-bold mb-4">
-                Allt klart när du anländer!
-              </h3>
-              <p className="text-lg opacity-90">
+            <Card className="p-8 bg-secondary/30 border-primary/20 shadow-elegant callout-glow">
+              <div className="flex items-center justify-center mb-4">
+                <span className="text-2xl mr-3 emoji-float">✨</span>
+                <h3 className="text-2xl font-bold text-foreground">
+                  Allt klart när du anländer!
+                </h3>
+              </div>
+              <p className="text-lg text-muted-foreground">
                 Du behöver bara ta med dina personliga saker, mat och dryck. 
                 Vi ordnar resten för din bekvämlighet.
               </p>

@@ -1,16 +1,17 @@
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Calculator, MapPin, Calendar, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { toast } from "sonner";
 import TermsModal from "./TermsModal";
 
-// Import tent images for carousel
+// Import carousel images
 import heroImage1 from "@/assets/lyxigt-glampingtalt-festival-tentify.webp";
 import heroImage2 from "@/assets/festival-talt-inredning-lyxig-camping.webp";
 import heroImage3 from "@/assets/glamping-talt-utomhusmobler-festival.webp";
@@ -33,96 +34,126 @@ interface ExtraItem {
 }
 
 const extraItems: ExtraItem[] = [
-  { id: 'baddset', name: 'Bäddset', price: 250, type: 'once' },
-  { id: 'dubbelsang', name: 'Uppgradering till dubbelsäng', price: 500, type: 'once' },
-  { id: 'extra-stol', name: 'Extra stol', price: 150, type: 'once' },
-  { id: 'handduk', name: 'Handduk', price: 80, type: 'once' },
-  { id: 'vattenkokare', name: 'Vattenkokare', price: 80, type: 'once' },
-  { id: 'frukost', name: 'Frukost', price: 79, type: 'daily' },
-  { id: 'fylleforsakring', name: 'Fylleförsäkring', price: 1000, type: 'once' }
+  { id: "fylleforsakring", name: "Fylleförsäkring", price: 1000, type: "once" }
 ];
 
 const NewBookingSection = () => {
-  const [festival, setFestival] = useState<string>('');
-  const [tentSize, setTentSize] = useState<string>('');
-  const [selectedExtras, setSelectedExtras] = useState<string[]>([]);
-  const [days, setDays] = useState<number>(4); // Default festival days
-  const [showContactForm, setShowContactForm] = useState(false);
-  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [bookingType, setBookingType] = useState<'festival' | 'halvpall'>('festival');
   const [currentImage, setCurrentImage] = useState(0);
+  const [festival, setFestival] = useState("");
+  const [tentSize, setTentSize] = useState("");
+  const [selectedExtras, setSelectedExtras] = useState<string[]>([]);
+  const [bookingDays] = useState(4); // Sweden Rock is 4 days
   
-  // Check if booking should be paused until October 1st
-  const isBookingPaused = () => {
-    const today = new Date();
-    const openingDate = new Date(2025, 9, 1); // October 1st, 2025 (month is 0-indexed)
-    return today < openingDate;
-  };
+  // Halvpall specific states
+  const [address, setAddress] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const [city, setCity] = useState("");
+  const [country, setCountry] = useState("Sverige");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [isWeekRental, setIsWeekRental] = useState(false);
   
-  // Contact form fields
-  const [contactData, setContactData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    message: ''
-  });
-
-  const basePrices = {
-    singel: 7800,
-    dubbel: 9200
-  };
+  // Contact form states
+  const [showContactForm, setShowContactForm] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [message, setMessage] = useState("");
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
 
   const handleExtraToggle = (extraId: string) => {
-    setSelectedExtras(prev => 
-      prev.includes(extraId) 
+    setSelectedExtras(prev =>
+      prev.includes(extraId)
         ? prev.filter(id => id !== extraId)
         : [...prev, extraId]
     );
   };
 
+  const calculateDays = () => {
+    if (bookingType === 'festival') {
+      return bookingDays;
+    }
+    
+    if (isWeekRental) {
+      return 7;
+    }
+    
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      const diffTime = Math.abs(end.getTime() - start.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays || 1;
+    }
+    
+    return 1;
+  };
+
   const calculateTotal = () => {
-    if (!tentSize) return 0;
+    let basePrice = 0;
     
-    const basePrice = basePrices[tentSize as keyof typeof basePrices] || 0;
-    const extrasTotal = selectedExtras.reduce((total, extraId) => {
+    if (bookingType === 'festival') {
+      // Festival pricing
+      if (tentSize === "singel") basePrice = 7800;
+      if (tentSize === "dubbel") basePrice = 9200;
+    } else {
+      // Halvpall pricing
+      const days = calculateDays();
+      const rentalCost = isWeekRental ? 10000 : days * 2500;
+      basePrice = 1200 + rentalCost; // Frakt + rental
+    }
+
+    const extrasTotal = selectedExtras.reduce((sum, extraId) => {
       const extra = extraItems.find(item => item.id === extraId);
-      if (!extra) return total;
-      return total + (extra.type === 'daily' ? extra.price * days : extra.price);
+      if (!extra) return sum;
+      
+      if (extra.type === 'daily') {
+        return sum + (extra.price * calculateDays());
+      }
+      return sum + extra.price;
     }, 0);
-    
+
     return basePrice + extrasTotal;
   };
 
-  const calculateDeposit = () => {
-    const total = calculateTotal();
-    return Math.round(total * 0.2); // 20% deposit
-  };
+  const calculateDeposit = () => Math.round(calculateTotal() * 0.2);
 
   const handleProceedToDetails = () => {
-    if (!festival || !tentSize) {
-      alert('Vänligen välj festival och tältstorlek');
+    if (bookingType === 'festival' && (!festival || !tentSize)) {
+      toast.error("Välj festival och tältstorlek för att fortsätta");
       return;
     }
+    
+    if (bookingType === 'halvpall' && (!address || !postalCode || !city || !tentSize)) {
+      toast.error("Fyll i alla obligatoriska fält för att fortsätta");
+      return;
+    }
+    
     setShowContactForm(true);
   };
 
   const handleFinalBooking = () => {
-    if (!contactData.name || !contactData.email || !contactData.phone || !acceptedTerms) {
-      alert('Vänligen fyll i alla obligatoriska fält och godkänn villkoren');
+    if (!name || !email || !phone || !acceptedTerms) {
+      toast.error("Fyll i alla obligatoriska fält och acceptera villkoren");
       return;
     }
-    
-    const bookingDetails = {
-      festival,
+
+    // Log booking details (in real app, this would be sent to backend)
+    console.log("Booking details:", {
+      bookingType,
+      festival: bookingType === 'festival' ? festival : null,
+      address: bookingType === 'halvpall' ? { address, postalCode, city, country } : null,
       tentSize,
-      extras: selectedExtras,
+      selectedExtras,
+      days: calculateDays(),
       total: calculateTotal(),
       deposit: calculateDeposit(),
-      days,
-      contact: contactData
-    };
-    
-    console.log('Bokning:', bookingDetails);
-    alert(`Tack! Vi behandlar din order och mejlar dig inom de kommande dagarna med detaljerna.`);
+      contact: { name, email, phone, message }
+    });
+
+    toast.success("Bokning mottagen! Vi kontaktar dig inom 24 timmar för bekräftelse och betalning.");
   };
 
   const nextImage = () => {
@@ -141,367 +172,458 @@ const NewBookingSection = () => {
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
               Boka ditt tält nu
             </h2>
-            <p className="text-lg text-muted-foreground mb-8">
-              Gör din bokning snabbt och enkelt. Välj festival, tältstorlek och lägg till extra tillbehör.
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-6">
+              Välj mellan festivalbokningar eller hemkörning av vårt kompletta glampingkit.
             </p>
             
-            {/* Mini Image Carousel */}
-            <div className="relative max-w-2xl mx-auto mb-8">
-              <div className="relative h-64 md:h-80 overflow-hidden rounded-lg shadow-elegant">
-                {carouselImages.map((image, index) => (
-                  <img
-                    key={index}
-                    src={image.src}
-                    alt={image.alt}
-                    loading="lazy"
-                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
-                      index === currentImage ? "opacity-100" : "opacity-0"
-                    }`}
-                  />
-                ))}
-                
-                {/* Navigation Arrows */}
-                <button
-                  onClick={prevImage}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-smooth"
-                  aria-label="Föregående bild"
-                >
-                  <ChevronLeft className="w-5 h-5 text-white" />
-                </button>
-                <button
-                  onClick={nextImage}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-smooth"
-                  aria-label="Nästa bild"
-                >
-                  <ChevronRight className="w-5 h-5 text-white" />
-                </button>
-              </div>
+            {/* Pre-booking badge */}
+            <Badge variant="secondary" className="bg-primary/10 text-primary font-medium px-4 py-2">
+              Förhandsbokning för Sweden Rock är öppen
+            </Badge>
+          </div>
+
+          {/* Mini image carousel */}
+          <div className="relative mb-8">
+            <div className="relative h-64 md:h-80 overflow-hidden rounded-lg shadow-elegant">
+              <img
+                src={carouselImages[currentImage].src}
+                alt={carouselImages[currentImage].alt}
+                className="w-full h-full object-cover"
+              />
               
-              {/* Thumbnail Navigation */}
-              <div className="flex justify-center mt-4 space-x-2">
-                {carouselImages.map((image, index) => (
+              {/* Navigation buttons */}
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={prevImage}
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={nextImage}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+              
+              {/* Thumbnail dots */}
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                {carouselImages.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => setCurrentImage(index)}
-                    className={`w-16 h-12 rounded overflow-hidden border-2 transition-smooth ${
-                      index === currentImage ? "border-primary" : "border-transparent opacity-70 hover:opacity-100"
+                    className={`w-2 h-2 rounded-full transition-smooth ${
+                      index === currentImage ? "bg-white" : "bg-white/50"
                     }`}
-                  >
-                    <img
-                      src={image.src}
-                      alt={image.alt}
-                      className="w-full h-full object-cover"
-                    />
-                  </button>
+                  />
                 ))}
               </div>
             </div>
           </div>
 
           <Card className="p-8 shadow-elegant">
-            {isBookingPaused() ? (
-              <div className="text-center py-12">
-                <h3 className="text-2xl font-semibold text-foreground mb-4">
-                  Bokningen öppnar 1 oktober
-                </h3>
-                <p className="text-muted-foreground mb-6">
-                  Vi förbereder inför nästa säsong. Kom tillbaka den 1 oktober för att göra din bokning.
-                </p>
-                <Button disabled className="btn-hero">
-                  Bokningen öppnar 1 oktober
-                </Button>
+            {/* Booking type toggle */}
+            <div className="mb-8">
+              <Label className="text-base font-semibold mb-4 block">Välj bokningstyp</Label>
+              <div className="flex rounded-lg bg-muted p-1">
+                <button
+                  onClick={() => setBookingType('festival')}
+                  className={`flex-1 px-4 py-3 rounded-md text-sm font-medium transition-smooth ${
+                    bookingType === 'festival'
+                      ? 'bg-primary text-primary-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  Festival
+                </button>
+                <button
+                  onClick={() => setBookingType('halvpall')}
+                  className={`flex-1 px-4 py-3 rounded-md text-sm font-medium transition-smooth ${
+                    bookingType === 'halvpall'
+                      ? 'bg-primary text-primary-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  Halvpall till min adress
+                </button>
+              </div>
+            </div>
+
+            {bookingType === 'festival' ? (
+              /* Festival booking form */
+              <div className="space-y-6">
+                <div>
+                  <Label htmlFor="festival" className="text-base font-semibold">Festival</Label>
+                  <Select value={festival} onValueChange={setFestival}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Välj festival" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="sweden-rock">Sweden Rock</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label className="text-base font-semibold mb-3 block">Tältstorlek</Label>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {[
+                      { value: "singel", label: "Singel (1 person)", price: "7 800 kr" },
+                      { value: "dubbel", label: "Dubbel (2 personer)", price: "9 200 kr" }
+                    ].map((option) => (
+                      <label key={option.value} className="relative cursor-pointer">
+                        <input
+                          type="radio"
+                          name="tentSize"
+                          value={option.value}
+                          checked={tentSize === option.value}
+                          onChange={(e) => setTentSize(e.target.value)}
+                          className="sr-only"
+                        />
+                        <Card className={`p-4 transition-smooth ${
+                          tentSize === option.value
+                            ? "border-primary ring-2 ring-primary/20"
+                            : "border-border hover:border-primary/50"
+                        }`}>
+                          <h4 className="font-semibold text-foreground">{option.label}</h4>
+                          <p className="text-lg font-bold text-primary mt-1">{option.price}</p>
+                        </Card>
+                      </label>
+                    ))}
+                  </div>
+                </div>
               </div>
             ) : (
-              <>
-                <div className="grid md:grid-cols-2 gap-8">
-                  {/* Booking Form */}
-                  <div className="space-y-6">
-                    {/* Festival Selection */}
+              /* Halvpall booking form */
+              <div className="space-y-6">
+                {/* Info card with image and included items */}
+                <Card className="p-6 bg-secondary/30 border-primary/20">
+                  <div className="grid md:grid-cols-2 gap-6 items-center">
                     <div>
-                      <Label className="block text-sm font-medium text-foreground mb-3">
-                        <Calendar className="inline w-4 h-4 mr-2" />
-                        Välj festival <span className="text-destructive">*</span>
-                      </Label>
-                      <Select value={festival} onValueChange={setFestival}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Välj festival" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="sweden-rock">Sweden Rock Festival</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <img
+                        src={carouselImages[0].src}
+                        alt="Halvpall med komplett glampingkit"
+                        className="w-full h-48 object-cover rounded-lg"
+                      />
                     </div>
-
-                    {/* Tent Size Selection */}
                     <div>
-                      <Label className="block text-sm font-medium text-foreground mb-3">
-                        <MapPin className="inline w-4 h-4 mr-2" />
-                        Tältstorlek <span className="text-destructive">*</span>
-                      </Label>
-                      <div className="space-y-3">
-                        <label className="flex items-center space-x-3 cursor-pointer">
-                          <input
-                            type="radio"
-                            name="tentSize"
-                            value="singel"
-                            checked={tentSize === 'singel'}
-                            onChange={(e) => setTentSize(e.target.value)}
-                            className="w-4 h-4 text-primary"
-                          />
-                          <span className="flex-1 flex justify-between">
-                            <span>Singel</span>
-                            <Badge variant="outline">7 800 kr</Badge>
-                          </span>
-                        </label>
-                        <label className="flex items-center space-x-3 cursor-pointer">
-                          <input
-                            type="radio"
-                            name="tentSize"
-                            value="dubbel"
-                            checked={tentSize === 'dubbel'}
-                            onChange={(e) => setTentSize(e.target.value)}
-                            className="w-4 h-4 text-primary"
-                          />
-                          <span className="flex-1 flex justify-between">
-                            <span>Dubbel</span>
-                            <Badge variant="outline">9 200 kr</Badge>
-                          </span>
-                        </label>
-                      </div>
-                    </div>
-
-                    {/* Extra Options */}
-                    <div>
-                      <Label className="block text-sm font-medium text-foreground mb-3">
-                        Extra tillbehör
-                      </Label>
-                      <div className="space-y-3">
-                        {extraItems.map((extra) => (
-                          <div key={extra.id} className="flex items-center space-x-3">
-                            <Checkbox
-                              id={extra.id}
-                              checked={selectedExtras.includes(extra.id)}
-                              onCheckedChange={() => handleExtraToggle(extra.id)}
-                            />
-                            <label 
-                              htmlFor={extra.id}
-                              className="flex-1 text-sm cursor-pointer flex justify-between items-center"
-                            >
-                              <span>
-                                {extra.name}
-                                {extra.id === 'fylleforsakring' && (
-                                  <span className="block text-xs text-muted-foreground mt-1">
-                                    Täckning för sanering vid kräkning, större spill och allmänt klumpiga missöden. Gäller inte skador på tält/utrustning.
-                                  </span>
-                                )}
-                              </span>
-                              <Badge variant="outline">
-                                {extra.price} kr{extra.type === 'daily' ? '/dag' : ''}
-                              </Badge>
-                            </label>
-                          </div>
-                        ))}
-                      </div>
+                      <h4 className="text-lg font-bold text-foreground mb-4">Ingående delar i halvpalls-kitet:</h4>
+                      <ul className="text-sm text-muted-foreground space-y-1">
+                        <li>• Tält (uppblåsbart) med tarp/UV-skydd</li>
+                        <li>• Manuell pump, pinnar/linor</li>
+                        <li>• 2 stolar, bord, matta, filt</li>
+                        <li>• Lykta med högtalare/naturljud</li>
+                        <li>• Deluxe uppblåsbar säng (singel/dubbel)</li>
+                        <li>• Nattduksbord</li>
+                        <li>• Indragbar el/elkabel</li>
+                        <li>• Goodiebag & picknickkorg (toalettpapper, våtservetter, mobilladdare, 2 muggar, bestick, 2 glas)</li>
+                      </ul>
                     </div>
                   </div>
+                </Card>
 
-                  {/* Price Calculator */}
+                {/* Address fields */}
+                <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <Card className="p-6 bg-gradient-subtle">
-                      <h3 className="text-xl font-semibold text-foreground mb-4 flex items-center">
-                        <Calculator className="w-5 h-5 mr-2" />
-                        Prissammanställning
-                      </h3>
-                      
-                      <div className="space-y-3">
-                        {tentSize && (
-                          <div className="flex justify-between items-center">
-                            <span className="text-muted-foreground">
-                              {tentSize === 'singel' ? 'Singeltält' : 'Dubbeltält'}
-                            </span>
-                            <span className="font-semibold">
-                              {basePrices[tentSize as keyof typeof basePrices]} kr
-                            </span>
-                          </div>
-                        )}
-                        
-                        {selectedExtras.map(extraId => {
-                          const extra = extraItems.find(item => item.id === extraId);
-                          if (!extra) return null;
-                          const price = extra.type === 'daily' ? extra.price * days : extra.price;
-                          return (
-                            <div key={extraId} className="flex justify-between items-center text-sm">
-                              <span className="text-muted-foreground">
-                                {extra.name} {extra.type === 'daily' && `(${days} dagar)`}
-                              </span>
-                              <span>{price} kr</span>
-                            </div>
-                          );
-                        })}
-                        
-                        {calculateTotal() > 0 && (
-                          <>
-                            <div className="border-t pt-3 mt-3 space-y-2">
-                              <div className="flex justify-between items-center text-lg font-bold">
-                                <span>Totalt</span>
-                                <span className="text-primary">{calculateTotal()} kr</span>
-                              </div>
-                              <div className="flex justify-between items-center text-sm text-muted-foreground">
-                                <span>Att betala nu (20% förskott, ej återbetalningsbart)</span>
-                                <span className="font-semibold">{calculateDeposit()} kr</span>
-                              </div>
-                            </div>
-                            
-                            {!showContactForm ? (
-                              <Button 
-                                onClick={handleProceedToDetails}
-                                className="w-full btn-hero mt-6"
-                              >
-                                Gå vidare till uppgifter
-                              </Button>
-                            ) : null}
-                          </>
-                        )}
-                      </div>
-                      
-                      {!tentSize && (
-                        <p className="text-muted-foreground italic text-sm mt-4">
-                          Välj festival och tältstorlek för att se priset
-                        </p>
-                      )}
-                    </Card>
-
-                    <div className="mt-6 text-sm text-muted-foreground">
-                      <p>📧 Du kommer få en bekräftelse via e-post</p>
-                      <p>💳 20% förskott betalas vid bokning</p>
-                      <p>🔄 Förskottet är ej återbetalningsbart</p>
-                    </div>
+                    <Label htmlFor="address">Gatuadress *</Label>
+                    <Input
+                      id="address"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      placeholder="Gatuadress"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="postal-code">Postnummer *</Label>
+                    <Input
+                      id="postal-code"
+                      value={postalCode}
+                      onChange={(e) => setPostalCode(e.target.value)}
+                      placeholder="12345"
+                      required
+                    />
                   </div>
                 </div>
 
-                {/* Contact Form (Expandable) */}
-                {showContactForm && (
-                  <div className="mt-8 pt-8 border-t">
-                    <div className="flex items-center justify-between mb-6">
-                      <h3 className="text-xl font-semibold text-foreground">
-                        Dina uppgifter
-                      </h3>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setShowContactForm(false)}
-                      >
-                        <ChevronUp className="w-4 h-4 mr-2" />
-                        Dölj
-                      </Button>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="city">Ort *</Label>
+                    <Input
+                      id="city"
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
+                      placeholder="Ort"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="country">Land</Label>
+                    <Input
+                      id="country"
+                      value={country}
+                      onChange={(e) => setCountry(e.target.value)}
+                      placeholder="Sverige"
+                    />
+                  </div>
+                </div>
+
+                {/* Rental period */}
+                <div>
+                  <Label className="text-base font-semibold mb-3 block">Hyresperiod</Label>
+                  <div className="space-y-4">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="week-rental"
+                        checked={isWeekRental}
+                        onCheckedChange={(checked) => setIsWeekRental(checked as boolean)}
+                      />
+                      <Label htmlFor="week-rental">1 vecka (7 dygn) - Spara pengar!</Label>
                     </div>
+                    
+                    {!isWeekRental && (
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="start-date">Startdatum</Label>
+                          <Input
+                            id="start-date"
+                            type="date"
+                            value={startDate}
+                            onChange={(e) => setStartDate(e.target.value)}
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="end-date">Slutdatum</Label>
+                          <Input
+                            id="end-date"
+                            type="date"
+                            value={endDate}
+                            onChange={(e) => setEndDate(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
 
-                    <div className="grid md:grid-cols-2 gap-6">
-                      <div className="space-y-4">
-                        <div>
-                          <Label htmlFor="name">Namn <span className="text-destructive">*</span></Label>
-                          <Input
-                            id="name"
-                            value={contactData.name}
-                            onChange={(e) => setContactData(prev => ({...prev, name: e.target.value}))}
-                            placeholder="Ditt fullständiga namn"
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="email">E-post <span className="text-destructive">*</span></Label>
-                          <Input
-                            id="email"
-                            type="email"
-                            value={contactData.email}
-                            onChange={(e) => setContactData(prev => ({...prev, email: e.target.value}))}
-                            placeholder="din.epost@exempel.se"
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="phone">Telefon <span className="text-destructive">*</span></Label>
-                          <Input
-                            id="phone"
-                            type="tel"
-                            value={contactData.phone}
-                            onChange={(e) => setContactData(prev => ({...prev, phone: e.target.value}))}
-                            placeholder="070-123 45 67"
-                          />
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="message">Meddelande (frivilligt)</Label>
-                        <Textarea
-                          id="message"
-                          value={contactData.message}
-                          onChange={(e) => setContactData(prev => ({...prev, message: e.target.value}))}
-                          placeholder="Eventuella önskemål eller frågor..."
-                          rows={6}
+                {/* Tent size for halvpall */}
+                <div>
+                  <Label className="text-base font-semibold mb-3 block">Tältstorlek</Label>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {[
+                      { value: "singel", label: "Singel (1 person)" },
+                      { value: "dubbel", label: "Dubbel (2 personer)" }
+                    ].map((option) => (
+                      <label key={option.value} className="relative cursor-pointer">
+                        <input
+                          type="radio"
+                          name="tentSize"
+                          value={option.value}
+                          checked={tentSize === option.value}
+                          onChange={(e) => setTentSize(e.target.value)}
+                          className="sr-only"
                         />
-                      </div>
+                        <Card className={`p-4 transition-smooth ${
+                          tentSize === option.value
+                            ? "border-primary ring-2 ring-primary/20"
+                            : "border-border hover:border-primary/50"
+                        }`}>
+                          <h4 className="font-semibold text-foreground">{option.label}</h4>
+                        </Card>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Extra items */}
+            <div className="mt-8">
+              <Label className="text-base font-semibold mb-4 block">Extraval</Label>
+              <div className="space-y-3">
+                {extraItems.map((extra) => (
+                  <div key={extra.id} className="flex items-center justify-between p-4 border border-border rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <Checkbox
+                        id={extra.id}
+                        checked={selectedExtras.includes(extra.id)}
+                        onCheckedChange={() => handleExtraToggle(extra.id)}
+                      />
+                      <Label htmlFor={extra.id} className="font-medium">
+                        {extra.name}
+                      </Label>
                     </div>
+                    <span className="font-semibold text-primary">
+                      {extra.price.toLocaleString()} kr
+                      {extra.type === 'daily' && bookingType === 'festival' && (
+                        <span className="text-sm text-muted-foreground ml-1">
+                          (× {bookingDays} dagar)
+                        </span>
+                      )}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
 
-                    <div className="mt-6 space-y-4">
-                      <div className="flex items-start space-x-3">
-                        <Checkbox
-                          id="terms"
-                          checked={acceptedTerms}
-                          onCheckedChange={(checked) => setAcceptedTerms(checked === true)}
-                          className="mt-1"
-                        />
-                        <div className="text-sm">
-                          <label htmlFor="terms" className="cursor-pointer">
-                            Jag godkänner{" "}
-                            <TermsModal 
-                              trigger={
-                                <button type="button" className="text-primary hover:underline">
-                                  villkoren
-                                </button>
-                              }
-                            />
-                            {" "}och bekräftar att förskottet (20%) är ej återbetalningsbart. <span className="text-destructive">*</span>
-                          </label>
-                        </div>
+            {/* Price calculator */}
+            <Card className="p-6 bg-secondary/30 border-primary/20 mt-8">
+              <h3 className="text-lg font-bold text-foreground mb-4">Prissammanfattning</h3>
+              <div className="space-y-2 text-sm">
+                {bookingType === 'festival' ? (
+                  <>
+                    <div className="flex justify-between">
+                      <span>Tält ({tentSize}):</span>
+                      <span>{tentSize === "singel" ? "7 800" : tentSize === "dubbel" ? "9 200" : "0"} kr</span>
+                    </div>
+                    {selectedExtras.length > 0 && (
+                      <div className="flex justify-between">
+                        <span>Extraval:</span>
+                        <span>{selectedExtras.reduce((sum, extraId) => {
+                          const extra = extraItems.find(item => item.id === extraId);
+                          return sum + (extra?.price || 0) * (extra?.type === 'daily' ? bookingDays : 1);
+                        }, 0).toLocaleString()} kr</span>
                       </div>
-                      
-                      <div className="bg-accent/10 p-4 rounded-lg">
-                        <h4 className="font-semibold text-foreground mb-2">📝 Betalningssammanfattning</h4>
-                        <div className="space-y-1 text-sm">
-                          <div className="flex justify-between">
-                            <span>Totalt pris:</span>
-                            <span className="font-semibold">{calculateTotal()} kr</span>
-                          </div>
-                          <div className="flex justify-between text-primary">
-                            <span>Förskott (20%, ej återbetalningsbart):</span>
-                            <span className="font-bold">{calculateDeposit()} kr</span>
-                          </div>
-                          <div className="flex justify-between text-muted-foreground">
-                            <span>Återstående att betala vid ankomst:</span>
-                            <span>{calculateTotal() - calculateDeposit()} kr</span>
-                          </div>
-                        </div>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <div className="flex justify-between">
+                      <span>Frakt t/r:</span>
+                      <span>1 200 kr</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Hyra ({calculateDays()} {calculateDays() === 1 ? 'dag' : 'dagar'}):</span>
+                      <span>{isWeekRental ? "10 000" : (calculateDays() * 2500).toLocaleString()} kr</span>
+                    </div>
+                    {selectedExtras.length > 0 && (
+                      <div className="flex justify-between">
+                        <span>Extraval:</span>
+                        <span>{selectedExtras.reduce((sum, extraId) => {
+                          const extra = extraItems.find(item => item.id === extraId);
+                          return sum + (extra?.price || 0);
+                        }, 0).toLocaleString()} kr</span>
                       </div>
+                    )}
+                  </>
+                )}
+              </div>
+              
+              <div className="border-t border-border pt-2 mt-4">
+                <div className="flex justify-between font-bold text-lg">
+                  <span>Totalt:</span>
+                  <span>{calculateTotal().toLocaleString()} kr</span>
+                </div>
+                <div className="flex justify-between text-sm text-muted-foreground mt-1">
+                  <span>Förskott (20%, ej återbetalningsbart):</span>
+                  <span>{calculateDeposit().toLocaleString()} kr</span>
+                </div>
+                <div className="flex justify-between text-sm text-muted-foreground">
+                  <span>Deposition:</span>
+                  <span>1 500 kr</span>
+                </div>
+              </div>
+            </Card>
 
-                      <Button
-                        onClick={handleFinalBooking}
-                        disabled={!contactData.name || !contactData.email || !contactData.phone || !acceptedTerms}
-                        className="w-full btn-hero"
-                        size="lg"
-                      >
-                        Slutför bokning & betala förskott ({calculateDeposit()} kr)
-                      </Button>
+            {/* Contact form toggle */}
+            {!showContactForm ? (
+              <div className="mt-8 text-center">
+                <Button 
+                  onClick={handleProceedToDetails}
+                  size="lg" 
+                  className="btn-hero text-lg px-12 py-4"
+                >
+                  Gå vidare till uppgifter
+                </Button>
+              </div>
+            ) : (
+              <div className="mt-8 pt-8 border-t border-border">
+                <h3 className="text-xl font-bold text-foreground mb-6">Dina uppgifter</h3>
+                <div className="space-y-4">
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="name">Namn *</Label>
+                      <Input
+                        id="name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="Ditt namn"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="email">E-post *</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="din@email.se"
+                        required
+                      />
                     </div>
                   </div>
-                )}
-              </>
+                  
+                  <div>
+                    <Label htmlFor="phone">Telefon *</Label>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="070-123 45 67"
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="message">Meddelande (valfritt)</Label>
+                    <Textarea
+                      id="message"
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      placeholder="Eventuella önskemål eller frågor..."
+                      rows={3}
+                    />
+                  </div>
+
+                  <div className="flex items-start space-x-2">
+                    <Checkbox
+                      id="terms"
+                      checked={acceptedTerms}
+                      onCheckedChange={(checked) => setAcceptedTerms(checked as boolean)}
+                    />
+                    <Label htmlFor="terms" className="text-sm leading-relaxed">
+                      Jag accepterar{" "}
+                      <TermsModal 
+                        trigger={
+                          <button
+                            type="button"
+                            className="text-primary hover:underline"
+                          >
+                            villkoren
+                          </button>
+                        }
+                      />{" "}
+                      och förstår att förskottet (20%) inte är återbetalningsbart. *
+                    </Label>
+                  </div>
+
+                  <Button 
+                    onClick={handleFinalBooking}
+                    size="lg" 
+                    className="btn-hero text-lg px-12 py-4 w-full"
+                    disabled={!acceptedTerms}
+                  >
+                    Slutför bokning & betala förskott (20%)
+                  </Button>
+                </div>
+              </div>
             )}
           </Card>
-
-          <div className="text-center mt-8">
-            <p className="text-muted-foreground">
-              Boka ditt glampingtält snabbt och smidigt. Välj tältstorlek, lägg till extra tillbehör och välj vilken festival eller event du vill boka till. Just nu erbjuder Tentify uthyrning på Sweden Rock – men vi hyr även ut till bröllop, event och privata fester. Allt ingår, från möbler och belysning till goodiebags och smarta detaljer. Gör din bokning idag och säkra din plats.
-            </p>
-          </div>
         </div>
       </div>
     </section>

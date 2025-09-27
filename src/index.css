@@ -4,7 +4,19 @@
 
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
+
+Animations for Tentify
 */
+
+@keyframes bounce-float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes emoji-bounce {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-3px) scale(1.05); }
+}
 
 @layer base {
   :root {
@@ -167,5 +179,15 @@ All colors MUST be HSL.
   .navbar-blur {
     backdrop-filter: blur(8px);
     background: hsl(var(--background) / 0.8);
+  }
+
+  /* Callout animations */
+  .callout-glow {
+    box-shadow: 0 6px 24px rgba(0,0,0,0.08);
+    animation: bounce-float 4s ease-in-out infinite;
+  }
+
+  .emoji-float {
+    animation: emoji-bounce 3.5s ease-in-out infinite;
   }
 }
