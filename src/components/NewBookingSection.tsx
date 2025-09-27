@@ -34,13 +34,25 @@ interface ExtraItem {
 }
 
 const extraItems: ExtraItem[] = [
+  { id: "baddset", name: "Bäddset", price: 250, type: "once" },
+  { id: "upgrade-dubbel", name: "Uppgradera till dubbelsäng", price: 500, type: "once" },
+  { id: "extra-stol", name: "Extra stol", price: 150, type: "once" },
+  { id: "handduk", name: "Handduk", price: 80, type: "once" },
+  { id: "vattenkokare", name: "Vattenkokare", price: 80, type: "once" },
+  { id: "frukost", name: "Frukost", price: 79, type: "daily" },
   { id: "fylleforsakring", name: "Fylleförsäkring", price: 1000, type: "once" }
 ];
+
+// Inventory status
+const inventory = {
+  singel: 5,
+  dubbel: 4
+};
 
 const NewBookingSection = () => {
   const [bookingType, setBookingType] = useState<'festival' | 'halvpall'>('festival');
   const [currentImage, setCurrentImage] = useState(0);
-  const [festival, setFestival] = useState("");
+  const [festival, setFestival] = useState("sweden-rock");
   const [tentSize, setTentSize] = useState("");
   const [selectedExtras, setSelectedExtras] = useState<string[]>([]);
   const [bookingDays] = useState(4); // Sweden Rock is 4 days
@@ -76,10 +88,6 @@ const NewBookingSection = () => {
       return bookingDays;
     }
     
-    if (isWeekRental) {
-      return 7;
-    }
-    
     if (startDate && endDate) {
       const start = new Date(startDate);
       const end = new Date(endDate);
@@ -89,6 +97,13 @@ const NewBookingSection = () => {
     }
     
     return 1;
+  };
+
+  const getHalvpallDayPrice = (days: number) => {
+    if (days >= 7) return 1000;
+    if (days >= 5) return 1500;
+    if (days >= 3) return 1800;
+    return 2000;
   };
 
   const calculateTotal = () => {
@@ -101,12 +116,18 @@ const NewBookingSection = () => {
     } else {
       // Halvpall pricing
       const days = calculateDays();
-      const rentalCost = isWeekRental ? 10000 : days * 2500;
+      const dayPrice = getHalvpallDayPrice(days);
+      const rentalCost = days * dayPrice;
       basePrice = 1200 + rentalCost; // Frakt + rental
     }
 
+    // Filter extras based on booking type
+    const availableExtras = bookingType === 'halvpall' 
+      ? extraItems.filter(item => item.id === 'fylleforsakring')
+      : extraItems;
+
     const extrasTotal = selectedExtras.reduce((sum, extraId) => {
-      const extra = extraItems.find(item => item.id === extraId);
+      const extra = availableExtras.find(item => item.id === extraId);
       if (!extra) return sum;
       
       if (extra.type === 'daily') {
@@ -237,7 +258,7 @@ const NewBookingSection = () => {
                       : 'text-muted-foreground hover:text-foreground'
                   }`}
                 >
-                  Festival
+                  🎪 Festival
                 </button>
                 <button
                   onClick={() => setBookingType('halvpall')}
@@ -247,7 +268,7 @@ const NewBookingSection = () => {
                       : 'text-muted-foreground hover:text-foreground'
                   }`}
                 >
-                  Halvpall till min adress
+                  📦 Halvpall till min adress
                 </button>
               </div>
             </div>
@@ -255,6 +276,21 @@ const NewBookingSection = () => {
             {bookingType === 'festival' ? (
               /* Festival booking form */
               <div className="space-y-6">
+                {/* Festival kit info box */}
+                <Card className="p-6 bg-secondary/30 border-primary/20">
+                  <h4 className="text-lg font-bold text-foreground mb-4">Ingående delar i festivalpaketet</h4>
+                  <ul className="text-sm text-muted-foreground space-y-1 grid md:grid-cols-2 gap-1">
+                    <li>• Glampingtält (uppblåsbart) förmonterat på plats</li>
+                    <li>• Tarp med UV-, regn- och skuggsskydd</li>
+                    <li>• 2 st stolar + bord (inne/ute)</li>
+                    <li>• Matta & filt</li>
+                    <li>• Lykta med högtalare och naturljud</li>
+                    <li>• Deluxe uppblåsbar säng (singel eller dubbel)</li>
+                    <li>• Indragen el & nattduksbord</li>
+                    <li>• Goodiebag & picknickkorg (toalettpapper, våtservetter, mobilladdare, 2 muggar, bestick, 2 glas)</li>
+                  </ul>
+                </Card>
+
                 <div>
                   <Label htmlFor="festival" className="text-base font-semibold">Festival</Label>
                   <Select value={festival} onValueChange={setFestival}>
@@ -271,8 +307,8 @@ const NewBookingSection = () => {
                   <Label className="text-base font-semibold mb-3 block">Tältstorlek</Label>
                   <div className="grid md:grid-cols-2 gap-4">
                     {[
-                      { value: "singel", label: "Singel (1 person)", price: "7 800 kr" },
-                      { value: "dubbel", label: "Dubbel (2 personer)", price: "9 200 kr" }
+                      { value: "singel", label: "Singel (1 person)", price: "7 800 kr", available: inventory.singel },
+                      { value: "dubbel", label: "Dubbel (2 personer)", price: "9 200 kr", available: inventory.dubbel }
                     ].map((option) => (
                       <label key={option.value} className="relative cursor-pointer">
                         <input
@@ -290,8 +326,37 @@ const NewBookingSection = () => {
                         }`}>
                           <h4 className="font-semibold text-foreground">{option.label}</h4>
                           <p className="text-lg font-bold text-primary mt-1">{option.price}</p>
+                          <p className="text-sm text-muted-foreground mt-1">{option.available} kvar</p>
                         </Card>
                       </label>
+                    ))}
+                  </div>
+                  
+                  {/* Warning badge */}
+                  <div className="mt-3">
+                    <Badge variant="secondary" className="bg-amber-100 text-amber-800 border-amber-200">
+                      Boka snabbt – tälten är nästan slut!
+                    </Badge>
+                  </div>
+                </div>
+
+                {/* Extra items for festival */}
+                <div>
+                  <Label className="text-base font-semibold mb-3 block">Extraval</Label>
+                  <div className="space-y-3">
+                    {extraItems.map((item) => (
+                      <div key={item.id} className="flex items-center space-x-2">
+                        <Checkbox
+                          id={item.id}
+                          checked={selectedExtras.includes(item.id)}
+                          onCheckedChange={() => handleExtraToggle(item.id)}
+                        />
+                        <Label htmlFor={item.id} className="text-sm cursor-pointer flex-1">
+                          {item.name} - {item.price} kr{item.type === 'daily' ? '/dag' : ''}
+                          {item.id === 'frukost' && <span className="text-muted-foreground ml-1">(kaffe/te, 1 ägg, 2 mackor, gröt)</span>}
+                          {item.id === 'fylleforsakring' && <span className="text-muted-foreground ml-1">(sanering vid kräkning/större spill; täcker inte hål/brännhål/skador)</span>}
+                        </Label>
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -375,35 +440,54 @@ const NewBookingSection = () => {
                 <div>
                   <Label className="text-base font-semibold mb-3 block">Hyresperiod</Label>
                   <div className="space-y-4">
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="week-rental"
-                        checked={isWeekRental}
-                        onCheckedChange={(checked) => setIsWeekRental(checked as boolean)}
-                      />
-                      <Label htmlFor="week-rental">1 vecka (7 dygn) - Spara pengar!</Label>
+                    {/* Pricing tiers info */}
+                    <Card className="p-4 bg-secondary/20">
+                      <h5 className="font-semibold text-sm mb-2">Pristrappa per dag (blir billigare ju längre du hyr):</h5>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+                        <div className="text-center p-2 rounded bg-background/50">
+                          <div className="font-medium">1-2 dagar</div>
+                          <div className="text-primary">2 000 kr/dag</div>
+                        </div>
+                        <div className="text-center p-2 rounded bg-background/50">
+                          <div className="font-medium">3-5 dagar</div>
+                          <div className="text-primary">1 800 kr/dag</div>
+                        </div>
+                        <div className="text-center p-2 rounded bg-background/50">
+                          <div className="font-medium">5-7 dagar</div>
+                          <div className="text-primary">1 500 kr/dag</div>
+                        </div>
+                        <div className="text-center p-2 rounded bg-primary/10 border border-primary/30">
+                          <div className="font-medium">7+ dagar</div>
+                          <div className="text-primary font-bold">1 000 kr/dag</div>
+                        </div>
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-2">+ Frakt tur/retur: 1 200 kr (fast)</p>
+                    </Card>
+                    
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="start-date">Startdatum</Label>
+                        <Input
+                          id="start-date"
+                          type="date"
+                          value={startDate}
+                          onChange={(e) => setStartDate(e.target.value)}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="end-date">Slutdatum</Label>
+                        <Input
+                          id="end-date"
+                          type="date"
+                          value={endDate}
+                          onChange={(e) => setEndDate(e.target.value)}
+                        />
+                      </div>
                     </div>
                     
-                    {!isWeekRental && (
-                      <div className="grid md:grid-cols-2 gap-4">
-                        <div>
-                          <Label htmlFor="start-date">Startdatum</Label>
-                          <Input
-                            id="start-date"
-                            type="date"
-                            value={startDate}
-                            onChange={(e) => setStartDate(e.target.value)}
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="end-date">Slutdatum</Label>
-                          <Input
-                            id="end-date"
-                            type="date"
-                            value={endDate}
-                            onChange={(e) => setEndDate(e.target.value)}
-                          />
-                        </div>
+                    {startDate && endDate && (
+                      <div className="text-sm text-muted-foreground">
+                        {calculateDays()} dagar × {getHalvpallDayPrice(calculateDays())} kr/dag = {calculateDays() * getHalvpallDayPrice(calculateDays())} kr
                       </div>
                     )}
                   </div>
@@ -437,37 +521,26 @@ const NewBookingSection = () => {
                     ))}
                   </div>
                 </div>
-              </div>
-            )}
 
-            {/* Extra items */}
-            <div className="mt-8">
-              <Label className="text-base font-semibold mb-4 block">Extraval</Label>
-              <div className="space-y-3">
-                {extraItems.map((extra) => (
-                  <div key={extra.id} className="flex items-center justify-between p-4 border border-border rounded-lg">
-                    <div className="flex items-center space-x-3">
+                {/* Extra items for halvpall (only Fylleförsäkring) */}
+                <div>
+                  <Label className="text-base font-semibold mb-3 block">Extraval</Label>
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-2">
                       <Checkbox
-                        id={extra.id}
-                        checked={selectedExtras.includes(extra.id)}
-                        onCheckedChange={() => handleExtraToggle(extra.id)}
+                        id="fylleforsakring"
+                        checked={selectedExtras.includes("fylleforsakring")}
+                        onCheckedChange={() => handleExtraToggle("fylleforsakring")}
                       />
-                      <Label htmlFor={extra.id} className="font-medium">
-                        {extra.name}
+                      <Label htmlFor="fylleforsakring" className="text-sm cursor-pointer flex-1">
+                        Fylleförsäkring - 1000 kr
+                        <span className="text-muted-foreground ml-1">(sanering vid kräkning/större spill; täcker inte hål/brännhål/skador)</span>
                       </Label>
                     </div>
-                    <span className="font-semibold text-primary">
-                      {extra.price.toLocaleString()} kr
-                      {extra.type === 'daily' && bookingType === 'festival' && (
-                        <span className="text-sm text-muted-foreground ml-1">
-                          (× {bookingDays} dagar)
-                        </span>
-                      )}
-                    </span>
                   </div>
-                ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Price calculator */}
             <Card className="p-6 bg-secondary/30 border-primary/20 mt-8">
@@ -497,7 +570,7 @@ const NewBookingSection = () => {
                     </div>
                     <div className="flex justify-between">
                       <span>Hyra ({calculateDays()} {calculateDays() === 1 ? 'dag' : 'dagar'}):</span>
-                      <span>{isWeekRental ? "10 000" : (calculateDays() * 2500).toLocaleString()} kr</span>
+                      <span>{(calculateDays() * getHalvpallDayPrice(calculateDays())).toLocaleString()} kr</span>
                     </div>
                     {selectedExtras.length > 0 && (
                       <div className="flex justify-between">
