@@ -18,6 +18,10 @@ import heroImage3 from "@/assets/glamping-talt-utomhusmobler-festival.webp";
 import heroImage4 from "@/assets/festival-glamping-talt-inuti-komfort.webp";
 import heroImage5 from "@/assets/tentify-glampingtalt-bekvamlighet-festival.webp";
 
+// Import tent size images
+import dubbelsangImage from "@/assets/glampingtalt-dubbelsang.webp";
+import enkelsangImage from "@/assets/glampingtalt-enkelsang.webp";
+
 const carouselImages = [
   { src: heroImage1, alt: "Lyxigt glampingtält för festival - komplett setup" },
   { src: heroImage2, alt: "Glampingtält interiör - bekväm säng och inredning" },
@@ -278,17 +282,29 @@ const NewBookingSection = () => {
               <div className="space-y-6">
                 {/* Festival kit info box */}
                 <Card className="p-6 bg-secondary/30 border-primary/20">
-                  <h4 className="text-lg font-bold text-foreground mb-4">Ingående delar i festivalpaketet</h4>
-                  <ul className="text-sm text-muted-foreground space-y-1 grid md:grid-cols-2 gap-1">
-                    <li>• Glampingtält (uppblåsbart) förmonterat på plats</li>
-                    <li>• Tarp med UV-, regn- och skuggsskydd</li>
-                    <li>• 2 st stolar + bord (inne/ute)</li>
-                    <li>• Matta & filt</li>
-                    <li>• Lykta med högtalare och naturljud</li>
-                    <li>• Deluxe uppblåsbar säng (singel eller dubbel)</li>
-                    <li>• Indragen el & nattduksbord</li>
-                    <li>• Goodiebag & picknickkorg (toalettpapper, våtservetter, mobilladdare, 2 muggar, bestick, 2 glas)</li>
-                  </ul>
+                  <div className="grid md:grid-cols-2 gap-6 items-center">
+                    <div>
+                      <img
+                        src={heroImage3}
+                        alt="Festivalpaket – förmonterat glampingtält"
+                        className="w-full h-48 object-cover rounded-lg shadow-md"
+                        loading="lazy"
+                      />
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-bold text-foreground mb-4">Ingående delar i festivalpaketet</h4>
+                      <ul className="text-sm text-muted-foreground space-y-1">
+                        <li>• Glampingtält (uppblåsbart) förmonterat på plats</li>
+                        <li>• Tarp med UV-, regn- och skuggsskydd</li>
+                        <li>• 2 st stolar + bord (inne/ute)</li>
+                        <li>• Matta & filt</li>
+                        <li>• Lykta med högtalare och naturljud</li>
+                        <li>• Deluxe uppblåsbar säng (singel eller dubbel)</li>
+                        <li>• Indragen el & nattduksbord</li>
+                        <li>• Goodiebag & picknickkorg (toalettpapper, våtservetter, mobilladdare, 2 muggar, bestick, 2 glas)</li>
+                      </ul>
+                    </div>
+                  </div>
                 </Card>
 
                 <div>
@@ -307,8 +323,22 @@ const NewBookingSection = () => {
                   <Label className="text-base font-semibold mb-3 block">Tältstorlek</Label>
                   <div className="grid md:grid-cols-2 gap-4">
                     {[
-                      { value: "singel", label: "Singel (1 person)", price: "7 800 kr", available: inventory.singel },
-                      { value: "dubbel", label: "Dubbel (2 personer)", price: "9 200 kr", available: inventory.dubbel }
+                      { 
+                        value: "singel", 
+                        label: "Singel (1 person)", 
+                        price: "7 800 kr", 
+                        available: inventory.singel,
+                        image: enkelsangImage,
+                        alt: "Glampingtält – enkelsäng"
+                      },
+                      { 
+                        value: "dubbel", 
+                        label: "Dubbel (2 personer)", 
+                        price: "9 200 kr", 
+                        available: inventory.dubbel,
+                        image: dubbelsangImage,
+                        alt: "Glampingtält – dubbelsäng"
+                      }
                     ].map((option) => (
                       <label key={option.value} className="relative cursor-pointer">
                         <input
@@ -319,14 +349,26 @@ const NewBookingSection = () => {
                           onChange={(e) => setTentSize(e.target.value)}
                           className="sr-only"
                         />
-                        <Card className={`p-4 transition-smooth ${
+                        <Card className={`overflow-hidden transition-smooth ${
                           tentSize === option.value
-                            ? "border-primary ring-2 ring-primary/20"
-                            : "border-border hover:border-primary/50"
+                            ? "border-primary ring-2 ring-primary/20 shadow-lg"
+                            : "border-border hover:border-primary/50 hover:shadow-md"
                         }`}>
-                          <h4 className="font-semibold text-foreground">{option.label}</h4>
-                          <p className="text-lg font-bold text-primary mt-1">{option.price}</p>
-                          <p className="text-sm text-muted-foreground mt-1">{option.available} kvar</p>
+                          <div className="aspect-[4/3] relative">
+                            <img
+                              src={option.image}
+                              alt={option.alt}
+                              className="w-full h-full object-cover"
+                              loading="lazy"
+                            />
+                            <Badge className="absolute top-2 right-2 bg-white/90 text-foreground">
+                              {option.available} kvar
+                            </Badge>
+                          </div>
+                          <div className="p-4">
+                            <h4 className="font-semibold text-foreground">{option.label}</h4>
+                            <p className="text-lg font-bold text-primary mt-1">{option.price}</p>
+                          </div>
                         </Card>
                       </label>
                     ))}
@@ -371,7 +413,8 @@ const NewBookingSection = () => {
                       <img
                         src={carouselImages[0].src}
                         alt="Halvpall med komplett glampingkit"
-                        className="w-full h-48 object-cover rounded-lg"
+                        className="w-full h-48 object-cover rounded-lg shadow-md"
+                        loading="lazy"
                       />
                     </div>
                     <div>
