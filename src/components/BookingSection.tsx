@@ -53,63 +53,28 @@ const BookingSection = () => {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-              Boka ditt tält nu
+              Tentify på Sweden Rock
             </h2>
           </div>
 
-          {/* Image Carousel */}
-          <div className="relative mb-12 rounded-xl overflow-hidden shadow-elegant">
-            <div className="relative aspect-[16/9] md:aspect-[21/9]">
-              {campingImages.map((image, index) => (
+          {/* Two Square Photos Side by Side */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+            {campingImages.map((image, index) => (
+              <div key={index} className="aspect-square rounded-xl overflow-hidden shadow-elegant">
                 <img
-                  key={index}
                   src={image.src}
                   alt={image.alt}
                   loading="lazy"
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-                    index === currentImageIndex ? 'opacity-100' : 'opacity-0'
-                  }`}
+                  className="w-full h-full object-cover"
                 />
-              ))}
-              
-              {/* Navigation Buttons */}
-              <button
-                onClick={prevImage}
-                className="absolute left-4 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground p-2 rounded-full transition-all hover:scale-110"
-                aria-label="Föregående bild"
-              >
-                <ChevronLeft className="w-6 h-6" />
-              </button>
-              <button
-                onClick={nextImage}
-                className="absolute right-4 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background text-foreground p-2 rounded-full transition-all hover:scale-110"
-                aria-label="Nästa bild"
-              >
-                <ChevronRight className="w-6 h-6" />
-              </button>
-
-              {/* Dots Indicator */}
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                {campingImages.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentImageIndex(index)}
-                    className={`w-2 h-2 rounded-full transition-all ${
-                      index === currentImageIndex 
-                        ? 'bg-primary w-8' 
-                        : 'bg-background/60 hover:bg-background/80'
-                    }`}
-                    aria-label={`Gå till bild ${index + 1}`}
-                  />
-                ))}
               </div>
-            </div>
+            ))}
           </div>
 
           {/* Content */}
           <Card className="p-8 md:p-12 shadow-elegant">
             <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
-              🏕️ ÅKEs Camping – bara några minuter från festivalens hjärta
+              ÅKEs Camping – bara några minuter från festivalens hjärta
             </h3>
             
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
@@ -131,7 +96,7 @@ const BookingSection = () => {
               <div className="flex items-start gap-4">
                 <Droplets className="w-6 h-6 text-primary flex-shrink-0 mt-1" />
                 <p className="text-muted-foreground">
-                  <span className="font-medium text-foreground">Duschmöjligheter</span> med fräscha och välskötta faciliteter
+                  <span className="font-medium text-foreground">Duschar</span> med fräscha och välskötta faciliteter
                 </p>
               </div>
 
