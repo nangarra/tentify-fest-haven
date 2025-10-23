@@ -101,13 +101,6 @@ const BookingSection = () => {
               </div>
 
               <div className="flex items-start gap-4">
-                <Shield className="w-6 h-6 text-primary flex-shrink-0 mt-1" />
-                <p className="text-muted-foreground">
-                  <span className="font-medium text-foreground">Säkerhetspaket</span> med bevakning och trygg miljö dygnet runt
-                </p>
-              </div>
-
-              <div className="flex items-start gap-4">
                 <ParkingCircle className="w-6 h-6 text-primary flex-shrink-0 mt-1" />
                 <p className="text-muted-foreground">
                   <span className="font-medium text-foreground">Parkering</span> nära campingen för enkel åtkomst

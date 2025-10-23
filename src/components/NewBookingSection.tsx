@@ -319,7 +319,6 @@ const NewBookingSection = () => {
                         <li>• Matta & filt</li>
                         <li>• Lykta med högtalare och naturljud</li>
                         <li>• Deluxe uppblåsbar säng (singel eller dubbel)</li>
-                        <li>• Indragen el & nattduksbord</li>
                         <li>• Goodiebag & picknickkorg (toalettpapper, våtservetter, mobilladdare, 2 muggar, bestick, 2 glas)</li>
                       </ul>
                     </div>
