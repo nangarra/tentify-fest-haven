@@ -18,8 +18,8 @@ import akesCampingFacilities from "@/assets/akes-camping-facilities.jpg";
 import akesCampingMap from "@/assets/akes-camping-map.png";
 
 const campingImages = [
-  { src: akesCampingFacilities, alt: "ÅKEs Camping – moderna toalettfaciliteter" },
-  { src: akesCampingMap, alt: "ÅKEs Camping – karta och läge nära Sweden Rock Festival" }
+  { src: akesCampingFacilities, alt: "ÅKEs Camping – faciliteter med toaletter, camping, parkering och personal" },
+  { src: akesCampingMap, alt: "Karta över gångvägen från ÅKEs Camping till Sweden Rock Festival" }
 ];
 
 const BookingSection = () => {
