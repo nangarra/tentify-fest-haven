@@ -10,9 +10,12 @@ import { useToast } from "@/hooks/use-toast";
 const ContactSection = () => {
   const [formData, setFormData] = useState({
     name: '',
+    phone: '',
     email: '',
     message: ''
   });
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -22,35 +25,60 @@ const ContactSection = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name || !formData.email || !formData.message) {
+    if (!formData.name || !formData.phone || !formData.email || !formData.message) {
       toast({
         title: "Alla fält måste fyllas i",
-        description: "Vänligen fyll i namn, e-post och meddelande.",
+        description: "Vänligen fyll i namn, telefon, e-post och meddelande.",
         variant: "destructive"
       });
       return;
     }
 
-    // Create email
-    const subject = `Kontakt från ${formData.name} - Tentify`;
-    const body = `Namn: ${formData.name}
-E-post: ${formData.email}
+    setIsSubmitting(true);
 
-Meddelande:
-${formData.message}`;
+    try {
+      const { supabase } = await import("@/integrations/supabase/client");
+      
+      const { error } = await supabase
+        .from('bookings')
+        .insert([
+          {
+            name: formData.name,
+            phone: formData.phone,
+            email: formData.email,
+            message: formData.message
+          }
+        ]);
 
-    window.location.href = `mailto:info@tentify.se?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    
-    toast({
-      title: "Tack för ditt meddelande!",
-      description: "Vi kommer kontakta dig inom 24 timmar."
-    });
+      if (error) throw error;
 
-    // Reset form
-    setFormData({ name: '', email: '', message: '' });
+      // Reset form and show confirmation
+      setFormData({ name: '', phone: '', email: '', message: '' });
+      setShowConfirmation(true);
+      
+      toast({
+        title: "Tack för din bokning!",
+        description: "Vi har tagit emot din bokning."
+      });
+
+      // Hide confirmation after 10 seconds
+      setTimeout(() => {
+        setShowConfirmation(false);
+      }, 10000);
+
+    } catch (error) {
+      console.error('Error submitting booking:', error);
+      toast({
+        title: "Ett fel uppstod",
+        description: "Kunde inte skicka din bokning. Vänligen försök igen.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -88,6 +116,19 @@ ${formData.message}`;
                 </div>
 
                 <div>
+                  <Label htmlFor="phone">Telefon *</Label>
+                  <Input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    placeholder="070-123 45 67"
+                    required
+                  />
+                </div>
+
+                <div>
                   <Label htmlFor="email">E-post *</Label>
                   <Input
                     id="email"
@@ -113,10 +154,31 @@ ${formData.message}`;
                   />
                 </div>
 
-                <Button type="submit" className="w-full btn-hero">
-                  Skicka meddelande
+                <Button type="submit" className="w-full btn-hero" disabled={isSubmitting}>
+                  {isSubmitting ? "Skickar..." : "Skicka meddelande"}
                 </Button>
               </form>
+
+              {/* Confirmation Panel */}
+              {showConfirmation && (
+                <Card className="mt-6 p-6 bg-primary/5 border-primary/20">
+                  <div className="space-y-4">
+                    <p className="text-foreground leading-relaxed">
+                      Vi har tagit emot din bokning, ditt tält är nu reserverat. För att din bokning ska bli godkänd behöver vi ta del av förskottsbetalningen. Det går bra att betala direkt via Swish eller Bankgiro.
+                    </p>
+                    
+                    <div className="space-y-2 bg-background/50 p-4 rounded-lg">
+                      <p className="font-semibold text-foreground">Nangarra Invest AB</p>
+                      <p className="text-muted-foreground">Swishnummer: <span className="font-medium text-foreground">123 155 02 27</span></p>
+                      <p className="text-muted-foreground">Bankgiro: <span className="font-medium text-foreground">5226-2243</span></p>
+                    </div>
+
+                    <p className="text-sm text-muted-foreground italic">
+                      Vi bekräftar även din bokning via e-post inom 24 timmar.
+                    </p>
+                  </div>
+                </Card>
+              )}
             </Card>
 
             {/* Contact Information */}
