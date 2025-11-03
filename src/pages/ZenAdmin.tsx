@@ -58,6 +58,13 @@ const ZenAdmin = () => {
   }, []);
 
   useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+      checkAuth();
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
     if (isAdmin) {
       fetchBookings();
     }
@@ -288,7 +295,7 @@ const ZenAdmin = () => {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-16 text-center">
+      <div className="container mx-auto px-4 pt-24 py-16 text-center">
         <p className="text-muted-foreground">Laddar...</p>
       </div>
     );
@@ -300,15 +307,20 @@ const ZenAdmin = () => {
 
   if (selectedBooking) {
     return (
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <Button
-          variant="ghost"
-          onClick={() => setSelectedBooking(null)}
-          className="mb-6"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Tillbaka till lista
-        </Button>
+      <div className="container mx-auto px-4 pt-24 py-8 max-w-4xl">
+        <div className="flex justify-between items-center mb-6">
+          <Button
+            variant="ghost"
+            onClick={() => setSelectedBooking(null)}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Tillbaka till lista
+          </Button>
+          <Button variant="outline" onClick={handleSignOut}>
+            <LogOut className="mr-2 h-4 w-4" />
+            Logga ut
+          </Button>
+        </div>
 
         <Card>
           <CardHeader>
@@ -432,7 +444,7 @@ const ZenAdmin = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
+    <div className="container mx-auto px-4 pt-24 py-8 max-w-6xl">
       <div className="mb-8 flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold mb-2">ZenAdmin - Tentify</h1>
