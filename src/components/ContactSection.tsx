@@ -16,6 +16,7 @@ const ContactSection = () => {
   });
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const { toast } = useToast();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -55,19 +56,9 @@ const ContactSection = () => {
 
       if (error) throw error;
 
-      // Reset form and show confirmation
-      setFormData({ name: '', phone: '', email: '', message: '' });
+      // Lock form and show confirmation
+      setIsSubmitted(true);
       setShowConfirmation(true);
-      
-      toast({
-        title: "Tack för din bokning!",
-        description: "Vi har tagit emot din bokning."
-      });
-
-      // Hide confirmation after 10 seconds
-      setTimeout(() => {
-        setShowConfirmation(false);
-      }, 10000);
 
     } catch (error) {
       console.error('Error submitting booking:', error);
@@ -112,6 +103,7 @@ const ContactSection = () => {
                     onChange={handleInputChange}
                     placeholder="Ditt namn"
                     required
+                    disabled={isSubmitted}
                   />
                 </div>
 
@@ -125,6 +117,7 @@ const ContactSection = () => {
                     onChange={handleInputChange}
                     placeholder="070-123 45 67"
                     required
+                    disabled={isSubmitted}
                   />
                 </div>
 
@@ -138,6 +131,7 @@ const ContactSection = () => {
                     onChange={handleInputChange}
                     placeholder="din@email.se"
                     required
+                    disabled={isSubmitted}
                   />
                 </div>
 
@@ -151,11 +145,18 @@ const ContactSection = () => {
                     placeholder="Berätta vad vi kan hjälpa dig med..."
                     rows={5}
                     required
+                    disabled={isSubmitted}
                   />
                 </div>
 
-                <Button type="submit" className="w-full btn-hero" disabled={isSubmitting}>
-                  {isSubmitting ? "Skickar..." : "Skicka meddelande"}
+                <Button 
+                  type="submit" 
+                  className="w-full btn-hero" 
+                  disabled={isSubmitting || isSubmitted}
+                  aria-disabled={isSubmitting || isSubmitted}
+                  style={isSubmitted ? { opacity: 0.6, pointerEvents: 'none' } : {}}
+                >
+                  {isSubmitting ? "Skickar..." : isSubmitted ? "Bokning skickad" : "Skicka meddelande"}
                 </Button>
               </form>
 
@@ -175,6 +176,10 @@ const ContactSection = () => {
 
                     <p className="text-sm text-muted-foreground italic">
                       Vi bekräftar även din bokning via e-post inom 24 timmar.
+                    </p>
+                    
+                    <p className="text-sm text-muted-foreground italic mt-2">
+                      Vi har mottagit din bokning och kommer att konfirmera när förskottsbetalningen är gjord.
                     </p>
                   </div>
                 </Card>
