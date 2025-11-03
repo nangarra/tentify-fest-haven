@@ -80,6 +80,8 @@ const NewBookingSection = () => {
   const [message, setMessage] = useState("");
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleExtraToggle = (extraId: string) => {
     setSelectedExtras(prev =>
@@ -178,26 +180,51 @@ const NewBookingSection = () => {
     setShowContactForm(true);
   };
 
-  const handleFinalBooking = () => {
+  const handleFinalBooking = async () => {
     if (!name || !email || !phone || !acceptedTerms) {
       toast.error("Fyll i alla obligatoriska fält och acceptera villkoren");
       return;
     }
 
-    // Log booking details (in real app, this would be sent to backend)
-    console.log("Booking details:", {
-      bookingType,
-      festival: bookingType === 'festival' ? festival : null,
-      address: bookingType === 'halvpall' ? { address, postalCode, city, country } : null,
-      tentSize,
-      selectedExtras,
-      days: calculateDays(),
-      total: calculateTotal(),
-      deposit: calculateDeposit(),
-      contact: { name, email, phone, message }
-    });
+    setIsSubmitting(true);
 
-    toast.success("Bokning mottagen! Vi kontaktar dig inom 24 timmar för bekräftelse och betalning.");
+    try {
+      const { supabase } = await import("@/integrations/supabase/client");
+      
+      // Create booking record with all details
+      const bookingData = {
+        name,
+        email,
+        phone,
+        message,
+        meta: {
+          bookingType,
+          festival: bookingType === 'festival' ? festival : null,
+          address: bookingType === 'halvpall' ? { address, postalCode, city, country } : null,
+          tentSize,
+          selectedExtras,
+          extraPersons: bookingType === 'festival' ? extraPersons : 0,
+          days: calculateDays(),
+          total: calculateTotal(),
+          deposit: calculateDeposit()
+        }
+      };
+
+      const { error } = await supabase
+        .from('bookings')
+        .insert([bookingData]);
+
+      if (error) throw error;
+
+      // Lock form and show confirmation
+      setIsSubmitted(true);
+
+    } catch (error) {
+      console.error('Error submitting booking:', error);
+      toast.error("Ett fel uppstod. Kunde inte skicka din bokning. Vänligen försök igen.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const nextImage = () => {
@@ -714,57 +741,62 @@ const NewBookingSection = () => {
                 <h3 className="text-xl font-bold text-foreground mb-6">Dina uppgifter</h3>
                 <div className="space-y-4">
                   <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="name">Namn *</Label>
-                      <Input
-                        id="name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="Ditt namn"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="email">E-post *</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="din@email.se"
-                        required
-                      />
-                    </div>
-                  </div>
-                  
                   <div>
-                    <Label htmlFor="phone">Telefon *</Label>
+                    <Label htmlFor="name">Namn *</Label>
                     <Input
-                      id="phone"
-                      type="tel"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="070-123 45 67"
+                      id="name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Ditt namn"
                       required
+                      disabled={isSubmitted}
                     />
                   </div>
-                  
                   <div>
-                    <Label htmlFor="message">Meddelande (valfritt)</Label>
-                    <Textarea
-                      id="message"
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      placeholder="Eventuella önskemål eller frågor..."
-                      rows={3}
+                    <Label htmlFor="email">E-post *</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="din@email.se"
+                      required
+                      disabled={isSubmitted}
                     />
                   </div>
+                </div>
+                
+                <div>
+                  <Label htmlFor="phone">Telefon *</Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="070-123 45 67"
+                    required
+                    disabled={isSubmitted}
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="message">Meddelande (valfritt)</Label>
+                  <Textarea
+                    id="message"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    placeholder="Eventuella önskemål eller frågor..."
+                    rows={3}
+                    disabled={isSubmitted}
+                  />
+                </div>
 
                   <div className="flex items-start space-x-2">
                     <Checkbox
                       id="terms"
                       checked={acceptedTerms}
                       onCheckedChange={(checked) => setAcceptedTerms(checked as boolean)}
+                      disabled={isSubmitted}
                     />
                     <Label htmlFor="terms" className="text-sm leading-relaxed">
                       Jag accepterar{" "}
@@ -786,10 +818,37 @@ const NewBookingSection = () => {
                     onClick={handleFinalBooking}
                     size="lg" 
                     className="btn-hero text-lg px-12 py-4 w-full"
-                    disabled={!acceptedTerms}
+                    disabled={!acceptedTerms || isSubmitting || isSubmitted}
+                    aria-disabled={isSubmitting || isSubmitted}
+                    style={isSubmitted ? { opacity: 0.6, pointerEvents: 'none' } : {}}
                   >
-                    Slutför bokning & betala förskott (20%)
+                    {isSubmitting ? "Skickar..." : isSubmitted ? "Bokning skickad" : "Slutför bokning"}
                   </Button>
+
+                  {/* Confirmation block */}
+                  {isSubmitted && (
+                    <Card className="p-6 bg-primary/5 border-primary/20 mt-4">
+                      <div className="space-y-4">
+                        <p className="text-foreground leading-relaxed">
+                          Vi har tagit emot din bokning, ditt tält är nu reserverat. För att din bokning ska bli godkänd behöver vi ta del av förskottsbetalningen. Det går bra att betala direkt via Swish eller Bankgiro.
+                        </p>
+                        
+                        <div className="space-y-2 bg-background/50 p-4 rounded-lg">
+                          <p className="font-semibold text-foreground">Nangarra Invest AB</p>
+                          <p className="text-muted-foreground">Swishnummer: <span className="font-medium text-foreground">123 155 02 27</span></p>
+                          <p className="text-muted-foreground">Bankgiro: <span className="font-medium text-foreground">5226-2243</span></p>
+                        </div>
+
+                        <p className="text-sm text-muted-foreground italic">
+                          Vi bekräftar även din bokning via e-post inom 24 timmar.
+                        </p>
+                        
+                        <p className="text-sm text-muted-foreground italic">
+                          Vi har mottagit din bokning och kommer att konfirmera när förskottsbetalningen är gjord.
+                        </p>
+                      </div>
+                    </Card>
+                  )}
                 </div>
               </div>
             )}
