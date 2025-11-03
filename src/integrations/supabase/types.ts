@@ -59,6 +59,36 @@ export type Database = {
         }
         Relationships: []
       }
+      tent_inventory: {
+        Row: {
+          available_count: number
+          created_at: string
+          festival: string
+          id: string
+          tent_type: string
+          total_count: number
+          updated_at: string
+        }
+        Insert: {
+          available_count?: number
+          created_at?: string
+          festival: string
+          id?: string
+          tent_type: string
+          total_count?: number
+          updated_at?: string
+        }
+        Update: {
+          available_count?: number
+          created_at?: string
+          festival?: string
+          id?: string
+          tent_type?: string
+          total_count?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -85,6 +115,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      decrease_tent_inventory: {
+        Args: { p_festival: string; p_tent_type: string }
+        Returns: undefined
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

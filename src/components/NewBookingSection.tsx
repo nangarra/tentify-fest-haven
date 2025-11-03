@@ -48,12 +48,6 @@ const extraItems: ExtraItem[] = [
   { id: "fylleforsakring", name: "Fylleförsäkring", price: 1000, type: "once" }
 ];
 
-// Inventory status
-const inventory = {
-  singel: 5,
-  dubbel: 4
-};
-
 const NewBookingSection = () => {
   const [bookingType, setBookingType] = useState<'festival' | 'halvpall'>('festival');
   const [currentImage, setCurrentImage] = useState(0);
@@ -62,6 +56,7 @@ const NewBookingSection = () => {
   const [selectedExtras, setSelectedExtras] = useState<string[]>([]);
   const [extraPersons, setExtraPersons] = useState(0);
   const [bookingDays] = useState(4); // Sweden Rock is 4 days
+  const [inventory, setInventory] = useState({ singel: 0, dubbel: 0 });
   
   // Halvpall specific states
   const [address, setAddress] = useState("");
@@ -82,6 +77,31 @@ const NewBookingSection = () => {
   const [showTerms, setShowTerms] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  // Fetch inventory on mount
+  useEffect(() => {
+    const fetchInventory = async () => {
+      const { supabase } = await import("@/integrations/supabase/client");
+      const { data, error } = await supabase
+        .from('tent_inventory')
+        .select('tent_type, available_count')
+        .eq('festival', 'sweden-rock');
+
+      if (error) {
+        console.error('Error fetching inventory:', error);
+        return;
+      }
+
+      const inventoryMap = data.reduce((acc, item) => {
+        acc[item.tent_type as 'singel' | 'dubbel'] = item.available_count;
+        return acc;
+      }, { singel: 0, dubbel: 0 });
+
+      setInventory(inventoryMap);
+    };
+
+    fetchInventory();
+  }, []);
 
   const handleExtraToggle = (extraId: string) => {
     setSelectedExtras(prev =>
@@ -191,6 +211,23 @@ const NewBookingSection = () => {
     try {
       const { supabase } = await import("@/integrations/supabase/client");
       
+      // Check inventory before booking (for festival bookings)
+      if (bookingType === 'festival') {
+        const { data: inventoryData, error: inventoryError } = await supabase
+          .from('tent_inventory')
+          .select('available_count')
+          .eq('festival', festival)
+          .eq('tent_type', tentSize)
+          .single();
+
+        if (inventoryError) throw inventoryError;
+        
+        if (inventoryData.available_count <= 0) {
+          toast.error("Tyvärr är detta tält utsålt. Vänligen välj ett annat alternativ.");
+          return;
+        }
+      }
+      
       // Create booking record with all details
       const bookingData = {
         name,
@@ -215,6 +252,33 @@ const NewBookingSection = () => {
         .insert([bookingData]);
 
       if (error) throw error;
+
+      // Reduce inventory (only for festival bookings)
+      if (bookingType === 'festival') {
+        const { error: updateError } = await supabase.rpc('decrease_tent_inventory', {
+          p_festival: festival,
+          p_tent_type: tentSize
+        });
+
+        if (updateError) {
+          console.error('Error updating inventory:', updateError);
+          // Don't fail the booking if inventory update fails, but log it
+        }
+
+        // Refresh inventory display
+        const { data: newInventory } = await supabase
+          .from('tent_inventory')
+          .select('tent_type, available_count')
+          .eq('festival', 'sweden-rock');
+
+        if (newInventory) {
+          const inventoryMap = newInventory.reduce((acc, item) => {
+            acc[item.tent_type as 'singel' | 'dubbel'] = item.available_count;
+            return acc;
+          }, { singel: 0, dubbel: 0 });
+          setInventory(inventoryMap);
+        }
+      }
 
       // Lock form and show confirmation
       setIsSubmitted(true);
@@ -385,29 +449,36 @@ const NewBookingSection = () => {
                         alt: "Glampingtält – dubbelsäng"
                       }
                     ].map((option) => (
-                      <label key={option.value} className="relative cursor-pointer">
+                      <label key={option.value} className={`relative ${option.available > 0 ? 'cursor-pointer' : 'cursor-not-allowed opacity-60'}`}>
                         <input
                           type="radio"
                           name="tentSize"
                           value={option.value}
                           checked={tentSize === option.value}
                           onChange={(e) => setTentSize(e.target.value)}
+                          disabled={option.available === 0}
                           className="sr-only"
                         />
                         <Card className={`overflow-hidden transition-smooth ${
-                          tentSize === option.value
-                            ? "border-primary ring-2 ring-primary/20 shadow-lg"
-                            : "border-border hover:border-primary/50 hover:shadow-md"
+                          option.available === 0 
+                            ? "border-muted bg-muted/50"
+                            : tentSize === option.value
+                              ? "border-primary ring-2 ring-primary/20 shadow-lg"
+                              : "border-border hover:border-primary/50 hover:shadow-md"
                         }`}>
                           <div className="aspect-[4/3] relative">
                             <img
                               src={option.image}
                               alt={option.alt}
-                              className="w-full h-full object-cover"
+                              className={`w-full h-full object-cover ${option.available === 0 ? 'grayscale' : ''}`}
                               loading="lazy"
                             />
-                            <Badge className="absolute top-2 right-2 bg-white/90 text-foreground">
-                              {option.available} kvar
+                            <Badge className={`absolute top-2 right-2 ${
+                              option.available === 0 
+                                ? 'bg-destructive text-destructive-foreground' 
+                                : 'bg-white/90 text-foreground'
+                            }`}>
+                              {option.available === 0 ? 'Utsålt' : `${option.available} kvar`}
                             </Badge>
                           </div>
                           <div className="p-4">
