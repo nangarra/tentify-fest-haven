@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import HyrGlamping from "./pages/HyrGlamping";
 import ZenAdmin from "./pages/ZenAdmin";
+import Auth from "./pages/Auth";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
 
@@ -22,6 +23,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/hyr-glamping" element={<HyrGlamping />} />
+          <Route path="/auth" element={<Auth />} />
           <Route path="/zenadmin" element={<ZenAdmin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

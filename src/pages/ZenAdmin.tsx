@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -17,9 +18,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { ArrowLeft, Search, Trash2 } from "lucide-react";
+import { ArrowLeft, Search, Trash2, LogOut } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import type { User } from "@supabase/supabase-js";
 
 interface Booking {
   id: string;
@@ -45,11 +47,21 @@ const ZenAdmin = () => {
   const [bookingToDelete, setBookingToDelete] = useState<string | null>(null);
   const [adminNote, setAdminNote] = useState("");
   const [isSavingNote, setIsSavingNote] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetchBookings();
+    checkAuth();
   }, []);
+
+  useEffect(() => {
+    if (isAdmin) {
+      fetchBookings();
+    }
+  }, [isAdmin]);
 
   useEffect(() => {
     // Filter bookings based on search query
@@ -66,6 +78,51 @@ const ZenAdmin = () => {
       setFilteredBookings(filtered);
     }
   }, [searchQuery, bookings]);
+
+  const checkAuth = async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        navigate("/auth");
+        return;
+      }
+
+      setUser(session.user);
+
+      // Check if user has admin role
+      const { data: roleData, error: roleError } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', session.user.id)
+        .eq('role', 'admin')
+        .maybeSingle();
+
+      if (roleError) throw roleError;
+
+      if (!roleData) {
+        toast({
+          title: "Åtkomst nekad",
+          description: "Du har inte administratörsbehörighet.",
+          variant: "destructive",
+        });
+        navigate("/");
+        return;
+      }
+
+      setIsAdmin(true);
+    } catch (error) {
+      console.error('Auth error:', error);
+      navigate("/auth");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    navigate("/auth");
+  };
 
   const fetchBookings = async () => {
     try {
@@ -229,6 +286,18 @@ const ZenAdmin = () => {
     setAdminNote(booking.admin_note || "");
   };
 
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-16 text-center">
+        <p className="text-muted-foreground">Laddar...</p>
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return null;
+  }
+
   if (selectedBooking) {
     return (
       <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -364,9 +433,15 @@ const ZenAdmin = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">ZenAdmin - Tentify</h1>
-        <p className="text-muted-foreground">Administrera bokningar</p>
+      <div className="mb-8 flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold mb-2">ZenAdmin - Tentify</h1>
+          <p className="text-muted-foreground">Administrera bokningar</p>
+        </div>
+        <Button variant="outline" onClick={handleSignOut}>
+          <LogOut className="mr-2 h-4 w-4" />
+          Logga ut
+        </Button>
       </div>
 
       {/* Bookings List */}
