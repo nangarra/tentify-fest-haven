@@ -158,6 +158,22 @@ const BookingSection = () => {
               </div>
             </div>
 
+            <div className="mb-10">
+              <p className="text-muted-foreground mb-4">
+                Vid incheckning krävs bekräftelsemail med ert kundnummer som mottogs i samband med godkänd bokning.
+              </p>
+              
+              <p className="text-muted-foreground mb-4">
+                Öppen incheckning<br />
+                Tisdag 2/6 till Lördag 6/6 kl. 09.00–20.00
+              </p>
+              
+              <p className="text-muted-foreground">
+                Utcheckning<br />
+                Utcheckning sker senast Söndag 7/6 kl. 12.00. Gästen ska lämna platsen i samma skick som vid tillträde – rent och fint!
+              </p>
+            </div>
+
             <div className="text-center">
               <Button 
                 onClick={scrollToBooking}
