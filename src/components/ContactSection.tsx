@@ -190,50 +190,15 @@ const ContactSection = () => {
             <div className="space-y-8">
               <Card className="p-6 shadow-card">
                 <h3 className="text-xl font-semibold text-foreground mb-6">
-                  Kontaktuppgifter
+                  Information / Kontakt
                 </h3>
                 
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-4">
-                    <div className="bg-primary/10 w-10 h-10 rounded-lg flex items-center justify-center">
-                      <Phone className="w-5 h-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-foreground">Telefon</p>
-                      <p className="text-muted-foreground">0701-234567</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center space-x-4">
-                    <div className="bg-primary/10 w-10 h-10 rounded-lg flex items-center justify-center">
-                      <Mail className="w-5 h-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-foreground">E-post</p>
-                      <p className="text-muted-foreground">info@tentify.se</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center space-x-4">
-                    <div className="bg-primary/10 w-10 h-10 rounded-lg flex items-center justify-center">
-                      <MapPin className="w-5 h-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-foreground">Plats</p>
-                      <p className="text-muted-foreground">Stockholm & omnejd</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center space-x-4">
-                    <div className="bg-primary/10 w-10 h-10 rounded-lg flex items-center justify-center">
-                      <Clock className="w-5 h-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-foreground">Öppettider</p>
-                      <p className="text-muted-foreground">Mån-Fre: 09:00-18:00</p>
-                      <p className="text-muted-foreground text-sm">Helger: Endast akuta ärenden</p>
-                    </div>
-                  </div>
+                <div className="text-muted-foreground space-y-1">
+                  <p>Tentify drivs av Nangarra Invest AB</p>
+                  <p>559125-7802</p>
+                  <p>073-513 37 09</p>
+                  <p>Skogsvägen 17, Eslöv.</p>
+                  <p>Vi finns på mailen 24/7 och telefon endast under eventet.</p>
                 </div>
               </Card>
 

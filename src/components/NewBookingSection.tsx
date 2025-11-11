@@ -315,6 +315,23 @@ const NewBookingSection = () => {
             <Badge variant="secondary" className="bg-primary/10 text-primary font-medium px-4 py-2">
               Förhandsbokning för Sweden Rock är öppen
             </Badge>
+
+            {/* Check-in and check-out information */}
+            <div className="mt-8 text-muted-foreground space-y-4 max-w-2xl mx-auto">
+              <p>
+                Vid incheckning krävs bekräftelsemail med ert kundnummer som mottogs i samband med godkänd bokning.
+              </p>
+              
+              <p>
+                Öppen incheckning<br />
+                Tisdag 2/6 till Lördag 6/6 kl. 09.00–20.00
+              </p>
+              
+              <p>
+                Utcheckning<br />
+                Utcheckning sker senast Söndag 7/6 kl. 12.00. Gästen ska lämna platsen i samma skick som vid tillträde – rent och fint!
+              </p>
+            </div>
           </div>
 
           {/* Mini image carousel */}
