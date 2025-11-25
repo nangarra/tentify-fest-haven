@@ -409,7 +409,7 @@ const NewBookingSection = () => {
                         <li>• 2 st stolar + bord (inne/ute)</li>
                         <li>• Matta & filt</li>
                         <li>• Lykta med högtalare och naturljud</li>
-                        <li>• Deluxe uppblåsbar säng (singel eller dubbel)</li>
+                        <li>• Deluxe uppblåsbar säng</li>
                         <li>• Goodiebag & picknickkorg (toalettpapper, våtservetter, mobilladdare, 2 muggar, bestick, 2 glas)</li>
                       </ul>
                     </div>
@@ -532,7 +532,7 @@ const NewBookingSection = () => {
                                 <Plus className="h-4 w-4" />
                               </Button>
                             </div>
-                            <p className="text-xs text-muted-foreground">Max 4 personer per tält.</p>
+                            <p className="text-xs text-muted-foreground">Max 4 personer per tält</p>
                           </div>
                         );
                       }
@@ -576,7 +576,7 @@ const NewBookingSection = () => {
                         <li>• Manuell pump, pinnar/linor</li>
                         <li>• 2 stolar, bord, matta, filt</li>
                         <li>• Lykta med högtalare/naturljud</li>
-                        <li>• Deluxe uppblåsbar säng (singel/dubbel)</li>
+                        <li>• Deluxe uppblåsbar säng</li>
                         <li>• Nattduksbord</li>
                         <li>• Indragbar el/elkabel</li>
                         <li>• Goodiebag & picknickkorg (toalettpapper, våtservetter, mobilladdare, 2 muggar, bestick, 2 glas)</li>
@@ -693,8 +693,8 @@ const NewBookingSection = () => {
                   <Label className="text-base font-semibold mb-3 block">Tältstorlek</Label>
                   <div className="grid md:grid-cols-2 gap-4">
                     {[
-                      { value: "singel", label: "Singel (1 person)" },
-                      { value: "dubbel", label: "Dubbel (2 personer)" }
+                      { value: "singel", label: "Medium tent" },
+                      { value: "dubbel", label: "Medium +" }
                     ].map((option) => (
                       <label key={option.value} className="relative cursor-pointer">
                         <input
