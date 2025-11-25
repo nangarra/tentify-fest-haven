@@ -56,7 +56,7 @@ const NewBookingSection = () => {
   const [selectedExtras, setSelectedExtras] = useState<string[]>([]);
   const [extraPersons, setExtraPersons] = useState(0);
   const [bookingDays] = useState(4); // Sweden Rock is 4 days
-  const [inventory, setInventory] = useState({ singel: 0, dubbel: 0 });
+  const [inventory, setInventory] = useState({ 'medium-tent': 0, 'medium-plus': 0 });
   
   // Halvpall specific states
   const [address, setAddress] = useState("");
@@ -80,28 +80,29 @@ const NewBookingSection = () => {
 
   // Fetch inventory on mount
   useEffect(() => {
-    const fetchInventory = async () => {
-      const { supabase } = await import("@/integrations/supabase/client");
-      const { data, error } = await supabase
-        .from('tent_inventory')
-        .select('tent_type, available_count')
-        .eq('festival', 'sweden-rock');
-
-      if (error) {
-        console.error('Error fetching inventory:', error);
-        return;
-      }
-
-      const inventoryMap = data.reduce((acc, item) => {
-        acc[item.tent_type as 'singel' | 'dubbel'] = item.available_count;
-        return acc;
-      }, { singel: 0, dubbel: 0 });
-
-      setInventory(inventoryMap);
-    };
-
     fetchInventory();
   }, []);
+
+  const fetchInventory = async () => {
+    const { supabase } = await import("@/integrations/supabase/client");
+    const { data, error } = await supabase.rpc('get_tent_availability', { p_festival: 'sweden-rock' });
+
+    if (error) {
+      console.error('Error fetching inventory:', error);
+      return;
+    }
+
+    const inventoryMap = data.reduce((acc: any, item: any) => {
+      // Map old internal IDs to new display IDs
+      const displayType = item.tent_type === 'singel' ? 'medium-tent' : 
+                          item.tent_type === 'dubbel' ? 'medium-plus' : 
+                          item.tent_type;
+      acc[displayType] = item.available_count;
+      return acc;
+    }, { 'medium-tent': 0, 'medium-plus': 0 });
+
+    setInventory(inventoryMap);
+  };
 
   const handleExtraToggle = (extraId: string) => {
     setSelectedExtras(prev =>
@@ -213,17 +214,21 @@ const NewBookingSection = () => {
       
       // Check inventory before booking (for festival bookings)
       if (bookingType === 'festival') {
-        const { data: inventoryData, error: inventoryError } = await supabase
-          .from('tent_inventory')
-          .select('available_count')
-          .eq('festival', festival)
-          .eq('tent_type', tentSize)
-          .single();
+        const { data: inventoryData, error: inventoryError } = await supabase.rpc('get_tent_availability', {
+          p_festival: festival
+        });
 
         if (inventoryError) throw inventoryError;
         
-        if (inventoryData.available_count <= 0) {
+        const tentAvailability = inventoryData?.find((item: any) => 
+          item.tent_type === tentSize || 
+          (tentSize === 'singel' && item.tent_type === 'singel') ||
+          (tentSize === 'dubbel' && item.tent_type === 'dubbel')
+        );
+        
+        if (!tentAvailability || tentAvailability.available_count <= 0) {
           toast.error("Tyvärr är detta tält utsålt. Vänligen välj ett annat alternativ.");
+          setIsSubmitting(false);
           return;
         }
       }
@@ -253,31 +258,9 @@ const NewBookingSection = () => {
 
       if (error) throw error;
 
-      // Reduce inventory (only for festival bookings)
+      // Refresh inventory display (only for festival bookings)
       if (bookingType === 'festival') {
-        const { error: updateError } = await supabase.rpc('decrease_tent_inventory', {
-          p_festival: festival,
-          p_tent_type: tentSize
-        });
-
-        if (updateError) {
-          console.error('Error updating inventory:', updateError);
-          // Don't fail the booking if inventory update fails, but log it
-        }
-
-        // Refresh inventory display
-        const { data: newInventory } = await supabase
-          .from('tent_inventory')
-          .select('tent_type, available_count')
-          .eq('festival', 'sweden-rock');
-
-        if (newInventory) {
-          const inventoryMap = newInventory.reduce((acc, item) => {
-            acc[item.tent_type as 'singel' | 'dubbel'] = item.available_count;
-            return acc;
-          }, { singel: 0, dubbel: 0 });
-          setInventory(inventoryMap);
-        }
+        await fetchInventory();
       }
 
       // Lock form and show confirmation
@@ -451,19 +434,19 @@ const NewBookingSection = () => {
                     {[
                       { 
                         value: "singel", 
-                        label: "Singel (1 person)", 
+                        label: "Medium tent", 
                         price: "7 800 kr", 
-                        available: inventory.singel,
+                        available: inventory['medium-tent'],
                         image: dubbelsangImage,
-                        alt: "Glampingtält – enkelsäng"
+                        alt: "Glampingtält – medium tent"
                       },
                       { 
                         value: "dubbel", 
-                        label: "Dubbel (2 personer)", 
+                        label: "Medium +", 
                         price: "9 200 kr", 
-                        available: inventory.dubbel,
+                        available: inventory['medium-plus'],
                         image: enkelsangImage,
-                        alt: "Glampingtält – dubbelsäng"
+                        alt: "Glampingtält – medium +"
                       }
                     ].map((option) => (
                       <label key={option.value} className={`relative ${option.available > 0 ? 'cursor-pointer' : 'cursor-not-allowed opacity-60'}`}>

@@ -50,6 +50,8 @@ const ZenAdmin = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [inventory, setInventory] = useState<any[]>([]);
+  const [isLoadingInventory, setIsLoadingInventory] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -67,6 +69,7 @@ const ZenAdmin = () => {
   useEffect(() => {
     if (isAdmin) {
       fetchBookings();
+      fetchInventory();
     }
   }, [isAdmin]);
 
@@ -150,6 +153,35 @@ const ZenAdmin = () => {
     }
   };
 
+  const fetchInventory = async () => {
+    try {
+      setIsLoadingInventory(true);
+      const { data, error } = await supabase.rpc('get_tent_availability', { 
+        p_festival: 'sweden-rock' 
+      });
+
+      if (error) throw error;
+      setInventory(data || []);
+    } catch (error) {
+      console.error('Error fetching inventory:', error);
+      toast({
+        title: "Fel",
+        description: "Kunde inte hämta lagerstatus.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoadingInventory(false);
+    }
+  };
+
+  const getTentTypeLabel = (tentType: string) => {
+    if (tentType === 'singel') return 'Medium tent';
+    if (tentType === 'dubbel') return 'Medium +';
+    if (tentType === 'medium-tent') return 'Medium tent';
+    if (tentType === 'medium-plus') return 'Medium +';
+    return tentType;
+  };
+
   const toggleDepositConfirmation = async (booking: Booking) => {
     try {
       const newDepositStatus = !booking.deposit_confirmed;
@@ -180,6 +212,7 @@ const ZenAdmin = () => {
       });
 
       await fetchBookings();
+      await fetchInventory(); // Refresh inventory after status change
       
       // Update selected booking if in detail view
       if (selectedBooking?.id === booking.id) {
@@ -217,6 +250,7 @@ const ZenAdmin = () => {
       });
 
       await fetchBookings();
+      await fetchInventory(); // Refresh inventory after deletion
       setDeleteDialogOpen(false);
       setBookingToDelete(null);
       
@@ -455,6 +489,60 @@ const ZenAdmin = () => {
           Logga ut
         </Button>
       </div>
+
+      {/* Inventory Status */}
+      <Card className="mb-6">
+        <CardHeader>
+          <div className="flex justify-between items-center">
+            <div>
+              <CardTitle>Lagerstatus - Sweden Rock</CardTitle>
+              <CardDescription>Realtidsöversikt baserad på bokningar</CardDescription>
+            </div>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={fetchInventory}
+              disabled={isLoadingInventory}
+            >
+              {isLoadingInventory ? "Uppdaterar..." : "Räkna om"}
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {inventory.length === 0 ? (
+            <p className="text-center text-muted-foreground py-4">Ingen lagerdata tillgänglig</p>
+          ) : (
+            <div className="grid md:grid-cols-2 gap-4">
+              {inventory.map((item: any) => (
+                <Card key={item.tent_type} className="p-4">
+                  <h4 className="font-semibold text-lg mb-3">{getTentTypeLabel(item.tent_type)}</h4>
+                  <div className="grid grid-cols-3 gap-4 text-center">
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-1">Totalt</p>
+                      <p className="text-2xl font-bold">{item.total_count}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-1">Bokade</p>
+                      <p className="text-2xl font-bold text-primary">{item.booked_count}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-1">Tillgängliga</p>
+                      <p className={`text-2xl font-bold ${item.available_count === 0 ? 'text-destructive' : 'text-green-600'}`}>
+                        {item.available_count}
+                      </p>
+                    </div>
+                  </div>
+                  {item.available_count === 0 && (
+                    <Badge variant="destructive" className="mt-3 w-full justify-center">
+                      Utsålt
+                    </Badge>
+                  )}
+                </Card>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Bookings List */}
       <Card>

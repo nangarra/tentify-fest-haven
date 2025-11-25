@@ -119,6 +119,15 @@ export type Database = {
         Args: { p_festival: string; p_tent_type: string }
         Returns: undefined
       }
+      get_tent_availability: {
+        Args: { p_festival: string }
+        Returns: {
+          available_count: number
+          booked_count: number
+          tent_type: string
+          total_count: number
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
