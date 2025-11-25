@@ -13,7 +13,7 @@ Jag är intresserad av att hyra tält till mitt event. Här är information om m
 Typ av event: [Bröllop/Företagsevent/Privat fest/Annat]
 Datum: [Datum]
 Plats: [Ort]
-Antal tält: [Antal personer/tält]
+Antal tält: [Antal tält]
 Önskemål: [Leverans/Uppmontage/Hämta själv]
 
 Övrig information:

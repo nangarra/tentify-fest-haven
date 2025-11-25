@@ -21,7 +21,7 @@ const extraItems = [
     icon: Bed,
     title: "Uppgradering till dubbelsäng",
     price: "500 kr",
-    description: "Mer utrymme och komfort för två personer"
+    description: "Mer utrymme och komfort"
   },
   {
     icon: Armchair,

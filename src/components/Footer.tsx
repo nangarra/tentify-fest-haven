@@ -98,7 +98,7 @@ const Footer = () => {
             
             <div className="mt-4 text-xs text-primary-foreground/60">
               <p>
-                © 2024 Nangarra Invest AB. Alla rättigheter förbehållna. Drömmer du om att bo bekvämt på nästa festival? Med Tentify hyr du färdiga glampingtält med allt inkluderat. Våra tält är utrustade med uppblåsbara sängar, stolar, bord, el, mattor, filtar och smarta detaljer som gör upplevelsen bekväm. Du slipper tänka på logistik och montering – allt står klart när du anländer. Tentify erbjuder tält på festivaler som Sweden Rock, men även för bröllop och privata event. Välj mellan singel- eller dubbeltält, lägg till extra tillbehör och upplev en lyxig campingkänsla. Boka enkelt online redan idag.
+                © 2024 Nangarra Invest AB. Alla rättigheter förbehållna. Drömmer du om att bo bekvämt på nästa festival? Med Tentify hyr du färdiga glampingtält med allt inkluderat. Våra tält är utrustade med uppblåsbara sängar, stolar, bord, el, mattor, filtar och smarta detaljer som gör upplevelsen bekväm. Du slipper tänka på logistik och montering – allt står klart när du anländer. Tentify erbjuder tält på festivaler som Sweden Rock, men även för bröllop och privata event. Välj mellan olika tältstorlekar, lägg till extra tillbehör och upplev en lyxig campingkänsla. Boka enkelt online redan idag.
               </p>
             </div>
           </div>

@@ -38,7 +38,7 @@ const includedItems = [
   {
     image: deluxeBedImage,
     title: "Deluxe uppblåsbar säng",
-    description: "Singel eller dubbel, bekväm sömn"
+    description: "Bekväm sömn"
   },
   {
     image: electricityImage,

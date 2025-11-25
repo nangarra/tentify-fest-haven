@@ -28,7 +28,7 @@ const specifications = [
   {
     icon: Users,
     title: "Kapacitet",
-    description: "2 personer bekvämt",
+    description: "Bekvämt utrymme",
     highlight: "Rymligt"
   },
   {
