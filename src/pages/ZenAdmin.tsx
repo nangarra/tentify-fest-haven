@@ -18,9 +18,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { ArrowLeft, Search, Trash2, LogOut } from "lucide-react";
+import { ArrowLeft, Search, Trash2, LogOut, Download, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { User } from "@supabase/supabase-js";
 
 interface Booking {
@@ -38,6 +39,17 @@ interface Booking {
   meta: any;
 }
 
+interface WaitlistEntry {
+  id: string;
+  festival: string;
+  name: string;
+  email: string;
+  phone: string;
+  contacted: boolean;
+  contacted_at: string | null;
+  created_at: string;
+}
+
 const ZenAdmin = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [filteredBookings, setFilteredBookings] = useState<Booking[]>([]);
@@ -52,6 +64,8 @@ const ZenAdmin = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [inventory, setInventory] = useState<any[]>([]);
   const [isLoadingInventory, setIsLoadingInventory] = useState(false);
+  const [waitlist, setWaitlist] = useState<WaitlistEntry[]>([]);
+  const [isLoadingWaitlist, setIsLoadingWaitlist] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -70,6 +84,7 @@ const ZenAdmin = () => {
     if (isAdmin) {
       fetchBookings();
       fetchInventory();
+      fetchWaitlist();
     }
   }, [isAdmin]);
 
@@ -172,6 +187,89 @@ const ZenAdmin = () => {
     } finally {
       setIsLoadingInventory(false);
     }
+  };
+
+  const fetchWaitlist = async () => {
+    try {
+      setIsLoadingWaitlist(true);
+      const { data, error } = await supabase
+        .from('waitlist')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setWaitlist(data || []);
+    } catch (error) {
+      console.error('Error fetching waitlist:', error);
+      toast({
+        title: "Fel",
+        description: "Kunde inte hämta väntelistan.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoadingWaitlist(false);
+    }
+  };
+
+  const toggleContacted = async (entry: WaitlistEntry) => {
+    try {
+      const newContactedStatus = !entry.contacted;
+      const { error } = await supabase
+        .from('waitlist')
+        .update({ 
+          contacted: newContactedStatus,
+          contacted_at: newContactedStatus ? new Date().toISOString() : null
+        })
+        .eq('id', entry.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Uppdaterat",
+        description: newContactedStatus ? "Markerad som kontaktad" : "Kontaktmarkering borttagen"
+      });
+
+      await fetchWaitlist();
+    } catch (error) {
+      console.error('Error toggling contacted:', error);
+      toast({
+        title: "Fel",
+        description: "Kunde inte uppdatera status.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const exportWaitlistCSV = () => {
+    if (waitlist.length === 0) {
+      toast({
+        title: "Ingen data",
+        description: "Väntelistan är tom.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const headers = ['Datum', 'Namn', 'E-post', 'Telefon', 'Event', 'Kontaktad'];
+    const rows = waitlist.map(entry => [
+      new Date(entry.created_at).toLocaleString('sv-SE'),
+      entry.name,
+      entry.email,
+      entry.phone,
+      entry.festival === 'sweden-rock' ? 'Sweden Rock' : entry.festival,
+      entry.contacted ? 'Ja' : 'Nej'
+    ]);
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `vantelista-sweden-rock-${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
   };
 
   const getTentTypeLabel = (tentType: string) => {
@@ -544,80 +642,167 @@ const ZenAdmin = () => {
         </CardContent>
       </Card>
 
-      {/* Bookings List */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Bokningar</CardTitle>
-          <CardDescription>Alla inkomna bokningar</CardDescription>
-          
-          {/* Search */}
-          <div className="relative mt-4">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Sök på namn, e-post eller telefon..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-        </CardHeader>
-        <CardContent>
-          {filteredBookings.length === 0 ? (
-            <p className="text-center text-muted-foreground py-8">
-              {searchQuery ? "Inga bokningar hittades" : "Inga bokningar ännu"}
-            </p>
-          ) : (
-            <div className="space-y-3">
-              {filteredBookings.map((booking) => (
-                <div
-                  key={booking.id}
-                  className="border rounded-lg p-4 hover:bg-muted/50 transition-colors cursor-pointer"
-                  onClick={() => openDetailView(booking)}
-                >
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="font-semibold truncate">{booking.name}</h3>
-                        {getStatusBadge(booking.status)}
-                      </div>
-                      <div className="text-sm text-muted-foreground space-y-1">
-                        <p className="truncate">{booking.email} • {booking.phone}</p>
-                        <p className="text-xs">
-                          {new Date(booking.created_at).toLocaleString('sv-SE')}
-                        </p>
+      {/* Tabs for Bookings and Waitlist */}
+      <Tabs defaultValue="bookings" className="w-full">
+        <TabsList className="mb-4">
+          <TabsTrigger value="bookings">Bokningar ({bookings.length})</TabsTrigger>
+          <TabsTrigger value="waitlist">Väntelista Sweden Rock ({waitlist.length})</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="bookings">
+          {/* Bookings List */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Bokningar</CardTitle>
+              <CardDescription>Alla inkomna bokningar</CardDescription>
+              
+              {/* Search */}
+              <div className="relative mt-4">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Sök på namn, e-post eller telefon..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </CardHeader>
+            <CardContent>
+              {filteredBookings.length === 0 ? (
+                <p className="text-center text-muted-foreground py-8">
+                  {searchQuery ? "Inga bokningar hittades" : "Inga bokningar ännu"}
+                </p>
+              ) : (
+                <div className="space-y-3">
+                  {filteredBookings.map((booking) => (
+                    <div
+                      key={booking.id}
+                      className="border rounded-lg p-4 hover:bg-muted/50 transition-colors cursor-pointer"
+                      onClick={() => openDetailView(booking)}
+                    >
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-3 mb-2">
+                            <h3 className="font-semibold truncate">{booking.name}</h3>
+                            {getStatusBadge(booking.status)}
+                          </div>
+                          <div className="text-sm text-muted-foreground space-y-1">
+                            <p className="truncate">{booking.email} • {booking.phone}</p>
+                            <p className="text-xs">
+                              {new Date(booking.created_at).toLocaleString('sv-SE')}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-3">
+                          <div 
+                            className="flex items-center gap-2"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <Label className="text-sm">Förskott:</Label>
+                            <Switch
+                              checked={booking.deposit_confirmed}
+                              onCheckedChange={() => toggleDepositConfirmation(booking)}
+                            />
+                          </div>
+                          
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openDeleteDialog(booking.id);
+                            }}
+                          >
+                            <Trash2 className="h-4 w-4 text-destructive" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
-                    
-                    <div className="flex items-center gap-3">
-                      <div 
-                        className="flex items-center gap-2"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <Label className="text-sm">Förskott:</Label>
-                        <Switch
-                          checked={booking.deposit_confirmed}
-                          onCheckedChange={() => toggleDepositConfirmation(booking)}
-                        />
-                      </div>
-                      
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          openDeleteDialog(booking.id);
-                        }}
-                      >
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                      </Button>
-                    </div>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="waitlist">
+          {/* Waitlist */}
+          <Card>
+            <CardHeader>
+              <div className="flex justify-between items-center">
+                <div>
+                  <CardTitle>Tentify – Väntelista Sweden Rock</CardTitle>
+                  <CardDescription>Intresserade som vill bli kontaktade om platser öppnas</CardDescription>
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={exportWaitlistCSV}
+                  disabled={waitlist.length === 0}
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  Exportera CSV
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {isLoadingWaitlist ? (
+                <p className="text-center text-muted-foreground py-8">Laddar...</p>
+              ) : waitlist.length === 0 ? (
+                <p className="text-center text-muted-foreground py-8">Inga anmälningar i väntelistan</p>
+              ) : (
+                <div className="space-y-3">
+                  {waitlist.map((entry) => (
+                    <div
+                      key={entry.id}
+                      className={`border rounded-lg p-4 transition-colors ${
+                        entry.contacted ? 'bg-muted/30' : 'hover:bg-muted/50'
+                      }`}
+                    >
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-3 mb-2">
+                            <h3 className="font-semibold truncate">{entry.name}</h3>
+                            <Badge variant="secondary">Sweden Rock</Badge>
+                            {entry.contacted && (
+                              <Badge variant="default" className="bg-green-600">
+                                <Check className="mr-1 h-3 w-3" />
+                                Kontaktad
+                              </Badge>
+                            )}
+                          </div>
+                          <div className="text-sm text-muted-foreground space-y-1">
+                            <p className="truncate">{entry.email} • {entry.phone}</p>
+                            <p className="text-xs">
+                              Anmäld: {new Date(entry.created_at).toLocaleString('sv-SE')}
+                              {entry.contacted_at && (
+                                <span className="ml-2">
+                                  • Kontaktad: {new Date(entry.contacted_at).toLocaleString('sv-SE')}
+                                </span>
+                              )}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-2">
+                            <Label className="text-sm">Kontaktad:</Label>
+                            <Switch
+                              checked={entry.contacted}
+                              onCheckedChange={() => toggleContacted(entry)}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
