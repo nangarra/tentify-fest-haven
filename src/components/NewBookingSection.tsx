@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { ChevronLeft, ChevronRight, Plus, Minus } from "lucide-react";
 import { toast } from "sonner";
 import TermsModal from "./TermsModal";
+import WaitlistForm from "./WaitlistForm";
 
 // Import carousel images
 import heroImage1 from "@/assets/lyxigt-glampingtalt-festival-tentify.webp";
@@ -490,70 +491,81 @@ const NewBookingSection = () => {
                     ))}
                   </div>
                   
-                  {/* Warning badge */}
+                  {/* Sold out badge or availability warning */}
                   <div className="mt-3">
-                    <Badge variant="secondary" className="bg-amber-100 text-amber-800 border-amber-200">
-                      Boka snabbt – tälten är nästan slut!
-                    </Badge>
+                    {inventory['medium-tent'] === 0 && inventory['medium-plus'] === 0 ? (
+                      <Badge variant="destructive" className="text-base px-4 py-1">
+                        Slutsålt
+                      </Badge>
+                    ) : (
+                      <Badge variant="secondary" className="bg-amber-100 text-amber-800 border-amber-200">
+                        Boka snabbt – tälten är nästan slut!
+                      </Badge>
+                    )}
                   </div>
                 </div>
 
-                {/* Extra items for festival */}
-                <div>
-                  <Label className="text-base font-semibold mb-3 block">Extraval</Label>
-                  <div className="space-y-4">
-                    {extraItems.map((item) => {
-                      if (item.type === 'counter') {
-                        return (
-                          <div key={item.id} className="space-y-2">
-                            <Label className="text-sm font-medium">
-                              {item.name} - {item.price} kr per extra person
-                            </Label>
-                            <div className="flex items-center space-x-3">
-                              <Button
-                                type="button"
-                                variant="outline"
-                                size="icon"
-                                onClick={() => setExtraPersons(Math.max(0, extraPersons - 1))}
-                                disabled={extraPersons === 0}
-                                className="h-8 w-8"
-                              >
-                                <Minus className="h-4 w-4" />
-                              </Button>
-                              <span className="w-8 text-center font-medium">{extraPersons}</span>
-                              <Button
-                                type="button"
-                                variant="outline"
-                                size="icon"
-                                onClick={() => setExtraPersons(Math.min(getMaxExtraPersons(), extraPersons + 1))}
-                                disabled={extraPersons >= getMaxExtraPersons() || !tentSize}
-                                className="h-8 w-8"
-                              >
-                                <Plus className="h-4 w-4" />
-                              </Button>
+                {/* Waitlist form when both tent types are sold out */}
+                {inventory['medium-tent'] === 0 && inventory['medium-plus'] === 0 ? (
+                  <WaitlistForm />
+                ) : (
+                  /* Extra items for festival */
+                  <div>
+                    <Label className="text-base font-semibold mb-3 block">Extraval</Label>
+                    <div className="space-y-4">
+                      {extraItems.map((item) => {
+                        if (item.type === 'counter') {
+                          return (
+                            <div key={item.id} className="space-y-2">
+                              <Label className="text-sm font-medium">
+                                {item.name} - {item.price} kr per extra person
+                              </Label>
+                              <div className="flex items-center space-x-3">
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="icon"
+                                  onClick={() => setExtraPersons(Math.max(0, extraPersons - 1))}
+                                  disabled={extraPersons === 0}
+                                  className="h-8 w-8"
+                                >
+                                  <Minus className="h-4 w-4" />
+                                </Button>
+                                <span className="w-8 text-center font-medium">{extraPersons}</span>
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="icon"
+                                  onClick={() => setExtraPersons(Math.min(getMaxExtraPersons(), extraPersons + 1))}
+                                  disabled={extraPersons >= getMaxExtraPersons() || !tentSize}
+                                  className="h-8 w-8"
+                                >
+                                  <Plus className="h-4 w-4" />
+                                </Button>
+                              </div>
+                              <p className="text-xs text-muted-foreground">Max 4 personer per tält</p>
                             </div>
-                            <p className="text-xs text-muted-foreground">Max 4 personer per tält</p>
+                          );
+                        }
+                        
+                        return (
+                          <div key={item.id} className="flex items-center space-x-2">
+                            <Checkbox
+                              id={item.id}
+                              checked={selectedExtras.includes(item.id)}
+                              onCheckedChange={() => handleExtraToggle(item.id)}
+                            />
+                            <Label htmlFor={item.id} className="text-sm cursor-pointer flex-1">
+                              {item.name} - {item.price} kr{item.type === 'daily' ? '/dag' : ''}
+                              {item.id === 'frukost' && <span className="text-muted-foreground ml-1">(kaffe/te, 1 ägg, 2 mackor, gröt)</span>}
+                              {item.id === 'fylleforsakring' && <span className="text-muted-foreground ml-1">(sanering vid kräkning/större spill; täcker inte hål/brännhål/skador)</span>}
+                            </Label>
                           </div>
                         );
-                      }
-                      
-                      return (
-                        <div key={item.id} className="flex items-center space-x-2">
-                          <Checkbox
-                            id={item.id}
-                            checked={selectedExtras.includes(item.id)}
-                            onCheckedChange={() => handleExtraToggle(item.id)}
-                          />
-                          <Label htmlFor={item.id} className="text-sm cursor-pointer flex-1">
-                            {item.name} - {item.price} kr{item.type === 'daily' ? '/dag' : ''}
-                            {item.id === 'frukost' && <span className="text-muted-foreground ml-1">(kaffe/te, 1 ägg, 2 mackor, gröt)</span>}
-                            {item.id === 'fylleforsakring' && <span className="text-muted-foreground ml-1">(sanering vid kräkning/större spill; täcker inte hål/brännhål/skador)</span>}
-                          </Label>
-                        </div>
-                      );
-                    })}
+                      })}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             ) : (
               /* Halvpall booking form */

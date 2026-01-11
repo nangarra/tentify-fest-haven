@@ -110,6 +110,39 @@ export type Database = {
         }
         Relationships: []
       }
+      waitlist: {
+        Row: {
+          contacted: boolean
+          contacted_at: string | null
+          created_at: string
+          email: string
+          festival: string
+          id: string
+          name: string
+          phone: string
+        }
+        Insert: {
+          contacted?: boolean
+          contacted_at?: string | null
+          created_at?: string
+          email: string
+          festival?: string
+          id?: string
+          name: string
+          phone: string
+        }
+        Update: {
+          contacted?: boolean
+          contacted_at?: string | null
+          created_at?: string
+          email?: string
+          festival?: string
+          id?: string
+          name?: string
+          phone?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
