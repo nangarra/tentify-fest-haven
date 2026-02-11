@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet";
 import { Card, CardContent } from "@/components/ui/card";
+import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -386,6 +387,12 @@ const HyrGlamping = () => {
                 </div>
                 <p className="mt-8 text-white/80 text-lg">
                   Ring oss för offert eller för att boka ditt tält idag.
+                </p>
+                <p className="mt-4 text-white/80">
+                  <Link to="/talt-brollop" className="underline hover:text-white font-medium">
+                    Hyra tält bröllop Skåne
+                  </Link>{" "}
+                  – läs mer om våra bröllopstjänster.
                 </p>
               </div>
             </div>

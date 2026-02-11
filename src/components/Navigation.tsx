@@ -86,6 +86,14 @@ const Navigation = () => {
               >
                 Hyr Glamping
               </Link>
+              <Link
+                to="/talt-brollop"
+                className={`text-foreground hover:text-primary transition-smooth font-medium ${
+                  location.pathname === "/talt-brollop" ? "text-primary" : ""
+                }`}
+              >
+                Tält bröllop
+              </Link>
               {isHomePage ? (
                 <button
                   onClick={() => scrollToSection("galleri")}
@@ -188,6 +196,15 @@ const Navigation = () => {
                 onClick={() => setIsOpen(false)}
               >
                 Hyr Glamping
+              </Link>
+              <Link
+                to="/talt-brollop"
+                className={`block px-3 py-2 text-foreground hover:text-primary transition-smooth font-medium w-full text-left ${
+                  location.pathname === "/talt-brollop" ? "text-primary" : ""
+                }`}
+                onClick={() => setIsOpen(false)}
+              >
+                Tält bröllop
               </Link>
               {isHomePage ? (
                 <button
