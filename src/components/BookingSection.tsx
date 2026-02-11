@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { 
@@ -174,13 +175,19 @@ const BookingSection = () => {
               </p>
             </div>
 
-            <div className="text-center">
+            <div className="text-center space-y-4">
               <Button 
                 onClick={scrollToBooking}
                 className="btn-hero text-lg px-8 py-6"
               >
                 Boka ditt tält nu
               </Button>
+              <p className="text-muted-foreground text-sm">
+                Planerar ni bröllop?{" "}
+                <Link to="/talt-brollop" className="text-primary hover:underline font-medium">
+                  Läs mer om att hyra tält till bröllop här
+                </Link>.
+              </p>
             </div>
           </Card>
         </div>
