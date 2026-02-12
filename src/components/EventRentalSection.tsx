@@ -131,7 +131,7 @@ Mvh,
 
           <div className="mt-8 text-center">
             <p className="text-muted-foreground text-sm">
-              📞 Ring oss på <strong>0701-234567</strong> för direktkontakt
+              📞 Ring oss på <strong>0735133709</strong> för direktkontakt
               <br />
               📧 Eller mejla till <strong>info@tentify.se</strong>
             </p>
