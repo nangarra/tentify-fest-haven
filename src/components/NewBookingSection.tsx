@@ -43,11 +43,14 @@ const extraItems: ExtraItem[] = [
   { id: "upgrade-dubbel", name: "Uppgradera till dubbelsäng", price: 500, type: "once" },
   { id: "extra-stol", name: "Extra stol", price: 150, type: "once" },
   { id: "handduk", name: "Handduk", price: 80, type: "once" },
-  { id: "vattenkokare", name: "Vattenkokare", price: 80, type: "once" },
   { id: "frukost", name: "Frukost", price: 79, type: "daily" },
   { id: "extra-person", name: "Extra person i tältet", price: 500, type: "counter" },
   { id: "fylleforsakring", name: "Fylleförsäkring", price: 1000, type: "once" }
 ];
+
+// Scheduled release for 5 extra Medium tents:
+// Friday 1 May 2026 at 08:00 Europe/Stockholm = 06:00 UTC (CEST = UTC+2)
+const EXTRA_MEDIUM_RELEASE_AT = new Date('2026-05-01T06:00:00Z');
 
 const NewBookingSection = () => {
   const [bookingType, setBookingType] = useState<'festival' | 'halvpall'>('festival');
