@@ -582,7 +582,7 @@ const NewBookingSection = () => {
                 </div>
 
                 {/* Waitlist form when both tent types are sold out */}
-                {inventory['medium-tent'] === 0 && inventory['medium-plus'] === 0 ? (
+                {mediumAvailable === 0 && mediumPlusAvailable === 0 ? (
                   <WaitlistForm />
                 ) : (
                   /* Extra items for festival */
