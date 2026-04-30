@@ -22,10 +22,10 @@ const Gallery = () => {
   const prev = () => setActive((p) => (p - 1 + galleryImages.length) % galleryImages.length);
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="w-full mx-auto">
       {/* Main image */}
       <div
-        className="relative h-72 sm:h-96 md:h-[500px] overflow-hidden rounded-xl shadow-elegant cursor-zoom-in group"
+        className="relative w-full aspect-[3/2] overflow-hidden rounded-xl shadow-elegant cursor-zoom-in group bg-muted/40"
         onClick={() => setLightbox(true)}
       >
         {galleryImages.map((img, i) => (
@@ -34,7 +34,7 @@ const Gallery = () => {
             src={img.src}
             alt={img.alt}
             loading={i === 0 ? "eager" : "lazy"}
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+            className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-500 ${
               i === active ? "opacity-100" : "opacity-0"
             }`}
           />
@@ -135,7 +135,10 @@ const AboutSection = () => {
           </p>
 
           {/* Gallery */}
-          <div className="mb-16">
+          <div className="mb-16 max-w-5xl mx-auto">
+            <p className="text-sm text-muted-foreground/80 italic mb-4 text-center">
+              Detta är våra nya visuella bilder från vårt koncept 2026. Viss variation från den faktiska setupen kan förekomma.
+            </p>
             <Gallery />
           </div>
 
