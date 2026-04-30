@@ -243,6 +243,9 @@ const NewBookingSection = () => {
     try {
       const { supabase } = await import("@/integrations/supabase/client");
       
+      // Determine which inventory batch to draw from for festival Medium bookings
+      let tentBatch: string | null = null;
+
       // Check inventory before booking (for festival bookings)
       if (bookingType === 'festival') {
         const { data: inventoryData, error: inventoryError } = await supabase.rpc('get_tent_availability', {
@@ -250,20 +253,30 @@ const NewBookingSection = () => {
         });
 
         if (inventoryError) throw inventoryError;
-        
-        const tentAvailability = inventoryData?.find((item: any) => 
-          item.tent_type === tentSize || 
-          (tentSize === 'singel' && item.tent_type === 'singel') ||
-          (tentSize === 'dubbel' && item.tent_type === 'dubbel')
-        );
-        
-        if (!tentAvailability || tentAvailability.available_count <= 0) {
-          toast.error("Tyvärr är detta tält utsålt. Vänligen välj ett annat alternativ.");
-          setIsSubmitting(false);
-          return;
+
+        const rows = (inventoryData ?? []) as any[];
+        const findAvail = (t: string) => rows.find((i: any) => i.tent_type === t)?.available_count ?? 0;
+
+        if (tentSize === 'singel') {
+          // Prefer the original Medium batch first; fall back to extra batch if released
+          if (findAvail('singel') > 0) {
+            tentBatch = null;
+          } else if (isExtraReleased && findAvail('medium-extra') > 0) {
+            tentBatch = 'medium-extra';
+          } else {
+            toast.error("Tyvärr är detta tält utsålt. Vänligen välj ett annat alternativ.");
+            setIsSubmitting(false);
+            return;
+          }
+        } else if (tentSize === 'dubbel') {
+          if (findAvail('dubbel') <= 0) {
+            toast.error("Tyvärr är detta tält utsålt. Vänligen välj ett annat alternativ.");
+            setIsSubmitting(false);
+            return;
+          }
         }
       }
-      
+
       // Create booking record with all details
       const bookingData = {
         name,
@@ -275,11 +288,12 @@ const NewBookingSection = () => {
           festival: bookingType === 'festival' ? festival : null,
           address: bookingType === 'halvpall' ? { address, postalCode, city, country } : null,
           tentSize,
+          tentBatch,
           selectedExtras,
           extraPersons: bookingType === 'festival' ? extraPersons : 0,
           days: calculateDays(),
           total: calculateTotal(),
-          deposit: calculateDeposit()
+          prepayment: calculateDeposit()
         }
       };
 
