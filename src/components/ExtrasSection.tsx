@@ -36,12 +36,6 @@ const extraItems = [
     description: "Mjuk och bekväm handduk för duschar"
   },
   {
-    icon: Coffee,
-    title: "Vattenkokare",
-    price: "80 kr",
-    description: "Perfekt för morgonkaffe eller te"
-  },
-  {
     icon: Utensils,
     title: "Frukost",
     price: "79 kr/dag",
