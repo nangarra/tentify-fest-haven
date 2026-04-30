@@ -43,11 +43,14 @@ const extraItems: ExtraItem[] = [
   { id: "upgrade-dubbel", name: "Uppgradera till dubbelsäng", price: 500, type: "once" },
   { id: "extra-stol", name: "Extra stol", price: 150, type: "once" },
   { id: "handduk", name: "Handduk", price: 80, type: "once" },
-  { id: "vattenkokare", name: "Vattenkokare", price: 80, type: "once" },
   { id: "frukost", name: "Frukost", price: 79, type: "daily" },
   { id: "extra-person", name: "Extra person i tältet", price: 500, type: "counter" },
   { id: "fylleforsakring", name: "Fylleförsäkring", price: 1000, type: "once" }
 ];
+
+// Scheduled release for 5 extra Medium tents:
+// Friday 1 May 2026 at 08:00 Europe/Stockholm = 06:00 UTC (CEST = UTC+2)
+const EXTRA_MEDIUM_RELEASE_AT = new Date('2026-05-01T06:00:00Z');
 
 const NewBookingSection = () => {
   const [bookingType, setBookingType] = useState<'festival' | 'halvpall'>('festival');
@@ -57,7 +60,9 @@ const NewBookingSection = () => {
   const [selectedExtras, setSelectedExtras] = useState<string[]>([]);
   const [extraPersons, setExtraPersons] = useState(0);
   const [bookingDays] = useState(4); // Sweden Rock is 4 days
-  const [inventory, setInventory] = useState({ 'medium-tent': 0, 'medium-plus': 0 });
+  const [inventory, setInventory] = useState({ 'medium-tent': 0, 'medium-plus': 0, 'medium-extra': 0 });
+  const [extraReleaseAt, setExtraReleaseAt] = useState<Date>(EXTRA_MEDIUM_RELEASE_AT);
+  const [now, setNow] = useState<Date>(new Date());
   
   // Halvpall specific states
   const [address, setAddress] = useState("");
@@ -84,6 +89,12 @@ const NewBookingSection = () => {
     fetchInventory();
   }, []);
 
+  // Tick clock every second so countdown updates and extras unlock automatically
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
   const fetchInventory = async () => {
     const { supabase } = await import("@/integrations/supabase/client");
     const { data, error } = await supabase.rpc('get_tent_availability', { p_festival: 'sweden-rock' });
@@ -93,14 +104,16 @@ const NewBookingSection = () => {
       return;
     }
 
-    const inventoryMap = data.reduce((acc: any, item: any) => {
-      // Map old internal IDs to new display IDs
-      const displayType = item.tent_type === 'singel' ? 'medium-tent' : 
-                          item.tent_type === 'dubbel' ? 'medium-plus' : 
+    const inventoryMap = (data as any[]).reduce((acc: any, item: any) => {
+      const displayType = item.tent_type === 'singel' ? 'medium-tent' :
+                          item.tent_type === 'dubbel' ? 'medium-plus' :
                           item.tent_type;
       acc[displayType] = item.available_count;
+      if (item.tent_type === 'medium-extra' && item.release_at) {
+        setExtraReleaseAt(new Date(item.release_at));
+      }
       return acc;
-    }, { 'medium-tent': 0, 'medium-plus': 0 });
+    }, { 'medium-tent': 0, 'medium-plus': 0, 'medium-extra': 0 });
 
     setInventory(inventoryMap);
   };
@@ -188,6 +201,23 @@ const NewBookingSection = () => {
 
   const calculateDeposit = () => Math.round(calculateTotal() * 0.2);
 
+  // Combined Medium availability: original batch + extra batch (if released)
+  const isExtraReleased = now >= extraReleaseAt;
+  const mediumAvailable = inventory['medium-tent'] + (isExtraReleased ? inventory['medium-extra'] : 0);
+  const mediumPlusAvailable = inventory['medium-plus'];
+
+  // Countdown formatter
+  const formatCountdown = () => {
+    const diff = extraReleaseAt.getTime() - now.getTime();
+    if (diff <= 0) return null;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+    return { days, hours, minutes, seconds };
+  };
+
+
   const handleProceedToDetails = () => {
     if (bookingType === 'festival' && (!festival || !tentSize)) {
       toast.error("Välj festival och tältstorlek för att fortsätta");
@@ -213,6 +243,9 @@ const NewBookingSection = () => {
     try {
       const { supabase } = await import("@/integrations/supabase/client");
       
+      // Determine which inventory batch to draw from for festival Medium bookings
+      let tentBatch: string | null = null;
+
       // Check inventory before booking (for festival bookings)
       if (bookingType === 'festival') {
         const { data: inventoryData, error: inventoryError } = await supabase.rpc('get_tent_availability', {
@@ -220,20 +253,30 @@ const NewBookingSection = () => {
         });
 
         if (inventoryError) throw inventoryError;
-        
-        const tentAvailability = inventoryData?.find((item: any) => 
-          item.tent_type === tentSize || 
-          (tentSize === 'singel' && item.tent_type === 'singel') ||
-          (tentSize === 'dubbel' && item.tent_type === 'dubbel')
-        );
-        
-        if (!tentAvailability || tentAvailability.available_count <= 0) {
-          toast.error("Tyvärr är detta tält utsålt. Vänligen välj ett annat alternativ.");
-          setIsSubmitting(false);
-          return;
+
+        const rows = (inventoryData ?? []) as any[];
+        const findAvail = (t: string) => rows.find((i: any) => i.tent_type === t)?.available_count ?? 0;
+
+        if (tentSize === 'singel') {
+          // Prefer the original Medium batch first; fall back to extra batch if released
+          if (findAvail('singel') > 0) {
+            tentBatch = null;
+          } else if (isExtraReleased && findAvail('medium-extra') > 0) {
+            tentBatch = 'medium-extra';
+          } else {
+            toast.error("Tyvärr är detta tält utsålt. Vänligen välj ett annat alternativ.");
+            setIsSubmitting(false);
+            return;
+          }
+        } else if (tentSize === 'dubbel') {
+          if (findAvail('dubbel') <= 0) {
+            toast.error("Tyvärr är detta tält utsålt. Vänligen välj ett annat alternativ.");
+            setIsSubmitting(false);
+            return;
+          }
         }
       }
-      
+
       // Create booking record with all details
       const bookingData = {
         name,
@@ -245,11 +288,12 @@ const NewBookingSection = () => {
           festival: bookingType === 'festival' ? festival : null,
           address: bookingType === 'halvpall' ? { address, postalCode, city, country } : null,
           tentSize,
+          tentBatch,
           selectedExtras,
           extraPersons: bookingType === 'festival' ? extraPersons : 0,
           days: calculateDays(),
           total: calculateTotal(),
-          deposit: calculateDeposit()
+          prepayment: calculateDeposit()
         }
       };
 
@@ -431,13 +475,45 @@ const NewBookingSection = () => {
 
                 <div>
                   <Label className="text-base font-semibold mb-3 block">Tältstorlek</Label>
+
+                  {/* Countdown for the 5 extra Medium tents */}
+                  {!isExtraReleased && inventory['medium-extra'] > 0 && (() => {
+                    const c = formatCountdown();
+                    if (!c) return null;
+                    return (
+                      <Card className="p-4 mb-4 bg-primary/5 border-primary/30">
+                        <p className="text-sm font-semibold text-foreground mb-2">
+                          5 extra Medium-tält släpps om:
+                        </p>
+                        <div className="flex gap-3 text-center">
+                          {[
+                            { label: 'dagar', val: c.days },
+                            { label: 'tim', val: c.hours },
+                            { label: 'min', val: c.minutes },
+                            { label: 'sek', val: c.seconds },
+                          ].map((u) => (
+                            <div key={u.label} className="flex-1 bg-background/70 rounded-lg py-2">
+                              <div className="text-2xl font-bold text-primary tabular-nums">
+                                {u.val.toString().padStart(2, '0')}
+                              </div>
+                              <div className="text-xs text-muted-foreground">{u.label}</div>
+                            </div>
+                          ))}
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-2">
+                          Släpps fredag 1 maj 2026 kl. 08:00 (svensk tid).
+                        </p>
+                      </Card>
+                    );
+                  })()}
+
                   <div className="grid md:grid-cols-2 gap-4">
                     {[
                       { 
                         value: "singel", 
                         label: "Medium tent", 
                         price: "7 800 kr", 
-                        available: inventory['medium-tent'],
+                        available: mediumAvailable,
                         image: dubbelsangImage,
                         alt: "Glampingtält – medium tent"
                       },
@@ -445,7 +521,7 @@ const NewBookingSection = () => {
                         value: "dubbel", 
                         label: "Medium +", 
                         price: "9 200 kr", 
-                        available: inventory['medium-plus'],
+                        available: mediumPlusAvailable,
                         image: enkelsangImage,
                         alt: "Glampingtält – medium +"
                       }
@@ -493,7 +569,7 @@ const NewBookingSection = () => {
                   
                   {/* Sold out badge or availability warning */}
                   <div className="mt-3">
-                    {inventory['medium-tent'] === 0 && inventory['medium-plus'] === 0 ? (
+                    {mediumAvailable === 0 && mediumPlusAvailable === 0 ? (
                       <Badge variant="destructive" className="text-base px-4 py-1">
                         Slutsålt
                       </Badge>
@@ -506,7 +582,7 @@ const NewBookingSection = () => {
                 </div>
 
                 {/* Waitlist form when both tent types are sold out */}
-                {inventory['medium-tent'] === 0 && inventory['medium-plus'] === 0 ? (
+                {mediumAvailable === 0 && mediumPlusAvailable === 0 ? (
                   <WaitlistForm />
                 ) : (
                   /* Extra items for festival */
@@ -798,13 +874,12 @@ const NewBookingSection = () => {
                   <span>{calculateTotal().toLocaleString()} kr</span>
                 </div>
                 <div className="flex justify-between text-sm text-muted-foreground mt-1">
-                  <span>Förskott (20%, ej återbetalningsbart):</span>
+                  <span>Att betala nu (20% av totalt, ej återbetalningsbart):</span>
                   <span>{calculateDeposit().toLocaleString()} kr</span>
                 </div>
-                <div className="flex justify-between text-sm text-muted-foreground">
-                  <span>Deposition:</span>
-                  <span>1 500 kr</span>
-                </div>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Betala 20 % av totala bokningsvärdet nu.
+                </p>
               </div>
             </Card>
 

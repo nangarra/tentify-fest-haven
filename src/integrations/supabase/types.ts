@@ -65,6 +65,7 @@ export type Database = {
           created_at: string
           festival: string
           id: string
+          release_at: string | null
           tent_type: string
           total_count: number
           updated_at: string
@@ -74,6 +75,7 @@ export type Database = {
           created_at?: string
           festival: string
           id?: string
+          release_at?: string | null
           tent_type: string
           total_count?: number
           updated_at?: string
@@ -83,6 +85,7 @@ export type Database = {
           created_at?: string
           festival?: string
           id?: string
+          release_at?: string | null
           tent_type?: string
           total_count?: number
           updated_at?: string
@@ -157,6 +160,7 @@ export type Database = {
         Returns: {
           available_count: number
           booked_count: number
+          release_at: string
           tent_type: string
           total_count: number
         }[]

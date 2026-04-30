@@ -4,7 +4,6 @@ import {
   Bed, 
   Armchair, 
   Bath, 
-  Coffee,
   Utensils,
   Package
 } from "lucide-react";
@@ -34,12 +33,6 @@ const extraItems = [
     title: "Handduk",
     price: "80 kr",
     description: "Mjuk och bekväm handduk för duschar"
-  },
-  {
-    icon: Coffee,
-    title: "Vattenkokare",
-    price: "80 kr",
-    description: "Perfekt för morgonkaffe eller te"
   },
   {
     icon: Utensils,
