@@ -60,7 +60,9 @@ const NewBookingSection = () => {
   const [selectedExtras, setSelectedExtras] = useState<string[]>([]);
   const [extraPersons, setExtraPersons] = useState(0);
   const [bookingDays] = useState(4); // Sweden Rock is 4 days
-  const [inventory, setInventory] = useState({ 'medium-tent': 0, 'medium-plus': 0 });
+  const [inventory, setInventory] = useState({ 'medium-tent': 0, 'medium-plus': 0, 'medium-extra': 0 });
+  const [extraReleaseAt, setExtraReleaseAt] = useState<Date>(EXTRA_MEDIUM_RELEASE_AT);
+  const [now, setNow] = useState<Date>(new Date());
   
   // Halvpall specific states
   const [address, setAddress] = useState("");
