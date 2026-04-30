@@ -475,13 +475,45 @@ const NewBookingSection = () => {
 
                 <div>
                   <Label className="text-base font-semibold mb-3 block">Tältstorlek</Label>
+
+                  {/* Countdown for the 5 extra Medium tents */}
+                  {!isExtraReleased && inventory['medium-extra'] > 0 && (() => {
+                    const c = formatCountdown();
+                    if (!c) return null;
+                    return (
+                      <Card className="p-4 mb-4 bg-primary/5 border-primary/30">
+                        <p className="text-sm font-semibold text-foreground mb-2">
+                          5 extra Medium-tält släpps om:
+                        </p>
+                        <div className="flex gap-3 text-center">
+                          {[
+                            { label: 'dagar', val: c.days },
+                            { label: 'tim', val: c.hours },
+                            { label: 'min', val: c.minutes },
+                            { label: 'sek', val: c.seconds },
+                          ].map((u) => (
+                            <div key={u.label} className="flex-1 bg-background/70 rounded-lg py-2">
+                              <div className="text-2xl font-bold text-primary tabular-nums">
+                                {u.val.toString().padStart(2, '0')}
+                              </div>
+                              <div className="text-xs text-muted-foreground">{u.label}</div>
+                            </div>
+                          ))}
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-2">
+                          Släpps fredag 1 maj 2026 kl. 08:00 (svensk tid).
+                        </p>
+                      </Card>
+                    );
+                  })()}
+
                   <div className="grid md:grid-cols-2 gap-4">
                     {[
                       { 
                         value: "singel", 
                         label: "Medium tent", 
                         price: "7 800 kr", 
-                        available: inventory['medium-tent'],
+                        available: mediumAvailable,
                         image: dubbelsangImage,
                         alt: "Glampingtält – medium tent"
                       },
@@ -489,7 +521,7 @@ const NewBookingSection = () => {
                         value: "dubbel", 
                         label: "Medium +", 
                         price: "9 200 kr", 
-                        available: inventory['medium-plus'],
+                        available: mediumPlusAvailable,
                         image: enkelsangImage,
                         alt: "Glampingtält – medium +"
                       }
@@ -537,7 +569,7 @@ const NewBookingSection = () => {
                   
                   {/* Sold out badge or availability warning */}
                   <div className="mt-3">
-                    {inventory['medium-tent'] === 0 && inventory['medium-plus'] === 0 ? (
+                    {mediumAvailable === 0 && mediumPlusAvailable === 0 ? (
                       <Badge variant="destructive" className="text-base px-4 py-1">
                         Slutsålt
                       </Badge>
