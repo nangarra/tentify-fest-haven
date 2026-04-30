@@ -89,6 +89,12 @@ const NewBookingSection = () => {
     fetchInventory();
   }, []);
 
+  // Tick clock every second so countdown updates and extras unlock automatically
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
   const fetchInventory = async () => {
     const { supabase } = await import("@/integrations/supabase/client");
     const { data, error } = await supabase.rpc('get_tent_availability', { p_festival: 'sweden-rock' });
@@ -98,14 +104,16 @@ const NewBookingSection = () => {
       return;
     }
 
-    const inventoryMap = data.reduce((acc: any, item: any) => {
-      // Map old internal IDs to new display IDs
-      const displayType = item.tent_type === 'singel' ? 'medium-tent' : 
-                          item.tent_type === 'dubbel' ? 'medium-plus' : 
+    const inventoryMap = (data as any[]).reduce((acc: any, item: any) => {
+      const displayType = item.tent_type === 'singel' ? 'medium-tent' :
+                          item.tent_type === 'dubbel' ? 'medium-plus' :
                           item.tent_type;
       acc[displayType] = item.available_count;
+      if (item.tent_type === 'medium-extra' && item.release_at) {
+        setExtraReleaseAt(new Date(item.release_at));
+      }
       return acc;
-    }, { 'medium-tent': 0, 'medium-plus': 0 });
+    }, { 'medium-tent': 0, 'medium-plus': 0, 'medium-extra': 0 });
 
     setInventory(inventoryMap);
   };
