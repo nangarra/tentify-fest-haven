@@ -135,7 +135,10 @@ const AboutSection = () => {
           </p>
 
           {/* Gallery */}
-          <div className="mb-16">
+          <div className="mb-16 max-w-5xl mx-auto">
+            <p className="text-sm text-muted-foreground/80 italic mb-4 text-center">
+              Detta är våra nya visuella bilder från vårt koncept 2026. Viss variation från den faktiska setupen kan förekomma.
+            </p>
             <Gallery />
           </div>
 
