@@ -22,10 +22,10 @@ const Gallery = () => {
   const prev = () => setActive((p) => (p - 1 + galleryImages.length) % galleryImages.length);
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="w-full mx-auto">
       {/* Main image */}
       <div
-        className="relative h-72 sm:h-96 md:h-[500px] overflow-hidden rounded-xl shadow-elegant cursor-zoom-in group"
+        className="relative w-full aspect-[3/2] overflow-hidden rounded-xl shadow-elegant cursor-zoom-in group bg-muted/40"
         onClick={() => setLightbox(true)}
       >
         {galleryImages.map((img, i) => (
@@ -34,7 +34,7 @@ const Gallery = () => {
             src={img.src}
             alt={img.alt}
             loading={i === 0 ? "eager" : "lazy"}
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+            className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-500 ${
               i === active ? "opacity-100" : "opacity-0"
             }`}
           />
