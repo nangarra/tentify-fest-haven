@@ -4,7 +4,6 @@ import {
   Bed, 
   Armchair, 
   Bath, 
-  Coffee,
   Utensils,
   Package
 } from "lucide-react";
