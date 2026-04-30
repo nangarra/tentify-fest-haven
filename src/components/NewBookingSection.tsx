@@ -874,13 +874,12 @@ const NewBookingSection = () => {
                   <span>{calculateTotal().toLocaleString()} kr</span>
                 </div>
                 <div className="flex justify-between text-sm text-muted-foreground mt-1">
-                  <span>Förskott (20%, ej återbetalningsbart):</span>
+                  <span>Att betala nu (20% av totalt, ej återbetalningsbart):</span>
                   <span>{calculateDeposit().toLocaleString()} kr</span>
                 </div>
-                <div className="flex justify-between text-sm text-muted-foreground">
-                  <span>Deposition:</span>
-                  <span>1 500 kr</span>
-                </div>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Betala 20 % av totala bokningsvärdet nu.
+                </p>
               </div>
             </Card>
 
