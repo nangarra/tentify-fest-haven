@@ -201,6 +201,23 @@ const NewBookingSection = () => {
 
   const calculateDeposit = () => Math.round(calculateTotal() * 0.2);
 
+  // Combined Medium availability: original batch + extra batch (if released)
+  const isExtraReleased = now >= extraReleaseAt;
+  const mediumAvailable = inventory['medium-tent'] + (isExtraReleased ? inventory['medium-extra'] : 0);
+  const mediumPlusAvailable = inventory['medium-plus'];
+
+  // Countdown formatter
+  const formatCountdown = () => {
+    const diff = extraReleaseAt.getTime() - now.getTime();
+    if (diff <= 0) return null;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+    return { days, hours, minutes, seconds };
+  };
+
+
   const handleProceedToDetails = () => {
     if (bookingType === 'festival' && (!festival || !tentSize)) {
       toast.error("Välj festival och tältstorlek för att fortsätta");
