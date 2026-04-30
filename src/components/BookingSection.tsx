@@ -15,12 +15,12 @@ import {
   ChevronLeft, 
   ChevronRight 
 } from "lucide-react";
-import akesCampingFacilities from "@/assets/akes-camping-facilities.jpg";
-import akesCampingMap from "@/assets/akes-camping-map.png";
+import akesCampingFacilities from "@/assets/akes-camping-tentify.webp";
+import akesCampingMap from "@/assets/akes-camping-sweden-rock-map.webp";
 
 const campingImages = [
-  { src: akesCampingFacilities, alt: "ÅKEs Camping – faciliteter med toaletter, camping, parkering och personal" },
-  { src: akesCampingMap, alt: "Karta över gångvägen från ÅKEs Camping till Sweden Rock Festival" }
+  { src: akesCampingFacilities, alt: "ÅKEs Camping – naturnära boende nära Sweden Rock Festival" },
+  { src: akesCampingMap, alt: "Karta – gångvägen från ÅKEs Camping till Sweden Rock Festival" }
 ];
 
 const BookingSection = () => {
