@@ -203,8 +203,9 @@ const NewBookingSection = () => {
 
   // Combined Medium availability: original batch + extra batch (if released)
   const isExtraReleased = now >= extraReleaseAt;
-  const mediumAvailable = inventory['medium-tent'] + (isExtraReleased ? inventory['medium-extra'] : 0);
-  const mediumPlusAvailable = inventory['medium-plus'];
+  const isSwedenRockSoldOut = bookingType === 'festival' && festival === 'sweden-rock';
+  const mediumAvailable = isSwedenRockSoldOut ? 0 : inventory['medium-tent'] + (isExtraReleased ? inventory['medium-extra'] : 0);
+  const mediumPlusAvailable = isSwedenRockSoldOut ? 0 : inventory['medium-plus'];
 
   // Countdown formatter
   const formatCountdown = () => {
@@ -219,6 +220,11 @@ const NewBookingSection = () => {
 
 
   const handleProceedToDetails = () => {
+    if (isSwedenRockSoldOut) {
+      toast.error("Sweden Rock är slutsålt.");
+      return;
+    }
+
     if (bookingType === 'festival' && (!festival || !tentSize)) {
       toast.error("Välj festival och tältstorlek för att fortsätta");
       return;
@@ -248,6 +254,12 @@ const NewBookingSection = () => {
 
       // Check inventory before booking (for festival bookings)
       if (bookingType === 'festival') {
+        if (festival === 'sweden-rock') {
+          toast.error("Sweden Rock är slutsålt.");
+          setIsSubmitting(false);
+          return;
+        }
+
         const { data: inventoryData, error: inventoryError } = await supabase.rpc('get_tent_availability', {
           p_festival: festival
         });
@@ -886,8 +898,9 @@ const NewBookingSection = () => {
                   onClick={handleProceedToDetails}
                   size="lg" 
                   className="btn-hero text-lg px-12 py-4"
+                  disabled={isSwedenRockSoldOut}
                 >
-                  Gå vidare till uppgifter
+                  {isSwedenRockSoldOut ? "Slutsålt" : "Gå vidare till uppgifter"}
                 </Button>
               </div>
             ) : (
@@ -972,11 +985,11 @@ const NewBookingSection = () => {
                     onClick={handleFinalBooking}
                     size="lg" 
                     className="btn-hero text-lg px-12 py-4 w-full"
-                    disabled={!acceptedTerms || isSubmitting || isSubmitted}
-                    aria-disabled={isSubmitting || isSubmitted}
+                    disabled={isSwedenRockSoldOut || !acceptedTerms || isSubmitting || isSubmitted}
+                    aria-disabled={isSwedenRockSoldOut || isSubmitting || isSubmitted}
                     style={isSubmitted ? { opacity: 0.6, pointerEvents: 'none' } : {}}
                   >
-                    {isSubmitting ? "Skickar..." : isSubmitted ? "Bokning skickad" : "Slutför bokning"}
+                    {isSwedenRockSoldOut ? "Slutsålt" : isSubmitting ? "Skickar..." : isSubmitted ? "Bokning skickad" : "Slutför bokning"}
                   </Button>
 
                   {/* Confirmation block */}
