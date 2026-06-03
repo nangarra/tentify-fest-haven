@@ -203,8 +203,9 @@ const NewBookingSection = () => {
 
   // Combined Medium availability: original batch + extra batch (if released)
   const isExtraReleased = now >= extraReleaseAt;
-  const mediumAvailable = inventory['medium-tent'] + (isExtraReleased ? inventory['medium-extra'] : 0);
-  const mediumPlusAvailable = inventory['medium-plus'];
+  const isSwedenRockSoldOut = bookingType === 'festival' && festival === 'sweden-rock';
+  const mediumAvailable = isSwedenRockSoldOut ? 0 : inventory['medium-tent'] + (isExtraReleased ? inventory['medium-extra'] : 0);
+  const mediumPlusAvailable = isSwedenRockSoldOut ? 0 : inventory['medium-plus'];
 
   // Countdown formatter
   const formatCountdown = () => {
@@ -219,6 +220,11 @@ const NewBookingSection = () => {
 
 
   const handleProceedToDetails = () => {
+    if (isSwedenRockSoldOut) {
+      toast.error("Sweden Rock är slutsålt.");
+      return;
+    }
+
     if (bookingType === 'festival' && (!festival || !tentSize)) {
       toast.error("Välj festival och tältstorlek för att fortsätta");
       return;
@@ -248,6 +254,12 @@ const NewBookingSection = () => {
 
       // Check inventory before booking (for festival bookings)
       if (bookingType === 'festival') {
+        if (festival === 'sweden-rock') {
+          toast.error("Sweden Rock är slutsålt.");
+          setIsSubmitting(false);
+          return;
+        }
+
         const { data: inventoryData, error: inventoryError } = await supabase.rpc('get_tent_availability', {
           p_festival: festival
         });
