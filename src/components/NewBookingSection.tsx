@@ -898,8 +898,9 @@ const NewBookingSection = () => {
                   onClick={handleProceedToDetails}
                   size="lg" 
                   className="btn-hero text-lg px-12 py-4"
+                  disabled={isSwedenRockSoldOut}
                 >
-                  Gå vidare till uppgifter
+                  {isSwedenRockSoldOut ? "Slutsålt" : "Gå vidare till uppgifter"}
                 </Button>
               </div>
             ) : (
@@ -984,11 +985,11 @@ const NewBookingSection = () => {
                     onClick={handleFinalBooking}
                     size="lg" 
                     className="btn-hero text-lg px-12 py-4 w-full"
-                    disabled={!acceptedTerms || isSubmitting || isSubmitted}
-                    aria-disabled={isSubmitting || isSubmitted}
+                    disabled={isSwedenRockSoldOut || !acceptedTerms || isSubmitting || isSubmitted}
+                    aria-disabled={isSwedenRockSoldOut || isSubmitting || isSubmitted}
                     style={isSubmitted ? { opacity: 0.6, pointerEvents: 'none' } : {}}
                   >
-                    {isSubmitting ? "Skickar..." : isSubmitted ? "Bokning skickad" : "Slutför bokning"}
+                    {isSwedenRockSoldOut ? "Slutsålt" : isSubmitting ? "Skickar..." : isSubmitted ? "Bokning skickad" : "Slutför bokning"}
                   </Button>
 
                   {/* Confirmation block */}
