@@ -1,0 +1,1 @@
+UPDATE public.tent_inventory SET available_count = 0 WHERE festival = 'sweden-rock' AND tent_type IN ('singel', 'medium-extra');
