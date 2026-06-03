@@ -567,18 +567,14 @@ const NewBookingSection = () => {
                     ))}
                   </div>
                   
-                  {/* Sold out badge or availability warning */}
-                  <div className="mt-3">
-                    {mediumAvailable === 0 && mediumPlusAvailable === 0 ? (
+                  {/* Sold out badge */}
+                  {mediumAvailable === 0 && mediumPlusAvailable === 0 && (
+                    <div className="mt-3">
                       <Badge variant="destructive" className="text-base px-4 py-1">
                         Slutsålt
                       </Badge>
-                    ) : (
-                      <Badge variant="secondary" className="bg-amber-100 text-amber-800 border-amber-200">
-                        Boka snabbt – tälten är nästan slut!
-                      </Badge>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Waitlist form when both tent types are sold out */}
