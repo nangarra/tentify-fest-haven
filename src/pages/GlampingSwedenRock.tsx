@@ -153,6 +153,9 @@ const GlampingSwedenRock = () => {
           content="Vill du bo bekvämt under Sweden Rock 2027? Skriv upp dig på Tentifys väntelista för glamping med färdigt tält, sovplats, täcke, kudde och mysig inredning."
         />
         <link rel="canonical" href="https://tentify.se/glamping-sweden-rock" />
+        <link rel="alternate" hrefLang="sv" href="https://tentify.se/glamping-sweden-rock" />
+        <link rel="alternate" hrefLang="de" href="https://tentify.se/de/sweden-rock-glamping-unterkunft" />
+        <link rel="alternate" hrefLang="x-default" href="https://tentify.se/glamping-sweden-rock" />
         <meta property="og:title" content="Glamping Sweden Rock 2027 | Tentify" />
         <meta
           property="og:description"
@@ -211,6 +214,11 @@ const GlampingSwedenRock = () => {
                 Vad ingår?
               </Button>
             </div>
+            <p className="mt-6 text-sm text-white/80">
+              <Link to="/de/sweden-rock-glamping-unterkunft" className="underline hover:text-white">
+                Deutsch? Hier finden Sie unsere Sweden Rock Glamping Unterkunft auf Deutsch.
+              </Link>
+            </p>
           </div>
         </section>
 
