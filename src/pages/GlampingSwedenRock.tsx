@@ -178,7 +178,7 @@ const GlampingSwedenRock = () => {
         {/* HERO */}
         <section className="relative min-h-[78vh] flex items-center justify-center overflow-hidden pt-20">
           <img
-            src={heroImg}
+            src={heroImg.url}
             alt="Glamping Sweden Rock 2027 med färdigt tält från Tentify"
             className="absolute inset-0 w-full h-full object-cover"
           />
