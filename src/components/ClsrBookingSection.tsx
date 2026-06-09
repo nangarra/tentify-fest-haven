@@ -388,7 +388,8 @@ const ClsrBookingSection = () => {
         </div>
       </div>
 
-      <TermsModal isOpen={showTerms} onClose={() => setShowTerms(false)} />
+      <TermsModal trigger={<span className="hidden" />} />
+
     </section>
   );
 };
