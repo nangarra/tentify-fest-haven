@@ -192,12 +192,13 @@ const ZenAdmin = () => {
   const fetchInventory = async () => {
     try {
       setIsLoadingInventory(true);
-      const { data, error } = await supabase.rpc('get_tent_availability', { 
-        p_festival: 'sweden-rock' 
+      const { data, error } = await supabase.rpc('get_tent_availability', {
+        p_festival: selectedEvent
       });
 
       if (error) throw error;
       setInventory(data || []);
+
     } catch (error) {
       console.error('Error fetching inventory:', error);
       toast({
