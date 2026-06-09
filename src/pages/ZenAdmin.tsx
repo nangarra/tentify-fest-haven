@@ -691,8 +691,9 @@ const ZenAdmin = () => {
       {/* Tabs for Bookings and Waitlist */}
       <Tabs defaultValue="bookings" className="w-full">
         <TabsList className="mb-4">
-          <TabsTrigger value="bookings">Bokningar ({bookings.length})</TabsTrigger>
+          <TabsTrigger value="bookings">Bokningar – {currentEventLabel} ({filteredBookings.length})</TabsTrigger>
           <TabsTrigger value="waitlist">Väntelista Sweden Rock ({waitlist.length})</TabsTrigger>
+
         </TabsList>
 
         <TabsContent value="bookings">
