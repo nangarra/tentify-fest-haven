@@ -299,8 +299,14 @@ const ZenAdmin = () => {
     if (tentType === 'dubbel') return 'Medium +';
     if (tentType === 'medium-tent') return 'Medium tent';
     if (tentType === 'medium-plus') return 'Medium +';
+    if (tentType === 'medium-extra') return 'Medium tent (extra)';
+    if (tentType === 'deluxe') return 'Deluxe-tält';
     return tentType;
   };
+
+  const currentEventLabel =
+    EVENT_OPTIONS.find((e) => e.key === selectedEvent)?.label ?? selectedEvent;
+
 
   const toggleDepositConfirmation = async (booking: Booking) => {
     try {
