@@ -8,6 +8,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -50,7 +52,15 @@ interface WaitlistEntry {
   created_at: string;
 }
 
+type EventKey = "sweden-rock" | "clsr-boutique-2026";
+
+const EVENT_OPTIONS: { key: EventKey; label: string }[] = [
+  { key: "clsr-boutique-2026", label: "CLSR Butikfestival" },
+  { key: "sweden-rock", label: "Sweden Rock 2026" },
+];
+
 const ZenAdmin = () => {
+  const [selectedEvent, setSelectedEvent] = useState<EventKey>("clsr-boutique-2026");
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [filteredBookings, setFilteredBookings] = useState<Booking[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -66,6 +76,7 @@ const ZenAdmin = () => {
   const [isLoadingInventory, setIsLoadingInventory] = useState(false);
   const [waitlist, setWaitlist] = useState<WaitlistEntry[]>([]);
   const [isLoadingWaitlist, setIsLoadingWaitlist] = useState(false);
+
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -86,23 +97,35 @@ const ZenAdmin = () => {
       fetchInventory();
       fetchWaitlist();
     }
-  }, [isAdmin]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAdmin, selectedEvent]);
 
   useEffect(() => {
-    // Filter bookings based on search query
+    // Filter bookings: by event first, then by search query
+    const byEvent = bookings.filter((b) => {
+      const fest = b.meta?.festival;
+      if (selectedEvent === "sweden-rock") {
+        // Legacy bookings may not have meta.festival set; treat them as Sweden Rock.
+        return !fest || fest === "sweden-rock";
+      }
+      return fest === selectedEvent;
+    });
+
     if (searchQuery.trim() === "") {
-      setFilteredBookings(bookings);
+      setFilteredBookings(byEvent);
     } else {
       const query = searchQuery.toLowerCase();
-      const filtered = bookings.filter(
-        (b) =>
-          b.name.toLowerCase().includes(query) ||
-          b.email.toLowerCase().includes(query) ||
-          b.phone.toLowerCase().includes(query)
+      setFilteredBookings(
+        byEvent.filter(
+          (b) =>
+            b.name.toLowerCase().includes(query) ||
+            b.email.toLowerCase().includes(query) ||
+            b.phone.toLowerCase().includes(query)
+        )
       );
-      setFilteredBookings(filtered);
     }
-  }, [searchQuery, bookings]);
+  }, [searchQuery, bookings, selectedEvent]);
+
 
   const checkAuth = async () => {
     try {
@@ -171,12 +194,13 @@ const ZenAdmin = () => {
   const fetchInventory = async () => {
     try {
       setIsLoadingInventory(true);
-      const { data, error } = await supabase.rpc('get_tent_availability', { 
-        p_festival: 'sweden-rock' 
+      const { data, error } = await supabase.rpc('get_tent_availability', {
+        p_festival: selectedEvent
       });
 
       if (error) throw error;
       setInventory(data || []);
+
     } catch (error) {
       console.error('Error fetching inventory:', error);
       toast({
@@ -277,8 +301,14 @@ const ZenAdmin = () => {
     if (tentType === 'dubbel') return 'Medium +';
     if (tentType === 'medium-tent') return 'Medium tent';
     if (tentType === 'medium-plus') return 'Medium +';
+    if (tentType === 'medium-extra') return 'Medium tent (extra)';
+    if (tentType === 'deluxe') return 'Deluxe-tält';
     return tentType;
   };
+
+  const currentEventLabel =
+    EVENT_OPTIONS.find((e) => e.key === selectedEvent)?.label ?? selectedEvent;
+
 
   const toggleDepositConfirmation = async (booking: Booking) => {
     try {
@@ -577,15 +607,30 @@ const ZenAdmin = () => {
 
   return (
     <div className="container mx-auto px-4 pt-24 py-8 max-w-6xl">
-      <div className="mb-8 flex justify-between items-center">
+      <div className="mb-8 flex flex-col md:flex-row justify-between md:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold mb-2">ZenAdmin - Tentify</h1>
-          <p className="text-muted-foreground">Administrera bokningar</p>
+          <p className="text-muted-foreground">Administrera bokningar per event</p>
         </div>
-        <Button variant="outline" onClick={handleSignOut}>
-          <LogOut className="mr-2 h-4 w-4" />
-          Logga ut
-        </Button>
+        <div className="flex items-center gap-3">
+          <Label className="text-sm whitespace-nowrap">Event:</Label>
+          <Select value={selectedEvent} onValueChange={(v) => setSelectedEvent(v as EventKey)}>
+            <SelectTrigger className="w-[220px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {EVENT_OPTIONS.map((opt) => (
+                <SelectItem key={opt.key} value={opt.key}>
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button variant="outline" onClick={handleSignOut}>
+            <LogOut className="mr-2 h-4 w-4" />
+            Logga ut
+          </Button>
+        </div>
       </div>
 
       {/* Inventory Status */}
@@ -593,9 +638,10 @@ const ZenAdmin = () => {
         <CardHeader>
           <div className="flex justify-between items-center">
             <div>
-              <CardTitle>Lagerstatus - Sweden Rock</CardTitle>
+              <CardTitle>Lagerstatus – {currentEventLabel}</CardTitle>
               <CardDescription>Realtidsöversikt baserad på bokningar</CardDescription>
             </div>
+
             <Button 
               variant="outline" 
               size="sm"
@@ -645,16 +691,18 @@ const ZenAdmin = () => {
       {/* Tabs for Bookings and Waitlist */}
       <Tabs defaultValue="bookings" className="w-full">
         <TabsList className="mb-4">
-          <TabsTrigger value="bookings">Bokningar ({bookings.length})</TabsTrigger>
+          <TabsTrigger value="bookings">Bokningar – {currentEventLabel} ({filteredBookings.length})</TabsTrigger>
           <TabsTrigger value="waitlist">Väntelista Sweden Rock ({waitlist.length})</TabsTrigger>
+
         </TabsList>
 
         <TabsContent value="bookings">
           {/* Bookings List */}
           <Card>
             <CardHeader>
-              <CardTitle>Bokningar</CardTitle>
-              <CardDescription>Alla inkomna bokningar</CardDescription>
+              <CardTitle>Bokningar – {currentEventLabel}</CardTitle>
+              <CardDescription>Endast bokningar för valt event visas. Sweden Rock-bokningar är bevarade och nås genom att välja Sweden Rock i menyn ovan.</CardDescription>
+
               
               {/* Search */}
               <div className="relative mt-4">

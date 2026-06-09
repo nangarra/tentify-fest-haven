@@ -117,8 +117,36 @@ const GallerySection = () => {
             ))}
           </div>
 
+          {/* Previous Events */}
+          <div className="mt-20">
+            <div className="text-center mb-8">
+              <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
+                Tidigare event
+              </h3>
+              <p className="text-muted-foreground max-w-xl mx-auto">
+                En tillbakablick på festivaler vi varit en del av.
+              </p>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <Card className="overflow-hidden shadow-card border-dashed">
+                <div className="aspect-[4/3] bg-muted flex flex-col items-center justify-center p-6 text-center">
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">
+                    2026
+                  </p>
+                  <h4 className="text-xl font-semibold text-foreground mb-2">
+                    Sweden Rock 2026
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    Bilder och höjdpunkter kommer snart.
+                  </p>
+                </div>
+              </Card>
+            </div>
+          </div>
+
         </div>
       </div>
+
 
       {/* Lightbox */}
       {selectedImage !== null && (
