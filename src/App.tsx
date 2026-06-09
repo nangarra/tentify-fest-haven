@@ -9,6 +9,7 @@ import HyrGlamping from "./pages/HyrGlamping";
 import ZenAdmin from "./pages/ZenAdmin";
 import Auth from "./pages/Auth";
 import TaltBrollop from "./pages/TaltBrollop";
+import GlampingSwedenRock from "./pages/GlampingSwedenRock";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
 
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/hyr-glamping" element={<HyrGlamping />} />
           <Route path="/talt-brollop" element={<TaltBrollop />} />
+          <Route path="/glamping-sweden-rock" element={<GlampingSwedenRock />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/zenadmin" element={<ZenAdmin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

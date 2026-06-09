@@ -1,4 +1,5 @@
 import { Heart } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -58,6 +59,11 @@ const Footer = () => {
             <div>
               <h4 className="font-semibold mb-4">Våra tjänster</h4>
               <ul className="space-y-2 text-sm text-primary-foreground/80">
+                <li>
+                  <Link to="/glamping-sweden-rock" className="hover:text-primary-foreground transition-smooth">
+                    Glamping Sweden Rock
+                  </Link>
+                </li>
                 <li>Festival glampingtält</li>
                 <li>Bröllop & event</li>
                 <li>Företagsevent</li>
