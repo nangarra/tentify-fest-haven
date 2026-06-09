@@ -1,12 +1,12 @@
 import { Helmet } from "react-helmet";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import {
   Accordion,
@@ -27,13 +27,13 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import TermsModal from "@/components/TermsModal";
 import heroImg from "@/assets/lyxigt-glampingtalt-festival-tentify.webp";
 import inutiImg from "@/assets/festival-glamping-talt-inuti-komfort.webp";
 import utomhusImg from "@/assets/glamping-talt-utomhusmobler-festival.webp";
 import sangImg from "@/assets/camping-sang-lyxig-festival-boende.webp";
 
-const FESTIVAL_KEY = "sweden-rock-2026";
+const FESTIVAL_KEY = "sweden-rock-2027";
+const WAITLIST_CAP = 100;
 
 const scrollTo = (id: string) => {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -77,21 +77,41 @@ const faq = [
     a: "Ja, det passar dig som vill bo nära festivalstämningen men bekvämare än i ett vanligt campingtält.",
   },
   {
-    q: "Kan man boka Sweden Rock 2026 direkt?",
-    a: "Ja, välj Sweden Rock 2026 i bokningssystemet på sidan.",
+    q: "Kan man boka Sweden Rock 2027 direkt?",
+    a: "Inte ännu. Skriv upp dig på väntelistan så hör vi av oss så snart platserna släpps.",
   },
 ];
 
+const galleryImages = [
+  { src: heroImg, alt: "Glampingtält från Tentify" },
+  { src: inutiImg, alt: "Inredning i glampingtält" },
+  { src: utomhusImg, alt: "Utomhusmöbler vid glampingtält" },
+  { src: sangImg, alt: "Bekväm säng i glampingtält" },
+];
+
 const GlampingSwedenRock = () => {
-  const [mode, setMode] = useState<"booking" | "waitlist">("booking");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [guests, setGuests] = useState(2);
   const [notes, setNotes] = useState("");
-  const [accepted, setAccepted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [done, setDone] = useState<null | "booking" | "waitlist">(null);
+  const [done, setDone] = useState(false);
+  const [count, setCount] = useState<number>(0);
+
+  const loadCount = async () => {
+    const { count: c } = await supabase
+      .from("waitlist")
+      .select("*", { count: "exact", head: true })
+      .eq("festival", FESTIVAL_KEY);
+    setCount(c || 0);
+  };
+
+  useEffect(() => {
+    loadCount();
+  }, []);
+
+  const isFull = count >= WAITLIST_CAP;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -99,41 +119,19 @@ const GlampingSwedenRock = () => {
       toast.error("Fyll i namn, e-post och telefon.");
       return;
     }
-    if (mode === "booking" && !accepted) {
-      toast.error("Du måste godkänna villkoren.");
-      return;
-    }
+    if (isFull) return;
     setSubmitting(true);
     try {
-      if (mode === "booking") {
-        const message =
-          `Glamping Sweden Rock 2026\n` +
-          `Antal gäster: ${guests}\n` +
-          `Önskemål: ${notes || "-"}`;
-        const { error } = await supabase.from("bookings").insert({
-          name,
-          email,
-          phone,
-          message,
-          meta: {
-            festival: FESTIVAL_KEY,
-            event: "Glamping Sweden Rock 2026",
-            guests,
-            source: "/glamping-sweden-rock",
-          },
-        });
-        if (error) throw error;
-        setDone("booking");
-      } else {
-        const { error } = await supabase.from("waitlist").insert({
-          festival: FESTIVAL_KEY,
-          name,
-          email,
-          phone,
-        });
-        if (error) throw error;
-        setDone("waitlist");
-      }
+      const { error } = await supabase.from("waitlist").insert({
+        festival: FESTIVAL_KEY,
+        name,
+        email,
+        phone,
+      });
+      if (error) throw error;
+      // Note: guests + notes are collected for UX but not persisted (waitlist table has no such columns)
+      setDone(true);
+      setCount((c) => c + 1);
     } catch (err) {
       console.error(err);
       toast.error("Något gick fel. Försök igen.");
@@ -142,19 +140,21 @@ const GlampingSwedenRock = () => {
     }
   };
 
+  const progressValue = Math.min(100, (count / WAITLIST_CAP) * 100);
+
   return (
     <>
       <Helmet>
-        <title>Glamping Sweden Rock 2026 | Färdigt festivaltält nära Sweden Rock</title>
+        <title>Glamping Sweden Rock 2027 | Skriv upp dig på väntelistan</title>
         <meta
           name="description"
-          content="Bo bekvämt under Sweden Rock 2026 med färdigt glampingtält från Tentify. Sängplats, täcke, kudde, bäddmadrass och mysig inredning. Boka direkt online."
+          content="Vill du bo bekvämt under Sweden Rock 2027? Skriv upp dig på Tentifys väntelista för glamping med färdigt tält, sovplats, täcke, kudde och mysig inredning."
         />
         <link rel="canonical" href="https://tentify.se/glamping-sweden-rock" />
-        <meta property="og:title" content="Glamping Sweden Rock 2026 | Tentify" />
+        <meta property="og:title" content="Glamping Sweden Rock 2027 | Tentify" />
         <meta
           property="og:description"
-          content="Färdigt glampingtält till Sweden Rock 2026 – sängplats, täcke, kudde och mysig inredning. Boka direkt online."
+          content="Skriv upp dig på väntelistan för glamping till Sweden Rock 2027."
         />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://tentify.se/glamping-sweden-rock" />
@@ -177,27 +177,28 @@ const GlampingSwedenRock = () => {
         <section className="relative min-h-[78vh] flex items-center justify-center overflow-hidden pt-20">
           <img
             src={heroImg}
-            alt="Glamping Sweden Rock med färdigt tält från Tentify"
+            alt="Glamping Sweden Rock 2027 med färdigt tält från Tentify"
             className="absolute inset-0 w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-black/55" />
           <div className="relative z-10 container mx-auto px-4 text-center text-white max-w-4xl py-16">
             <Badge className="mb-6 bg-white/15 text-white border-white/30 backdrop-blur-sm">
-              Sweden Rock Festival · 3–6 juni 2026
+              Sweden Rock Festival 2027
             </Badge>
             <h1
               className="text-4xl md:text-6xl font-bold mb-6 leading-tight"
               style={{ textShadow: "0 2px 12px rgba(0,0,0,0.6)" }}
             >
-              Glamping Sweden Rock 2026
+              Glamping Sweden Rock 2027
             </h1>
             <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto mb-8 leading-relaxed">
-              Bo bekvämt under Sweden Rock Festival med färdiga glampingtält, sängplats,
-              täcke, kudde och mysig inredning. Kom fram, checka in och njut av festivalen.
+              Bo bekvämt under Sweden Rock Festival 2027 med färdiga glampingtält, sängplats,
+              täcke, kudde och mysig inredning. Skriv upp dig på väntelistan så hör vi av oss
+              så snart platserna släpps.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Button size="lg" className="btn-hero" onClick={() => scrollTo("boka-sweden-rock")}>
-                Boka Sweden Rock 2026
+              <Button size="lg" className="btn-hero" onClick={() => scrollTo("vantelista")}>
+                Skriv upp mig på väntelistan
               </Button>
               <Button
                 size="lg"
@@ -215,14 +216,13 @@ const GlampingSwedenRock = () => {
         <section className="py-16 bg-background">
           <div className="container mx-auto px-4 max-w-3xl text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Färdigt boende till Sweden Rock
+              Färdigt boende till Sweden Rock 2027
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Vill du bo bekvämt under Sweden Rock utan att släpa med tält, madrasser och
-              all utrustning? Tentify erbjuder färdiga glampingtält för Sweden Rock med
-              sovplats, täcke, kudde, bäddmadrass och mysig inredning. Det är ett enkelt
-              alternativ för dig som vill ha festivalstämning men sova bättre än på vanlig
-              camping.
+              Vill du bo bekvämt under Sweden Rock 2027 utan att släpa med tält, madrasser och
+              all utrustning? Tentify förbereder färdiga glampingtält för Sweden Rock med
+              sovplats, täcke, kudde, bäddmadrass och mysig inredning. Skriv upp dig på
+              väntelistan så får du information först när platserna släpps.
             </p>
           </div>
         </section>
@@ -248,26 +248,6 @@ const GlampingSwedenRock = () => {
                 Två sovplatser ingår. Upp till fyra gäster per tält är möjligt mot tillval
                 av extra madrasser och täcken.
               </p>
-            </div>
-            <div className="grid md:grid-cols-3 gap-4 mt-10">
-              <img
-                src={inutiImg}
-                alt="Sweden Rock glamping med sängplats och inredning"
-                className="w-full h-56 object-cover rounded-lg shadow-card"
-                loading="lazy"
-              />
-              <img
-                src={utomhusImg}
-                alt="Färdigt festivaltält till Sweden Rock"
-                className="w-full h-56 object-cover rounded-lg shadow-card"
-                loading="lazy"
-              />
-              <img
-                src={sangImg}
-                alt="Bekvämt boende under Sweden Rock Festival"
-                className="w-full h-56 object-cover rounded-lg shadow-card"
-                loading="lazy"
-              />
             </div>
           </div>
         </section>
@@ -297,130 +277,91 @@ const GlampingSwedenRock = () => {
           </div>
         </section>
 
-        {/* BOKNING */}
-        <section id="boka-sweden-rock" className="py-16 bg-muted/30">
+        {/* VÄNTELISTA */}
+        <section id="vantelista" className="py-16 bg-muted/30">
           <div className="container mx-auto px-4 max-w-2xl">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
-              Boka glamping till Sweden Rock 2026
+              Skriv upp dig på väntelistan för Sweden Rock 2027
             </h2>
             <p className="text-center text-muted-foreground mb-8">
-              Välj Sweden Rock 2026 i bokningssystemet nedan och boka ditt glampingtält.
-              Antalet tält är begränsat.
+              Vi öppnar intresseanmälan för glamping till Sweden Rock 2027. Skriv upp dig på
+              väntelistan för att få information först när platserna släpps.
             </p>
 
             <Card className="p-6 md:p-8 shadow-elegant">
+              {/* Counter */}
+              <div className="mb-6">
+                <div className="flex justify-between text-sm font-medium mb-2">
+                  <span>Platser på väntelistan</span>
+                  <span className={isFull ? "text-destructive" : "text-primary"}>
+                    {count} / {WAITLIST_CAP}
+                  </span>
+                </div>
+                <Progress value={progressValue} className="h-2" />
+                {isFull && (
+                  <p className="text-center mt-3 font-semibold text-destructive">
+                    Väntelistan är full
+                  </p>
+                )}
+              </div>
+
               {done ? (
                 <div className="text-center py-4">
                   <CheckCircle2 className="w-12 h-12 text-primary mx-auto mb-4" />
-                  <h3 className="text-2xl font-bold mb-3">
-                    {done === "booking" ? "Tack för din bokning!" : "Du är på väntelistan!"}
-                  </h3>
+                  <h3 className="text-2xl font-bold mb-3">Du är på väntelistan!</h3>
                   <p className="text-muted-foreground">
-                    {done === "booking"
-                      ? "Vi har tagit emot din förfrågan för Glamping Sweden Rock 2026 och hör av oss inom kort med bekräftelse och betalningsinstruktioner."
-                      : "Vi hör av oss så snart ett tält blir tillgängligt för Sweden Rock 2026."}
+                    Tack! Vi hör av oss så snart platserna för Sweden Rock 2027 släpps.
+                  </p>
+                </div>
+              ) : isFull ? (
+                <div className="text-center py-4">
+                  <p className="text-lg text-foreground">
+                    Väntelistan för Sweden Rock 2027 är just nu full.
                   </p>
                 </div>
               ) : (
-                <>
-                  <div className="flex gap-2 mb-6">
-                    <Button
-                      type="button"
-                      variant={mode === "booking" ? "default" : "outline"}
-                      className="flex-1"
-                      onClick={() => setMode("booking")}
-                    >
-                      Boka tält
-                    </Button>
-                    <Button
-                      type="button"
-                      variant={mode === "waitlist" ? "default" : "outline"}
-                      className="flex-1"
-                      onClick={() => setMode("waitlist")}
-                    >
-                      Skriv upp mig på väntelistan
-                    </Button>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid md:grid-cols-2 gap-3">
+                    <div>
+                      <Label htmlFor="sr-name">Namn *</Label>
+                      <Input id="sr-name" value={name} onChange={(e) => setName(e.target.value)} required maxLength={100} />
+                    </div>
+                    <div>
+                      <Label htmlFor="sr-phone">Telefon *</Label>
+                      <Input id="sr-phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required maxLength={30} />
+                    </div>
                   </div>
-
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                      <Label htmlFor="event">Evenemang</Label>
-                      <Input id="event" value="Glamping Sweden Rock 2026" readOnly className="bg-muted/50" />
-                    </div>
-                    <div className="grid md:grid-cols-2 gap-3">
-                      <div>
-                        <Label htmlFor="sr-name">Namn *</Label>
-                        <Input id="sr-name" value={name} onChange={(e) => setName(e.target.value)} required maxLength={100} />
-                      </div>
-                      <div>
-                        <Label htmlFor="sr-phone">Telefon *</Label>
-                        <Input id="sr-phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required maxLength={30} />
-                      </div>
-                    </div>
-                    <div>
-                      <Label htmlFor="sr-email">E-post *</Label>
-                      <Input id="sr-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required maxLength={255} />
-                    </div>
-
-                    {mode === "booking" && (
-                      <>
-                        <div>
-                          <Label htmlFor="sr-guests">Antal gäster (max 4)</Label>
-                          <Input
-                            id="sr-guests"
-                            type="number"
-                            min={1}
-                            max={4}
-                            value={guests}
-                            onChange={(e) =>
-                              setGuests(Math.max(1, Math.min(4, parseInt(e.target.value) || 1)))
-                            }
-                          />
-                          <p className="text-xs text-muted-foreground mt-1.5">
-                            Två sovplatser ingår. Extra madrasser, täcken och kuddar kan
-                            hyras som tillval.
-                          </p>
-                        </div>
-                        <div>
-                          <Label htmlFor="sr-notes">Önskemål (valfritt)</Label>
-                          <Textarea
-                            id="sr-notes"
-                            value={notes}
-                            onChange={(e) => setNotes(e.target.value)}
-                            maxLength={500}
-                            rows={3}
-                          />
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <Checkbox
-                            id="sr-terms"
-                            checked={accepted}
-                            onCheckedChange={(c) => setAccepted(c === true)}
-                          />
-                          <Label htmlFor="sr-terms" className="text-sm leading-relaxed cursor-pointer">
-                            Jag godkänner{" "}
-                            <TermsModal
-                              trigger={
-                                <button type="button" className="underline text-primary">
-                                  villkoren
-                                </button>
-                              }
-                            />
-                            .
-                          </Label>
-                        </div>
-                      </>
-                    )}
-
-                    <Button type="submit" size="lg" className="w-full btn-hero" disabled={submitting}>
-                      {submitting
-                        ? "Skickar..."
-                        : mode === "booking"
-                        ? "Boka Sweden Rock 2026"
-                        : "Skriv upp mig på väntelistan"}
-                    </Button>
-                  </form>
-                </>
+                  <div>
+                    <Label htmlFor="sr-email">E-post *</Label>
+                    <Input id="sr-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required maxLength={255} />
+                  </div>
+                  <div>
+                    <Label htmlFor="sr-guests">Antal personer</Label>
+                    <Input
+                      id="sr-guests"
+                      type="number"
+                      min={1}
+                      max={4}
+                      value={guests}
+                      onChange={(e) =>
+                        setGuests(Math.max(1, Math.min(4, parseInt(e.target.value) || 1)))
+                      }
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="sr-notes">Meddelande eller fråga (valfritt)</Label>
+                    <Textarea
+                      id="sr-notes"
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                      maxLength={500}
+                      rows={3}
+                    />
+                  </div>
+                  <Button type="submit" size="lg" className="w-full btn-hero" disabled={submitting}>
+                    {submitting ? "Skickar..." : "Skriv upp mig på väntelistan"}
+                  </Button>
+                </form>
               )}
             </Card>
           </div>
@@ -443,8 +384,31 @@ const GlampingSwedenRock = () => {
           </div>
         </section>
 
-        {/* FAQ */}
+        {/* GALLERI */}
         <section className="py-16 bg-muted/30">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-10">
+              Bilder från våra glampingtält
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {galleryImages.map((img, i) => (
+                <img
+                  key={i}
+                  src={img.src}
+                  alt={img.alt}
+                  loading="lazy"
+                  className="w-full h-48 md:h-56 object-cover rounded-lg shadow-card"
+                />
+              ))}
+            </div>
+            <p className="text-center text-sm text-muted-foreground mt-6">
+              Fler bilder kommer snart.
+            </p>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section className="py-16 bg-background">
           <div className="container mx-auto px-4 max-w-3xl">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-10">
               Vanliga frågor om Glamping Sweden Rock
