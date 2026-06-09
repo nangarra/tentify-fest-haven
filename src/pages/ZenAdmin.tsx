@@ -95,23 +95,35 @@ const ZenAdmin = () => {
       fetchInventory();
       fetchWaitlist();
     }
-  }, [isAdmin]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAdmin, selectedEvent]);
 
   useEffect(() => {
-    // Filter bookings based on search query
+    // Filter bookings: by event first, then by search query
+    const byEvent = bookings.filter((b) => {
+      const fest = b.meta?.festival;
+      if (selectedEvent === "sweden-rock") {
+        // Legacy bookings may not have meta.festival set; treat them as Sweden Rock.
+        return !fest || fest === "sweden-rock";
+      }
+      return fest === selectedEvent;
+    });
+
     if (searchQuery.trim() === "") {
-      setFilteredBookings(bookings);
+      setFilteredBookings(byEvent);
     } else {
       const query = searchQuery.toLowerCase();
-      const filtered = bookings.filter(
-        (b) =>
-          b.name.toLowerCase().includes(query) ||
-          b.email.toLowerCase().includes(query) ||
-          b.phone.toLowerCase().includes(query)
+      setFilteredBookings(
+        byEvent.filter(
+          (b) =>
+            b.name.toLowerCase().includes(query) ||
+            b.email.toLowerCase().includes(query) ||
+            b.phone.toLowerCase().includes(query)
+        )
       );
-      setFilteredBookings(filtered);
     }
-  }, [searchQuery, bookings]);
+  }, [searchQuery, bookings, selectedEvent]);
+
 
   const checkAuth = async () => {
     try {
