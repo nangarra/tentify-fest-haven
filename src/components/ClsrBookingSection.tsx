@@ -71,14 +71,21 @@ const ClsrBookingSection = () => {
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+    let hls: Hls | null = null;
     if (video.canPlayType("application/vnd.apple.mpegurl")) {
       video.src = HERO_VIDEO_SRC;
     } else if (Hls.isSupported()) {
-      const hls = new Hls({ enableWorker: true });
+      hls = new Hls({ enableWorker: true });
       hls.loadSource(HERO_VIDEO_SRC);
       hls.attachMedia(video);
-      return () => hls.destroy();
     }
+    const tryPlay = () => video.play().catch(() => {});
+    video.addEventListener("loadedmetadata", tryPlay);
+    tryPlay();
+    return () => {
+      video.removeEventListener("loadedmetadata", tryPlay);
+      hls?.destroy();
+    };
   }, []);
 
   useEffect(() => {
@@ -185,9 +192,9 @@ const ClsrBookingSection = () => {
           playsInline
           preload="auto"
           poster={clsrCastle.url}
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover z-0"
         />
-        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-black/40 z-[1]" />
 
 
         <div className="relative z-10 container mx-auto px-4 text-center text-white max-w-4xl">
@@ -229,24 +236,50 @@ const ClsrBookingSection = () => {
 
           {/* Booking Card – contains ALL steps */}
           <Card className="bg-white/95 backdrop-blur-md text-foreground p-0 max-w-2xl mx-auto shadow-2xl overflow-hidden text-left">
-            {/* Deluxe image - full visible, no crop */}
-            <div className="relative bg-muted/30">
-              <img
-                src={clsrDeluxe.url}
-                alt="Deluxe VIP glampingtält interiör"
-                className="w-full h-auto max-h-[70vh] object-contain"
-              />
-              <div className="absolute top-3 left-3">
-                <Badge className="bg-background/90 text-foreground border-0 text-sm">
-                  Deluxe
-                </Badge>
+            {/* Image collage */}
+            <div className="relative p-3 bg-muted/30">
+              <div className="grid grid-cols-4 grid-rows-2 gap-2 h-64 md:h-80">
+                <div className="relative col-span-2 row-span-2 rounded-lg overflow-hidden">
+                  <img
+                    src={clsrDeluxe.url}
+                    alt="Deluxe VIP glampingtält interiör med bäddad säng"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute top-2 left-2">
+                    <Badge className="bg-background/90 text-foreground border-0 text-xs">
+                      Deluxe
+                    </Badge>
+                  </div>
+                </div>
+                <div className="relative col-span-2 rounded-lg overflow-hidden">
+                  <img
+                    src={clsrTentsNight.url}
+                    alt="Glampingtält i skymningen med lyktor"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="relative rounded-lg overflow-hidden">
+                  <img
+                    src={clsrCampPath.url}
+                    alt="Stigen till glampingområdet"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="relative rounded-lg overflow-hidden">
+                  <img
+                    src={clsrCastle.url}
+                    alt="Stora Sundby Slott"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
               </div>
-              <div className="absolute top-3 right-3">
-                <Badge variant={isSoldOut ? "destructive" : "secondary"} className="text-sm">
+              <div className="absolute top-5 right-5 z-10">
+                <Badge variant={isSoldOut ? "destructive" : "secondary"} className="text-sm shadow-md">
                   {isSoldOut ? "Slutsålt" : `${available} av ${TOTAL_TENTS} kvar`}
                 </Badge>
               </div>
             </div>
+
 
 
             <div className="p-6 md:p-8">
