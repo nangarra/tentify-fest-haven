@@ -55,22 +55,38 @@ const Footer = () => {
               </ul>
             </div>
 
-            {/* Services */}
+            {/* Services + Popular pages */}
             <div>
-              <h4 className="font-semibold mb-4">Våra tjänster</h4>
+              <h4 className="font-semibold mb-4">Populära sidor</h4>
               <ul className="space-y-2 text-sm text-primary-foreground/80">
+                <li>
+                  <Link to="/hyr-glamping" className="hover:text-primary-foreground transition-smooth">
+                    Hyr glampingtält
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/talt-brollop" className="hover:text-primary-foreground transition-smooth">
+                    Glamping bröllop
+                  </Link>
+                </li>
                 <li>
                   <Link to="/glamping-sweden-rock" className="hover:text-primary-foreground transition-smooth">
                     Glamping Sweden Rock
                   </Link>
                 </li>
-                <li>Festival glampingtält</li>
-                <li>Bröllop & event</li>
-                <li>Företagsevent</li>
-                <li>Privata fester</li>
-                <li>Leverans & montage</li>
+                <li>
+                  <Link to="/hyr-glamping" className="hover:text-primary-foreground transition-smooth">
+                    Hyra tält till event
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/glamping-sweden-rock" className="hover:text-primary-foreground transition-smooth">
+                    Festivalboende Sweden Rock
+                  </Link>
+                </li>
               </ul>
             </div>
+
 
             {/* Contact */}
             <div>
