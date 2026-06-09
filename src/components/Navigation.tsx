@@ -94,6 +94,14 @@ const Navigation = () => {
               >
                 Tält bröllop
               </Link>
+              <Link
+                to="/glamping-sweden-rock"
+                className={`text-foreground hover:text-primary transition-smooth font-medium ${
+                  location.pathname === "/glamping-sweden-rock" ? "text-primary" : ""
+                }`}
+              >
+                Sweden Rock
+              </Link>
               {isHomePage ? (
                 <button
                   onClick={() => scrollToSection("galleri")}
@@ -205,6 +213,15 @@ const Navigation = () => {
                 onClick={() => setIsOpen(false)}
               >
                 Tält bröllop
+              </Link>
+              <Link
+                to="/glamping-sweden-rock"
+                className={`block px-3 py-2 text-foreground hover:text-primary transition-smooth font-medium w-full text-left ${
+                  location.pathname === "/glamping-sweden-rock" ? "text-primary" : ""
+                }`}
+                onClick={() => setIsOpen(false)}
+              >
+                Sweden Rock
               </Link>
               {isHomePage ? (
                 <button
