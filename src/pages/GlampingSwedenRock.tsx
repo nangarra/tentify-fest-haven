@@ -27,10 +27,11 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import heroImg from "@/assets/lyxigt-glampingtalt-festival-tentify.webp";
-import inutiImg from "@/assets/festival-glamping-talt-inuti-komfort.webp";
-import utomhusImg from "@/assets/glamping-talt-utomhusmobler-festival.webp";
-import sangImg from "@/assets/camping-sang-lyxig-festival-boende.webp";
+import heroImg from "@/assets/glamping-sweden-rock-2027-tentify.webp.asset.json";
+import camplineImg from "@/assets/sweden-rock-glamping-talt.webp.asset.json";
+import fardigtTaltImg from "@/assets/fardigt-talt-sweden-rock.webp.asset.json";
+import interiorImg from "@/assets/glampingtalt-sweden-rock-interior.webp.asset.json";
+import bekvamtBoendeImg from "@/assets/bekvamt-boende-sweden-rock-glamping.webp.asset.json";
 
 const FESTIVAL_KEY = "sweden-rock-2027";
 const WAITLIST_CAP = 100;
