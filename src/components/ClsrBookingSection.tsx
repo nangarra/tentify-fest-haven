@@ -237,7 +237,7 @@ const ClsrBookingSection = () => {
                 <div className="relative col-span-2 row-span-2 rounded-lg overflow-hidden">
                   <img
                     src={clsrDeluxe.url}
-                    alt="Deluxe VIP glampingtält interiör med bäddad säng"
+                    alt="Deluxe VIP glampingtält interiör med dubbelsäng"
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute top-2 left-2">
