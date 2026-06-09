@@ -387,6 +387,8 @@ const ClsrBookingSection = () => {
                   <h3 className="text-2xl font-bold mb-3">Tack för din bokning!</h3>
                   <p className="text-muted-foreground mb-4">
                     Vi har tagit emot din förfrågan för CLSR Butikfestival.
+                    Varje tält har en färdigbäddad dubbelsäng för 2 gäster.
+                    Extra luftmadrasser, täcken och kuddar kan hyras som tillval.
                   </p>
                   <div className="bg-muted/50 rounded-lg p-4 text-left text-sm space-y-2">
                     <p>
