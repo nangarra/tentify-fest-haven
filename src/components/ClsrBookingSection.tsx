@@ -28,13 +28,18 @@ const EVENT_START = new Date("2026-06-26T10:00:00Z");
 
 const included = [
   "Glampingtält",
-  "Bäddade sängar",
-  "Stolar & bord",
-  "Mattor & filtar",
+  "Dubbelsäng (färdigbäddad för 2 gäster)",
+  "Duntäcke för 2 gäster",
+  "Kuddar för 2 gäster",
+  "Bäddmadrass till dubbelsängen",
+  "Stolar",
+  "Bord",
+  "Mattor",
   "Lyktor",
+  "Mysig styling",
+  "Parkering nära tältet",
   "Deluxe-lås",
   "Goodiebag",
-  "Mysig styling och detaljer",
 ];
 
 const benefits = [
@@ -45,7 +50,7 @@ const benefits = [
 ];
 
 const slideshowImages = [
-  { src: clsrDeluxe.url, alt: "Deluxe glampingtält interiör med bäddad säng" },
+  { src: clsrDeluxe.url, alt: "Deluxe VIP glampingtält interiör med dubbelsäng" },
   { src: clsrTentsNight.url, alt: "Glampingtält i skymningen med lyktor" },
   { src: clsrCampPath.url, alt: "Stigen till glampingområdet vid Stora Sundby Slott" },
   { src: clsrCastle.url, alt: "Stora Sundby Slott i solnedgång" },
@@ -126,7 +131,7 @@ const ClsrBookingSection = () => {
     try {
       const message =
         `CLSR Butikfestival – Privat VIP Glamping\n` +
-        `Tält: Deluxe (upp till 4 gäster)\n` +
+        `Tält: Deluxe (sovplats för upp till 4 gäster)\n` +
         `Antal gäster: ${guests}\n` +
         `Datum: 26–27 juni 2026, Stora Sundby Slott\n` +
         `Pris: ${PRICE} kr (2 dagar)\n` +
@@ -199,7 +204,7 @@ const ClsrBookingSection = () => {
           </h2>
           <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto mb-8 leading-relaxed">
             Endast 9 exklusiva VIP-tält tillgängliga — bara 5 minuter från scenen.
-            Din egen privata plats att vila, sova, ladda och umgås med vänner under festivalen.
+            Varje tält har en färdigbäddad dubbelsäng för 2 gäster, med plats för upp till 4.
           </p>
 
           {/* Countdown */}
@@ -232,7 +237,7 @@ const ClsrBookingSection = () => {
                 <div className="relative col-span-2 row-span-2 rounded-lg overflow-hidden">
                   <img
                     src={clsrDeluxe.url}
-                    alt="Deluxe VIP glampingtält interiör med bäddad säng"
+                    alt="Deluxe VIP glampingtält interiör med dubbelsäng"
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute top-2 left-2">
@@ -278,7 +283,7 @@ const ClsrBookingSection = () => {
                   <p className="text-sm text-muted-foreground">Deluxe VIP Glamping Stay</p>
                   <p className="text-3xl font-bold">16 800 kr</p>
                   <p className="text-xs text-muted-foreground">
-                    2 dagar · upp till 4 gäster
+                    2 dagar · färdigbäddad dubbelsäng för 2 · plats för upp till 4
                   </p>
                 </div>
               </div>
@@ -325,6 +330,10 @@ const ClsrBookingSection = () => {
                       onChange={(e) => setGuests(Math.max(1, Math.min(4, parseInt(e.target.value) || 1)))}
                       required
                     />
+                    <p className="text-xs text-muted-foreground mt-1.5">
+                      Varje tält rymmer upp till 4 gäster. Basuppsättningen är förberedd för 2 gäster i dubbelsängen.
+                      Extra luftmadrasser, täcken och kuddar kan hyras som tillval för ytterligare gäster.
+                    </p>
                   </div>
 
                   <div className="bg-muted/50 rounded-lg p-4 space-y-2 text-sm">
@@ -378,6 +387,8 @@ const ClsrBookingSection = () => {
                   <h3 className="text-2xl font-bold mb-3">Tack för din bokning!</h3>
                   <p className="text-muted-foreground mb-4">
                     Vi har tagit emot din förfrågan för CLSR Butikfestival.
+                    Varje tält har en färdigbäddad dubbelsäng för 2 gäster.
+                    Extra luftmadrasser, täcken och kuddar kan hyras som tillval.
                   </p>
                   <div className="bg-muted/50 rounded-lg p-4 text-left text-sm space-y-2">
                     <p>
