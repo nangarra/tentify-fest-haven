@@ -389,7 +389,7 @@ const ClsrBookingSection = () => {
         </div>
       </div>
 
-      <TermsModal trigger={<span className="hidden" />} />
+      
 
     </section>
   );
