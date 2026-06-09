@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo, useRef } from "react";
-import Hls from "hls.js";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -14,9 +13,8 @@ import clsrCastle from "@/assets/clsr-castle.webp.asset.json";
 import clsrDeluxe from "@/assets/clsr-deluxe.webp.asset.json";
 import clsrTentsNight from "@/assets/clsr-tents-night.webp.asset.json";
 import clsrCampPath from "@/assets/clsr-camp-path.webp.asset.json";
+import clsrHeroVideo from "@/assets/clsr-hero.mp4.asset.json";
 
-const HERO_VIDEO_SRC =
-  "https://video.squarespace-cdn.com/content/v1/616eb40c941acb1cebee9540/b517b7c8-9276-41c1-8db5-e3eb9ffc006b/segments/mpegts-h264-1920:1080.m3u8?Expires=1781040245&Signature=ZDI2OGQ1MWRlMjY5YmFjMDUzZjhhYmZiMTcxMWQ3YTBjNGYyNmIwZGQ4YmEyNzI0NDYwM2EzM2U3ZjcyNjlmYg";
 
 
 const FESTIVAL_KEY = "clsr-boutique-2026";
@@ -71,22 +69,12 @@ const ClsrBookingSection = () => {
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    let hls: Hls | null = null;
-    if (video.canPlayType("application/vnd.apple.mpegurl")) {
-      video.src = HERO_VIDEO_SRC;
-    } else if (Hls.isSupported()) {
-      hls = new Hls({ enableWorker: true });
-      hls.loadSource(HERO_VIDEO_SRC);
-      hls.attachMedia(video);
-    }
     const tryPlay = () => video.play().catch(() => {});
     video.addEventListener("loadedmetadata", tryPlay);
     tryPlay();
-    return () => {
-      video.removeEventListener("loadedmetadata", tryPlay);
-      hls?.destroy();
-    };
+    return () => video.removeEventListener("loadedmetadata", tryPlay);
   }, []);
+
 
   useEffect(() => {
 
@@ -193,7 +181,9 @@ const ClsrBookingSection = () => {
           preload="auto"
           poster={clsrCastle.url}
           className="absolute inset-0 w-full h-full object-cover z-0"
-        />
+        >
+          <source src={clsrHeroVideo.url} type="video/mp4" />
+        </video>
         <div className="absolute inset-0 bg-black/40 z-[1]" />
 
 
