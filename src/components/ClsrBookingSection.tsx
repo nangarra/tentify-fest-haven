@@ -353,14 +353,15 @@ const ClsrBookingSection = () => {
                     />
                     <Label htmlFor="clsr-terms" className="text-sm leading-relaxed cursor-pointer">
                       Jag godkänner{" "}
-                      <button
-                        type="button"
-                        onClick={() => setShowTerms(true)}
-                        className="underline text-primary"
-                      >
-                        villkoren
-                      </button>{" "}
+                      <TermsModal
+                        trigger={
+                          <button type="button" className="underline text-primary">
+                            villkoren
+                          </button>
+                        }
+                      />{" "}
                       och att förskottet är icke återbetalningsbart.
+
                     </Label>
                   </div>
 
