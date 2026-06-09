@@ -1,4 +1,5 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
+import Hls from "hls.js";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -13,6 +14,10 @@ import clsrCastle from "@/assets/clsr-castle.webp.asset.json";
 import clsrDeluxe from "@/assets/clsr-deluxe.webp.asset.json";
 import clsrTentsNight from "@/assets/clsr-tents-night.webp.asset.json";
 import clsrCampPath from "@/assets/clsr-camp-path.webp.asset.json";
+
+const HERO_VIDEO_SRC =
+  "https://video.squarespace-cdn.com/content/v1/616eb40c941acb1cebee9540/b517b7c8-9276-41c1-8db5-e3eb9ffc006b/segments/mpegts-h264-1920:1080.m3u8?Expires=1781040245&Signature=ZDI2OGQ1MWRlMjY5YmFjMDUzZjhhYmZiMTcxMWQ3YTBjNGYyNmIwZGQ4YmEyNzI0NDYwM2EzM2U3ZjcyNjlmYg";
+
 
 const FESTIVAL_KEY = "clsr-boutique-2026";
 const TENT_TYPE = "deluxe";
@@ -61,12 +66,23 @@ const ClsrBookingSection = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [slide, setSlide] = useState(0);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    fetchAvailability();
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.canPlayType("application/vnd.apple.mpegurl")) {
+      video.src = HERO_VIDEO_SRC;
+    } else if (Hls.isSupported()) {
+      const hls = new Hls({ enableWorker: true });
+      hls.loadSource(HERO_VIDEO_SRC);
+      hls.attachMedia(video);
+      return () => hls.destroy();
+    }
   }, []);
 
   useEffect(() => {
+
     const id = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(id);
   }, []);
@@ -161,11 +177,18 @@ const ClsrBookingSection = () => {
     <section id="boka-talt" className="relative">
       {/* HERO */}
       <div className="relative min-h-[88vh] flex items-center justify-center overflow-hidden py-16">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${clsrCastle.url})` }}
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          poster={clsrCastle.url}
+          className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/55 to-black/80" />
+        <div className="absolute inset-0 bg-black/40" />
+
 
         <div className="relative z-10 container mx-auto px-4 text-center text-white max-w-4xl">
           <Badge className="mb-6 bg-white/15 text-white border-white/30 backdrop-blur-sm">
@@ -206,12 +229,12 @@ const ClsrBookingSection = () => {
 
           {/* Booking Card – contains ALL steps */}
           <Card className="bg-white/95 backdrop-blur-md text-foreground p-0 max-w-2xl mx-auto shadow-2xl overflow-hidden text-left">
-            {/* Deluxe image */}
-            <div className="relative h-56 md:h-64 overflow-hidden">
+            {/* Deluxe image - full visible, no crop */}
+            <div className="relative bg-muted/30">
               <img
                 src={clsrDeluxe.url}
                 alt="Deluxe VIP glampingtält interiör"
-                className="w-full h-full object-cover"
+                className="w-full h-auto max-h-[70vh] object-contain"
               />
               <div className="absolute top-3 left-3">
                 <Badge className="bg-background/90 text-foreground border-0 text-sm">
@@ -224,6 +247,7 @@ const ClsrBookingSection = () => {
                 </Badge>
               </div>
             </div>
+
 
             <div className="p-6 md:p-8">
               <div className="flex items-end justify-between mb-5">
