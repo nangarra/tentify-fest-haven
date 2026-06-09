@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
-// Import hero images
 import heroImage1 from "@/assets/lyxigt-glampingtalt-festival-tentify.webp";
 import heroImage2 from "@/assets/festival-talt-inredning-lyxig-camping.webp";
 import heroImage3 from "@/assets/glamping-talt-utomhusmobler-festival.webp";
@@ -87,22 +87,35 @@ const HeroSection = () => {
             textShadow: '0 2px 8px rgba(0,0,0,0.55), 0 1px 2px rgba(0,0,0,0.6)' 
           }}
         >
-          Lyxiga glampingtält för festivaler
+          Hyr glampingtält till festival, bröllop och event
         </h1>
+        <p
+          className="text-lg md:text-xl text-white/95 mb-8 max-w-2xl mx-auto"
+          style={{ textShadow: '0 1px 4px rgba(0,0,0,0.6)' }}
+        >
+          Tentify skapar färdiga glampingupplevelser med inredda tält, sovplatser och mysig känsla.
+          Vi levererar, sätter upp och förbereder allt så att gästerna kan komma fram och njuta.
+        </p>
 
-        <div className="space-y-4">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <Button
-            onClick={scrollToBooking}
+            asChild
             size="lg"
-            className="btn-hero text-lg px-12 py-6 hover:scale-105 transition-bounce"
-            style={{ 
-              textShadow: '0 1px 3px rgba(0,0,0,0.4)' 
-            }}
+            className="btn-hero text-lg px-10 py-6 hover:scale-105 transition-bounce"
           >
-            Boka ditt tält
+            <Link to="/hyr-glamping">Hyr glampingtält</Link>
+          </Button>
+          <Button
+            asChild
+            size="lg"
+            variant="outline"
+            className="text-lg px-10 py-6 bg-white/10 backdrop-blur border-white/70 text-white hover:bg-white hover:text-foreground transition-bounce"
+          >
+            <Link to="/glamping-sweden-rock">Glamping Sweden Rock</Link>
           </Button>
         </div>
       </div>
+
     </section>
   );
 };
