@@ -49,7 +49,7 @@ const ClsrBookingSection = () => {
   const [phone, setPhone] = useState("");
   const [guests, setGuests] = useState(2);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
-  const [showTerms, setShowTerms] = useState(false);
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
