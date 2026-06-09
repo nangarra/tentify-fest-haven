@@ -84,10 +84,11 @@ const faq = [
 ];
 
 const galleryImages = [
-  { src: heroImg, alt: "Glampingtält från Tentify" },
-  { src: inutiImg, alt: "Inredning i glampingtält" },
-  { src: utomhusImg, alt: "Utomhusmöbler vid glampingtält" },
-  { src: sangImg, alt: "Bekväm säng i glampingtält" },
+  { src: heroImg.url, alt: "Glamping Sweden Rock 2027 med färdigt tält från Tentify" },
+  { src: camplineImg.url, alt: "Sweden Rock glamping med inrett festivaltält på campingen" },
+  { src: fardigtTaltImg.url, alt: "Färdigt glampingtält till Sweden Rock i solnedgång" },
+  { src: interiorImg.url, alt: "Inrett tält för glamping nära Sweden Rock Festival" },
+  { src: bekvamtBoendeImg.url, alt: "Bekvämt festivalboende under Sweden Rock med dubbelsäng" },
 ];
 
 const GlampingSwedenRock = () => {
