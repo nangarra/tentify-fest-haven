@@ -160,7 +160,7 @@ const GlampingSwedenRock = () => {
         />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://tentify.se/glamping-sweden-rock" />
-        <meta property="og:image" content={heroImg} />
+        <meta property="og:image" content={heroImg.url} />
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
