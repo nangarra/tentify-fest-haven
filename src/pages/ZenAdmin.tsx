@@ -700,8 +700,9 @@ const ZenAdmin = () => {
           {/* Bookings List */}
           <Card>
             <CardHeader>
-              <CardTitle>Bokningar</CardTitle>
-              <CardDescription>Alla inkomna bokningar</CardDescription>
+              <CardTitle>Bokningar – {currentEventLabel}</CardTitle>
+              <CardDescription>Endast bokningar för valt event visas. Sweden Rock-bokningar är bevarade och nås genom att välja Sweden Rock i menyn ovan.</CardDescription>
+
               
               {/* Search */}
               <div className="relative mt-4">
