@@ -50,7 +50,15 @@ interface WaitlistEntry {
   created_at: string;
 }
 
+type EventKey = "sweden-rock" | "clsr-boutique-2026";
+
+const EVENT_OPTIONS: { key: EventKey; label: string }[] = [
+  { key: "clsr-boutique-2026", label: "CLSR Butikfestival" },
+  { key: "sweden-rock", label: "Sweden Rock 2026" },
+];
+
 const ZenAdmin = () => {
+  const [selectedEvent, setSelectedEvent] = useState<EventKey>("clsr-boutique-2026");
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [filteredBookings, setFilteredBookings] = useState<Booking[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -66,6 +74,7 @@ const ZenAdmin = () => {
   const [isLoadingInventory, setIsLoadingInventory] = useState(false);
   const [waitlist, setWaitlist] = useState<WaitlistEntry[]>([]);
   const [isLoadingWaitlist, setIsLoadingWaitlist] = useState(false);
+
   const { toast } = useToast();
   const navigate = useNavigate();
 
