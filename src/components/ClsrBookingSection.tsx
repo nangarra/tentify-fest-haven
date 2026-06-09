@@ -28,13 +28,18 @@ const EVENT_START = new Date("2026-06-26T10:00:00Z");
 
 const included = [
   "Glampingtält",
-  "Bäddade sängar",
-  "Stolar & bord",
-  "Mattor & filtar",
+  "Dubbelsäng (färdigbäddad för 2 gäster)",
+  "Duntäcke för 2 gäster",
+  "Kuddar för 2 gäster",
+  "Bäddmadrass till dubbelsängen",
+  "Stolar",
+  "Bord",
+  "Mattor",
   "Lyktor",
+  "Mysig styling",
+  "Parkering nära tältet",
   "Deluxe-lås",
   "Goodiebag",
-  "Mysig styling och detaljer",
 ];
 
 const benefits = [
