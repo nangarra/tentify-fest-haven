@@ -607,15 +607,30 @@ const ZenAdmin = () => {
 
   return (
     <div className="container mx-auto px-4 pt-24 py-8 max-w-6xl">
-      <div className="mb-8 flex justify-between items-center">
+      <div className="mb-8 flex flex-col md:flex-row justify-between md:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold mb-2">ZenAdmin - Tentify</h1>
-          <p className="text-muted-foreground">Administrera bokningar</p>
+          <p className="text-muted-foreground">Administrera bokningar per event</p>
         </div>
-        <Button variant="outline" onClick={handleSignOut}>
-          <LogOut className="mr-2 h-4 w-4" />
-          Logga ut
-        </Button>
+        <div className="flex items-center gap-3">
+          <Label className="text-sm whitespace-nowrap">Event:</Label>
+          <Select value={selectedEvent} onValueChange={(v) => setSelectedEvent(v as EventKey)}>
+            <SelectTrigger className="w-[220px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {EVENT_OPTIONS.map((opt) => (
+                <SelectItem key={opt.key} value={opt.key}>
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button variant="outline" onClick={handleSignOut}>
+            <LogOut className="mr-2 h-4 w-4" />
+            Logga ut
+          </Button>
+        </div>
       </div>
 
       {/* Inventory Status */}
@@ -623,9 +638,10 @@ const ZenAdmin = () => {
         <CardHeader>
           <div className="flex justify-between items-center">
             <div>
-              <CardTitle>Lagerstatus - Sweden Rock</CardTitle>
+              <CardTitle>Lagerstatus – {currentEventLabel}</CardTitle>
               <CardDescription>Realtidsöversikt baserad på bokningar</CardDescription>
             </div>
+
             <Button 
               variant="outline" 
               size="sm"
