@@ -71,14 +71,21 @@ const ClsrBookingSection = () => {
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+    let hls: Hls | null = null;
     if (video.canPlayType("application/vnd.apple.mpegurl")) {
       video.src = HERO_VIDEO_SRC;
     } else if (Hls.isSupported()) {
-      const hls = new Hls({ enableWorker: true });
+      hls = new Hls({ enableWorker: true });
       hls.loadSource(HERO_VIDEO_SRC);
       hls.attachMedia(video);
-      return () => hls.destroy();
     }
+    const tryPlay = () => video.play().catch(() => {});
+    video.addEventListener("loadedmetadata", tryPlay);
+    tryPlay();
+    return () => {
+      video.removeEventListener("loadedmetadata", tryPlay);
+      hls?.destroy();
+    };
   }, []);
 
   useEffect(() => {
@@ -185,9 +192,9 @@ const ClsrBookingSection = () => {
           playsInline
           preload="auto"
           poster={clsrCastle.url}
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover z-0"
         />
-        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-black/40 z-[1]" />
 
 
         <div className="relative z-10 container mx-auto px-4 text-center text-white max-w-4xl">
