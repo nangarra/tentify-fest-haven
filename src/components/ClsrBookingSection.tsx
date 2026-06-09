@@ -283,7 +283,7 @@ const ClsrBookingSection = () => {
                   <p className="text-sm text-muted-foreground">Deluxe VIP Glamping Stay</p>
                   <p className="text-3xl font-bold">16 800 kr</p>
                   <p className="text-xs text-muted-foreground">
-                    2 dagar · upp till 4 gäster
+                    2 dagar · färdigbäddad dubbelsäng för 2 · plats för upp till 4
                   </p>
                 </div>
               </div>
@@ -330,6 +330,10 @@ const ClsrBookingSection = () => {
                       onChange={(e) => setGuests(Math.max(1, Math.min(4, parseInt(e.target.value) || 1)))}
                       required
                     />
+                    <p className="text-xs text-muted-foreground mt-1.5">
+                      Varje tält rymmer upp till 4 gäster. Basuppsättningen är förberedd för 2 gäster i dubbelsängen.
+                      Extra luftmadrasser, täcken och kuddar kan hyras som tillval för ytterligare gäster.
+                    </p>
                   </div>
 
                   <div className="bg-muted/50 rounded-lg p-4 space-y-2 text-sm">
