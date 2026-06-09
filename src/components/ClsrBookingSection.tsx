@@ -50,7 +50,7 @@ const benefits = [
 ];
 
 const slideshowImages = [
-  { src: clsrDeluxe.url, alt: "Deluxe glampingtält interiör med bäddad säng" },
+  { src: clsrDeluxe.url, alt: "Deluxe VIP glampingtält interiör med dubbelsäng" },
   { src: clsrTentsNight.url, alt: "Glampingtält i skymningen med lyktor" },
   { src: clsrCampPath.url, alt: "Stigen till glampingområdet vid Stora Sundby Slott" },
   { src: clsrCastle.url, alt: "Stora Sundby Slott i solnedgång" },
@@ -131,7 +131,7 @@ const ClsrBookingSection = () => {
     try {
       const message =
         `CLSR Butikfestival – Privat VIP Glamping\n` +
-        `Tält: Deluxe (upp till 4 gäster)\n` +
+        `Tält: Deluxe (sovplats för upp till 4 gäster)\n` +
         `Antal gäster: ${guests}\n` +
         `Datum: 26–27 juni 2026, Stora Sundby Slott\n` +
         `Pris: ${PRICE} kr (2 dagar)\n` +
@@ -204,7 +204,7 @@ const ClsrBookingSection = () => {
           </h2>
           <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto mb-8 leading-relaxed">
             Endast 9 exklusiva VIP-tält tillgängliga — bara 5 minuter från scenen.
-            Din egen privata plats att vila, sova, ladda och umgås med vänner under festivalen.
+            Varje tält har en färdigbäddad dubbelsäng för 2 gäster, med plats för upp till 4.
           </p>
 
           {/* Countdown */}
