@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
-// Import hero images
 import heroImage1 from "@/assets/lyxigt-glampingtalt-festival-tentify.webp";
 import heroImage2 from "@/assets/festival-talt-inredning-lyxig-camping.webp";
 import heroImage3 from "@/assets/glamping-talt-utomhusmobler-festival.webp";
