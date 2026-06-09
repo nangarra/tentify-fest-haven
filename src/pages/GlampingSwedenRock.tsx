@@ -27,10 +27,11 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import heroImg from "@/assets/lyxigt-glampingtalt-festival-tentify.webp";
-import inutiImg from "@/assets/festival-glamping-talt-inuti-komfort.webp";
-import utomhusImg from "@/assets/glamping-talt-utomhusmobler-festival.webp";
-import sangImg from "@/assets/camping-sang-lyxig-festival-boende.webp";
+import heroImg from "@/assets/glamping-sweden-rock-2027-tentify.webp.asset.json";
+import camplineImg from "@/assets/sweden-rock-glamping-talt.webp.asset.json";
+import fardigtTaltImg from "@/assets/fardigt-talt-sweden-rock.webp.asset.json";
+import interiorImg from "@/assets/glampingtalt-sweden-rock-interior.webp.asset.json";
+import bekvamtBoendeImg from "@/assets/bekvamt-boende-sweden-rock-glamping.webp.asset.json";
 
 const FESTIVAL_KEY = "sweden-rock-2027";
 const WAITLIST_CAP = 100;
@@ -83,10 +84,11 @@ const faq = [
 ];
 
 const galleryImages = [
-  { src: heroImg, alt: "Glampingtält från Tentify" },
-  { src: inutiImg, alt: "Inredning i glampingtält" },
-  { src: utomhusImg, alt: "Utomhusmöbler vid glampingtält" },
-  { src: sangImg, alt: "Bekväm säng i glampingtält" },
+  { src: heroImg.url, alt: "Glamping Sweden Rock 2027 med färdigt tält från Tentify" },
+  { src: camplineImg.url, alt: "Sweden Rock glamping med inrett festivaltält på campingen" },
+  { src: fardigtTaltImg.url, alt: "Färdigt glampingtält till Sweden Rock i solnedgång" },
+  { src: interiorImg.url, alt: "Inrett tält för glamping nära Sweden Rock Festival" },
+  { src: bekvamtBoendeImg.url, alt: "Bekvämt festivalboende under Sweden Rock med dubbelsäng" },
 ];
 
 const GlampingSwedenRock = () => {
@@ -158,7 +160,7 @@ const GlampingSwedenRock = () => {
         />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://tentify.se/glamping-sweden-rock" />
-        <meta property="og:image" content={heroImg} />
+        <meta property="og:image" content={heroImg.url} />
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
@@ -176,7 +178,7 @@ const GlampingSwedenRock = () => {
         {/* HERO */}
         <section className="relative min-h-[78vh] flex items-center justify-center overflow-hidden pt-20">
           <img
-            src={heroImg}
+            src={heroImg.url}
             alt="Glamping Sweden Rock 2027 med färdigt tält från Tentify"
             className="absolute inset-0 w-full h-full object-cover"
           />
