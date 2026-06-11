@@ -101,7 +101,7 @@ const ClsrBookingSection = () => {
       return;
     }
     const deluxe = (data as any[])?.find((r) => r.tent_type === TENT_TYPE);
-    if (deluxe) setAvailable(deluxe.available_count);
+    if (deluxe) setAvailable(Math.min(deluxe.available_count, TOTAL_TENTS));
   };
 
   const countdown = useMemo(() => {
