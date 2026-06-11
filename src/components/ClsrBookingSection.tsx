@@ -194,7 +194,7 @@ const ClsrBookingSection = () => {
 
         <div className="relative z-10 container mx-auto px-4 text-center text-white max-w-4xl">
           <Badge className="mb-6 bg-white/15 text-white border-white/30 backdrop-blur-sm">
-            Boutique Festival · 26–27 juni 2026 · Stora Sundby Slott
+            Private VIP Glamping
           </Badge>
           <h2
             className="text-4xl md:text-6xl font-bold mb-6 leading-tight"
