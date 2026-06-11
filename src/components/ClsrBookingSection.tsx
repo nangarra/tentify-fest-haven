@@ -281,7 +281,7 @@ const ClsrBookingSection = () => {
               <div className="flex items-end justify-between mb-5">
                 <div>
                   <p className="text-sm text-muted-foreground">Deluxe VIP Glamping Stay</p>
-                  <p className="text-3xl font-bold">16 800 kr</p>
+                  <p className="text-3xl font-bold">TBH</p>
                   <p className="text-xs text-muted-foreground">
                     2 dagar · färdigbäddad dubbelsäng för 2 · plats för upp till 4
                   </p>
@@ -339,11 +339,11 @@ const ClsrBookingSection = () => {
                   <div className="bg-muted/50 rounded-lg p-4 space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span>Pris (2 dagar)</span>
-                      <span className="font-medium">{PRICE.toLocaleString("sv-SE")} kr</span>
+                      <span className="font-medium">TBH</span>
                     </div>
                     <div className="flex justify-between text-primary">
                       <span>Förskott vid bokning (20%)</span>
-                      <span className="font-bold">{ADVANCE.toLocaleString("sv-SE")} kr</span>
+                      <span className="font-bold">TBH</span>
                     </div>
                     <div className="flex justify-between text-muted-foreground">
                       <span>Deposition (vid ankomst)</span>
@@ -375,7 +375,7 @@ const ClsrBookingSection = () => {
                       Tillbaka
                     </Button>
                     <Button type="submit" className="flex-1 btn-hero" disabled={isSubmitting || isSoldOut}>
-                      {isSubmitting ? "Skickar..." : `Boka för ${ADVANCE.toLocaleString("sv-SE")} kr förskott`}
+                      {isSubmitting ? "Skickar..." : "Boka"}
                     </Button>
                   </div>
                 </form>
@@ -392,7 +392,7 @@ const ClsrBookingSection = () => {
                   </p>
                   <div className="bg-muted/50 rounded-lg p-4 text-left text-sm space-y-2">
                     <p>
-                      <strong>Betala förskott:</strong> {ADVANCE.toLocaleString("sv-SE")} kr (20%) via Swish till{" "}
+                      <strong>Betala förskott:</strong> TBH via Swish till{" "}
                       <strong>123 456 78 90</strong> eller Bankgiro <strong>1234-5678</strong>.
                     </p>
                     <p>
