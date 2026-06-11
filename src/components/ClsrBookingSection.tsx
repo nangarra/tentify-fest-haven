@@ -281,7 +281,7 @@ const ClsrBookingSection = () => {
               <div className="flex items-end justify-between mb-5">
                 <div>
                   <p className="text-sm text-muted-foreground">Deluxe VIP Glamping Stay</p>
-                  <p className="text-3xl font-bold">16 800 kr</p>
+                  <p className="text-3xl font-bold">TBH</p>
                   <p className="text-xs text-muted-foreground">
                     2 dagar · färdigbäddad dubbelsäng för 2 · plats för upp till 4
                   </p>
