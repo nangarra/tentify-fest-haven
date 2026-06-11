@@ -19,7 +19,7 @@ import clsrHeroVideo from "@/assets/clsr-hero.mp4.asset.json";
 
 const FESTIVAL_KEY = "clsr-boutique-2026";
 const TENT_TYPE = "deluxe";
-const TOTAL_TENTS = 9;
+const TOTAL_TENTS = 3;
 const PRICE = 16800;
 const ADVANCE = Math.round(PRICE * 0.2); // 3360 kr
 const DEPOSIT = 1500;
@@ -97,7 +97,7 @@ const ClsrBookingSection = () => {
       p_festival: FESTIVAL_KEY,
     });
     if (error) {
-      console.error("CLSR availability error:", error);
+      console.error("Boutique Festival availability error:", error);
       return;
     }
     const deluxe = (data as any[])?.find((r) => r.tent_type === TENT_TYPE);
@@ -130,7 +130,7 @@ const ClsrBookingSection = () => {
     setIsSubmitting(true);
     try {
       const message =
-        `CLSR Butikfestival – Privat VIP Glamping\n` +
+        `Boutique Festival – Privat VIP Glamping\n` +
         `Tält: Deluxe (sovplats för upp till 4 gäster)\n` +
         `Antal gäster: ${guests}\n` +
         `Datum: 26–27 juni 2026, Stora Sundby Slott\n` +
@@ -145,7 +145,7 @@ const ClsrBookingSection = () => {
         message,
         meta: {
           festival: FESTIVAL_KEY,
-          event: "CLSR Butikfestival",
+          event: "Boutique Festival",
           tentType: TENT_TYPE,
           tentBatch: TENT_TYPE,
           guests,
@@ -194,7 +194,7 @@ const ClsrBookingSection = () => {
 
         <div className="relative z-10 container mx-auto px-4 text-center text-white max-w-4xl">
           <Badge className="mb-6 bg-white/15 text-white border-white/30 backdrop-blur-sm">
-            CLSR Boutique Festival · 26–27 juni 2026 · Stora Sundby Slott
+            Boutique Festival · 26–27 juni 2026 · Stora Sundby Slott
           </Badge>
           <h2
             className="text-4xl md:text-6xl font-bold mb-6 leading-tight"
@@ -203,7 +203,7 @@ const ClsrBookingSection = () => {
             Private VIP Glamping Stay
           </h2>
           <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto mb-8 leading-relaxed">
-            Endast 9 exklusiva VIP-tält tillgängliga — bara 5 minuter från scenen.
+            Endast 3 exklusiva VIP-tält tillgängliga — bara 5 minuter från scenen.
             Varje tält har en färdigbäddad dubbelsäng för 2 gäster, med plats för upp till 4.
           </p>
 
@@ -291,11 +291,11 @@ const ClsrBookingSection = () => {
               {step === 1 && (
                 <Button
                   size="lg"
-                  className="w-full btn-hero"
-                  onClick={() => setStep(2)}
-                  disabled={isSoldOut}
+                  className="w-full"
+                  variant="secondary"
+                  disabled
                 >
-                  {isSoldOut ? "Slutsålt" : "Boka din privata vistelse"}
+                  Bokning öppnar snart
                 </Button>
               )}
 
@@ -386,7 +386,7 @@ const ClsrBookingSection = () => {
                   <CheckCircle2 className="w-12 h-12 text-primary mx-auto mb-4" />
                   <h3 className="text-2xl font-bold mb-3">Tack för din bokning!</h3>
                   <p className="text-muted-foreground mb-4">
-                    Vi har tagit emot din förfrågan för CLSR Butikfestival.
+                    Vi har tagit emot din förfrågan för Boutique Festival.
                     Varje tält har en färdigbäddad dubbelsäng för 2 gäster.
                     Extra luftmadrasser, täcken och kuddar kan hyras som tillval.
                   </p>
@@ -396,7 +396,7 @@ const ClsrBookingSection = () => {
                       <strong>123 456 78 90</strong> eller Bankgiro <strong>1234-5678</strong>.
                     </p>
                     <p>
-                      Märk betalningen med ditt namn och &quot;CLSR&quot;. Deposition om{" "}
+                      Märk betalningen med ditt namn och &quot;Boutique&quot;. Deposition om{" "}
                       {DEPOSIT.toLocaleString("sv-SE")} kr betalas vid ankomst.
                     </p>
                     <p>Vi bekräftar din bokning så snart förskottet är registrerat.</p>
@@ -413,7 +413,7 @@ const ClsrBookingSection = () => {
         <div className="container mx-auto px-4 max-w-5xl">
           <div className="grid md:grid-cols-2 gap-10 mb-14">
             <div>
-              <h3 className="text-2xl font-bold mb-4">Varför CLSR med Tentify?</h3>
+              <h3 className="text-2xl font-bold mb-4">Varför välja Private VIP Glamping med Tentify?</h3>
               <ul className="space-y-3">
                 {benefits.map((b, i) => (
                   <li key={i} className="flex items-start gap-3">
