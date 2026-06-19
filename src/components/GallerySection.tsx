@@ -13,6 +13,23 @@ import image6 from "@/assets/tentify-festivaltalt-utomhus-setup.webp";
 import image7 from "@/assets/glampingtalt-familj-festival-upplevelse.webp";
 import image8 from "@/assets/camping-sang-lyxig-festival-boende.webp";
 
+// Sweden Rock – tidigare event
+import srImg1 from "@/assets/sweden-rock-glamping-4-2.webp.asset.json";
+import srImg2 from "@/assets/sweden-rock-glamping-5-2.webp.asset.json";
+import srImg3 from "@/assets/sweden-rock-glamping-6-2.webp.asset.json";
+import srImg4 from "@/assets/sweden-rock-glamping-7.webp.asset.json";
+import srImg5 from "@/assets/sweden-rock-glamping-8-2.webp.asset.json";
+import srImg6 from "@/assets/sweden-rock-glamping-9-3.webp.asset.json";
+
+const swedenRockImages = [
+  { src: srImg1.url, alt: "Glampingtält på Sweden Rock i kvällsljus" },
+  { src: srImg2.url, alt: "Festivalboende med glampingtält i rad under Sweden Rock" },
+  { src: srImg3.url, alt: "Färdigt uppsatt glampingtält till Sweden Rock" },
+  { src: srImg4.url, alt: "Bekväm sovplats med dubbelsäng i glampingtält på Sweden Rock" },
+  { src: srImg5.url, alt: "Inrett glampingtält med säng och mysig inredning på Sweden Rock" },
+  { src: srImg6.url, alt: "Bekvämt festivalboende med två sovplatser i Tentifys glampingtält" },
+];
+
 const galleryImages = [
   {
     src: image1,
@@ -127,21 +144,24 @@ const GallerySection = () => {
                 En tillbakablick på festivaler vi varit en del av.
               </p>
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <Card className="overflow-hidden shadow-card border-dashed">
-                <div className="aspect-[4/3] bg-muted flex flex-col items-center justify-center p-6 text-center">
-                  <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">
-                    2026
-                  </p>
-                  <h4 className="text-xl font-semibold text-foreground mb-2">
-                    Sweden Rock 2026
-                  </h4>
-                  <p className="text-sm text-muted-foreground">
-                    Bilder och höjdpunkter kommer snart.
-                  </p>
-                </div>
-              </Card>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {swedenRockImages.map((img, i) => (
+                <Card key={i} className="overflow-hidden shadow-card hover:shadow-elegant transition-smooth">
+                  <div className="relative aspect-[4/3]">
+                    <img
+                      src={img.src}
+                      alt={img.alt}
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-full object-cover hover:scale-105 transition-smooth"
+                    />
+                  </div>
+                </Card>
+              ))}
             </div>
+            <p className="text-center text-xs text-muted-foreground mt-4">
+              Bilder från Sweden Rock 2026.
+            </p>
           </div>
 
         </div>
