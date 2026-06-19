@@ -144,21 +144,24 @@ const GallerySection = () => {
                 En tillbakablick på festivaler vi varit en del av.
               </p>
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <Card className="overflow-hidden shadow-card border-dashed">
-                <div className="aspect-[4/3] bg-muted flex flex-col items-center justify-center p-6 text-center">
-                  <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">
-                    2026
-                  </p>
-                  <h4 className="text-xl font-semibold text-foreground mb-2">
-                    Sweden Rock 2026
-                  </h4>
-                  <p className="text-sm text-muted-foreground">
-                    Bilder och höjdpunkter kommer snart.
-                  </p>
-                </div>
-              </Card>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {swedenRockImages.map((img, i) => (
+                <Card key={i} className="overflow-hidden shadow-card hover:shadow-elegant transition-smooth">
+                  <div className="relative aspect-[4/3]">
+                    <img
+                      src={img.src}
+                      alt={img.alt}
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-full object-cover hover:scale-105 transition-smooth"
+                    />
+                  </div>
+                </Card>
+              ))}
             </div>
+            <p className="text-center text-xs text-muted-foreground mt-4">
+              Bilder från Sweden Rock 2026.
+            </p>
           </div>
 
         </div>
