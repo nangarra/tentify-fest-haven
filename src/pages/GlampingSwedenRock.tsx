@@ -426,11 +426,46 @@ const GlampingSwedenRock = () => {
           </div>
         </section>
 
-        {/* FAQ */}
+        {/* REVIEW */}
         <section className="py-16 bg-background">
           <div className="container mx-auto px-4 max-w-3xl">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl md:text-4xl font-bold mb-3">
+                Tidigare gäster om Tentify på Sweden Rock
+              </h2>
+              <p className="text-muted-foreground">
+                En äkta upplevelse från våra Sweden Rock-gäster.
+              </p>
+            </div>
+            <div className="rounded-2xl bg-accent/20 border border-accent/30 p-6 md:p-8 shadow-sm">
+              <div className="flex gap-1 mb-4" aria-label="5 av 5 stjärnor">
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <svg
+                    key={i}
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    className="w-5 h-5 text-primary"
+                  >
+                    <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                  </svg>
+                ))}
+              </div>
+              <blockquote className="text-foreground italic leading-relaxed mb-3">
+                “Hejsan Niklas. Tack för en underbar Rock Festival, du gjorde den så perfekt
+                med din härliga utstrålning, härlig frukost och bra service ❤️ Hoppas att vi
+                ses nästa år också ❤️”
+              </blockquote>
+              <p className="text-sm font-medium text-muted-foreground">– Monica & Micke</p>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section className="py-16 bg-muted/30">
+          <div className="container mx-auto px-4 max-w-3xl">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-10">
-              Vanliga frågor om Glamping Sweden Rock
+              Vanliga frågor om Sweden Rock glamping
             </h2>
             <Accordion type="single" collapsible className="w-full">
               {faq.map((f, i) => (
@@ -448,6 +483,10 @@ const GlampingSwedenRock = () => {
               ,{" "}
               <Link to="/hyra-glampingtalt" className="underline text-primary">
                 hyra glampingtält
+              </Link>
+              ,{" "}
+              <Link to="/talt-brollop" className="underline text-primary">
+                glamping bröllop
               </Link>{" "}
               och{" "}
               <Link to="/hyra-talt-skane" className="underline text-primary">
