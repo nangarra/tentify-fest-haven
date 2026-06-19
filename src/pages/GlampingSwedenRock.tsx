@@ -64,22 +64,32 @@ const forWho = [
 
 const faq = [
   {
-    q: "Vad är glamping på Sweden Rock?",
-    a: "Glamping är ett bekvämare sätt att campa under Sweden Rock Festival. Tältet är redan uppsatt och inrett med sovplatser och utrustning.",
+    q: "Kan jag boka glamping till Sweden Rock 2027?",
+    a: "Inte ännu. Skriv upp dig på väntelistan så hör vi av oss så snart platserna släpps.",
   },
   {
-    q: "Hur många kan sova i ett Tentify-tält?",
-    a: "Två sovplatser ingår, men upp till fyra gäster kan bo i varje tält. Extra uppblåsbara madrasser och täcken kan hyras till.",
+    q: "Var ligger tälten?",
+    a: "Tälten står på en camping i närheten av Sweden Rock-området. Exakt plats meddelas i god tid före festivalen.",
   },
-  { q: "Ingår täcke och kudde?", a: "Ja, täcke och kudde för två personer ingår." },
-  { q: "Behöver jag ta med eget tält?", a: "Nej, tältet står färdigt när du kommer." },
+  {
+    q: "Hur långt är det till festivalområdet?",
+    a: "Tälten står cirka 10 minuter från festivalen.",
+  },
+  {
+    q: "Vad ingår i tältet?",
+    a: "Färdigt uppsatt tält, sovplats med säng/bäddmadrass, täcke och kudde för två personer, matta, belysning och mysig inredning. Upp till fyra gäster är möjligt med tillval.",
+  },
+  {
+    q: "Finns det el i tältet?",
+    a: "Tälten har inte fast el. Vi rekommenderar powerbank för laddning – mer info skickas till alla på väntelistan.",
+  },
+  {
+    q: "Hur fungerar väntelistan för Sweden Rock 2027?",
+    a: "Du fyller i namn, e-post och telefon. När platserna släpps kontaktar vi alla på väntelistan i tur och ordning med bokningsinfo.",
+  },
   {
     q: "Är detta ett alternativ till hotell under Sweden Rock?",
     a: "Ja, det passar dig som vill bo nära festivalstämningen men bekvämare än i ett vanligt campingtält.",
-  },
-  {
-    q: "Kan man boka Sweden Rock 2027 direkt?",
-    a: "Inte ännu. Skriv upp dig på väntelistan så hör vi av oss så snart platserna släpps.",
   },
 ];
 
@@ -432,9 +442,17 @@ const GlampingSwedenRock = () => {
               ))}
             </Accordion>
             <p className="text-center text-sm text-muted-foreground mt-10">
-              Se även våra övriga tjänster:{" "}
+              Se även:{" "}
+              <Link to="/festival-glamping" className="underline text-primary">
+                festival glamping
+              </Link>
+              ,{" "}
               <Link to="/hyr-glamping" className="underline text-primary">
-                Hyr glampingtält i Skåne
+                hyra glampingtält
+              </Link>{" "}
+              och{" "}
+              <Link to="/hyra-talt-skane" className="underline text-primary">
+                hyra tält i Skåne
               </Link>
               .
             </p>
