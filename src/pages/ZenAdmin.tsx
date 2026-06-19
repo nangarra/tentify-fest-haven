@@ -287,7 +287,7 @@ const ZenAdmin = () => {
       entry.name,
       entry.email,
       entry.phone,
-      entry.festival === 'sweden-rock' ? 'Sweden Rock' : entry.festival,
+      FESTIVAL_LABELS[entry.festival] ?? entry.festival,
       entry.contacted ? 'Ja' : 'Nej'
     ]);
 
