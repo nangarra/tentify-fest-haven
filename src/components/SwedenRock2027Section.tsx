@@ -48,7 +48,7 @@ const SwedenRock2027Section = () => {
             <ul className="space-y-3 mb-8">
               {[
                 { icon: Sparkles, text: "Färdigbäddade glampingtält – bara checka in" },
-                { icon: MapPin, text: "Nära ÅKEs Camping & festivalområdet" },
+                { icon: MapPin, text: "Endast 10 minuter från festivalen" },
                 { icon: Calendar, text: "Sweden Rock Festival 2027" },
                 { icon: CheckCircle2, text: "Begränsat antal tält – först till kvarn" },
               ].map((b, i) => (
