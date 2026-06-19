@@ -65,31 +65,27 @@ const forWho = [
 const faq = [
   {
     q: "Kan jag boka glamping till Sweden Rock 2027?",
-    a: "Inte ännu. Skriv upp dig på väntelistan så hör vi av oss så snart platserna släpps.",
+    a: "Just nu kan du skriva upp dig på väntelistan för Sweden Rock 2027. Då får du information när nya platser eller bokningsmöjligheter öppnar.",
+  },
+  {
+    q: "Vad ingår i glampingtältet?",
+    a: "Exakt innehåll kan variera beroende på paket, men målet är att erbjuda ett färdigt och bekvämt tält med sovplats, inredning och mysig känsla.",
+  },
+  {
+    q: "Är detta ett alternativ till vanlig camping?",
+    a: "Ja, Tentifys glamping är för dig som vill bo bekvämare än i ett vanligt tält och slippa ta med all campingutrustning själv.",
+  },
+  {
+    q: "Hur fungerar väntelistan?",
+    a: "Du skriver upp dig med dina kontaktuppgifter och får information när platser eller bokningsmöjligheter inför Sweden Rock 2027 öppnar.",
+  },
+  {
+    q: "Är platserna begränsade?",
+    a: "Ja, antalet glampingtält är begränsat och tidigare år har intresset varit stort. Därför rekommenderar vi att skriva upp sig på väntelistan.",
   },
   {
     q: "Var ligger tälten?",
-    a: "Tälten står på en camping i närheten av Sweden Rock-området. Exakt plats meddelas i god tid före festivalen.",
-  },
-  {
-    q: "Hur långt är det till festivalområdet?",
-    a: "Tälten står cirka 10 minuter från festivalen.",
-  },
-  {
-    q: "Vad ingår i tältet?",
-    a: "Färdigt uppsatt tält, sovplats med säng/bäddmadrass, täcke och kudde för två personer, matta, belysning och mysig inredning. Upp till fyra gäster är möjligt med tillval.",
-  },
-  {
-    q: "Finns det el i tältet?",
-    a: "Tälten har inte fast el. Vi rekommenderar powerbank för laddning – mer info skickas till alla på väntelistan.",
-  },
-  {
-    q: "Hur fungerar väntelistan för Sweden Rock 2027?",
-    a: "Du fyller i namn, e-post och telefon. När platserna släpps kontaktar vi alla på väntelistan i tur och ordning med bokningsinfo.",
-  },
-  {
-    q: "Är detta ett alternativ till hotell under Sweden Rock?",
-    a: "Ja, det passar dig som vill bo nära festivalstämningen men bekvämare än i ett vanligt campingtält.",
+    a: "Exakt platsinformation uppdateras inför 2027 när campingen och upplägget är fastställt.",
   },
 ];
 
@@ -157,19 +153,19 @@ const GlampingSwedenRock = () => {
   return (
     <>
       <Helmet>
-        <title>Glamping Sweden Rock 2027 | Skriv upp dig på väntelistan</title>
+        <title>Glamping Sweden Rock 2027 | Väntelista</title>
         <meta
           name="description"
-          content="Vill du bo bekvämt under Sweden Rock 2027? Skriv upp dig på Tentifys väntelista för glamping med färdigt tält, sovplats, täcke, kudde och mysig inredning."
+          content="Bo bekvämt under Sweden Rock 2027. Skriv upp dig på Tentifys väntelista för glamping med färdigt tält, sovplats och mysig inredning."
         />
         <link rel="canonical" href="https://tentify.se/glamping-sweden-rock" />
         <link rel="alternate" hrefLang="sv" href="https://tentify.se/glamping-sweden-rock" />
         <link rel="alternate" hrefLang="de" href="https://tentify.se/de/sweden-rock-glamping-unterkunft" />
         <link rel="alternate" hrefLang="x-default" href="https://tentify.se/glamping-sweden-rock" />
-        <meta property="og:title" content="Glamping Sweden Rock 2027 | Tentify" />
+        <meta property="og:title" content="Glamping Sweden Rock 2027 | Väntelista" />
         <meta
           property="og:description"
-          content="Skriv upp dig på väntelistan för glamping till Sweden Rock 2027."
+          content="Bo bekvämt under Sweden Rock 2027. Skriv upp dig på Tentifys väntelista för glamping med färdigt tält, sovplats och mysig inredning."
         />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://tentify.se/glamping-sweden-rock" />
@@ -192,7 +188,10 @@ const GlampingSwedenRock = () => {
         <section className="relative min-h-[78vh] flex items-center justify-center overflow-hidden pt-20">
           <img
             src={heroImg.url}
-            alt="Glamping Sweden Rock 2027 med färdigt tält från Tentify"
+            alt="Glampingtält på Sweden Rock 2027 – festivalboende från Tentify"
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
             className="absolute inset-0 w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-black/55" />
@@ -207,9 +206,9 @@ const GlampingSwedenRock = () => {
               Glamping Sweden Rock 2027
             </h1>
             <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto mb-8 leading-relaxed">
-              Bo bekvämt under Sweden Rock Festival 2027 med färdiga glampingtält, sängplats,
-              täcke, kudde och mysig inredning. Skriv upp dig på väntelistan så hör vi av oss
-              så snart platserna släpps.
+              Vill du bo bekvämt under Sweden Rock 2027 utan att släpa med tält, madrass och
+              campingutrustning? Tentify erbjuder färdiga glampingtält med sovplats, inredning
+              och mysig festivalkänsla nära Sweden Rock.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Button size="lg" className="btn-hero" onClick={() => scrollTo("vantelista")}>
@@ -427,11 +426,46 @@ const GlampingSwedenRock = () => {
           </div>
         </section>
 
-        {/* FAQ */}
+        {/* REVIEW */}
         <section className="py-16 bg-background">
           <div className="container mx-auto px-4 max-w-3xl">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl md:text-4xl font-bold mb-3">
+                Tidigare gäster om Tentify på Sweden Rock
+              </h2>
+              <p className="text-muted-foreground">
+                En äkta upplevelse från våra Sweden Rock-gäster.
+              </p>
+            </div>
+            <div className="rounded-2xl bg-accent/20 border border-accent/30 p-6 md:p-8 shadow-sm">
+              <div className="flex gap-1 mb-4" aria-label="5 av 5 stjärnor">
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <svg
+                    key={i}
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    className="w-5 h-5 text-primary"
+                  >
+                    <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                  </svg>
+                ))}
+              </div>
+              <blockquote className="text-foreground italic leading-relaxed mb-3">
+                “Hejsan Niklas. Tack för en underbar Rock Festival, du gjorde den så perfekt
+                med din härliga utstrålning, härlig frukost och bra service ❤️ Hoppas att vi
+                ses nästa år också ❤️”
+              </blockquote>
+              <p className="text-sm font-medium text-muted-foreground">– Monica & Micke</p>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section className="py-16 bg-muted/30">
+          <div className="container mx-auto px-4 max-w-3xl">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-10">
-              Vanliga frågor om Glamping Sweden Rock
+              Vanliga frågor om Sweden Rock glamping
             </h2>
             <Accordion type="single" collapsible className="w-full">
               {faq.map((f, i) => (
@@ -449,6 +483,10 @@ const GlampingSwedenRock = () => {
               ,{" "}
               <Link to="/hyra-glampingtalt" className="underline text-primary">
                 hyra glampingtält
+              </Link>
+              ,{" "}
+              <Link to="/talt-brollop" className="underline text-primary">
+                glamping bröllop
               </Link>{" "}
               och{" "}
               <Link to="/hyra-talt-skane" className="underline text-primary">
