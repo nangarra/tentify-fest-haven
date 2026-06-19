@@ -28,7 +28,7 @@ const ContactSection = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.name || !formData.phone || !formData.email || !formData.message) {
       toast({
         title: "Alla fält måste fyllas i",
@@ -42,29 +42,49 @@ const ContactSection = () => {
 
     try {
       const { supabase } = await import("@/integrations/supabase/client");
-      
+
+      const sourcePage =
+        typeof window !== "undefined"
+          ? `${window.location.pathname}${window.location.hash || ""}`
+          : null;
+
       const { error } = await supabase
-        .from('bookings')
+        .from('contact_requests')
         .insert([
           {
             name: formData.name,
-            phone: formData.phone,
             email: formData.email,
-            message: formData.message
+            phone: formData.phone,
+            message: formData.message,
+            source_page: sourcePage,
           }
         ]);
 
       if (error) throw error;
 
-      // Lock form and show confirmation
+      // Best-effort email notification (no-op if function not deployed)
+      try {
+        await supabase.functions.invoke('notify-contact-request', {
+          body: {
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            message: formData.message,
+            source_page: sourcePage,
+          },
+        });
+      } catch (notifyErr) {
+        console.warn('Contact notification not sent:', notifyErr);
+      }
+
       setIsSubmitted(true);
       setShowConfirmation(true);
 
     } catch (error) {
-      console.error('Error submitting booking:', error);
+      console.error('Error submitting contact request:', error);
       toast({
         title: "Ett fel uppstod",
-        description: "Kunde inte skicka din bokning. Vänligen försök igen.",
+        description: "Kunde inte skicka din förfrågan. Vänligen försök igen.",
         variant: "destructive"
       });
     } finally {
@@ -156,32 +176,17 @@ const ContactSection = () => {
                   aria-disabled={isSubmitting || isSubmitted}
                   style={isSubmitted ? { opacity: 0.6, pointerEvents: 'none' } : {}}
                 >
-                  {isSubmitting ? "Skickar..." : isSubmitted ? "Bokning skickad" : "Skicka meddelande"}
+                  {isSubmitting ? "Skickar..." : isSubmitted ? "Förfrågan skickad" : "Skicka meddelande"}
                 </Button>
               </form>
 
               {/* Confirmation Panel */}
               {showConfirmation && (
                 <Card className="mt-6 p-6 bg-primary/5 border-primary/20">
-                  <div className="space-y-4">
-                    <p className="text-foreground leading-relaxed">
-                      Vi har tagit emot din bokning, ditt tält är nu reserverat. För att din bokning ska bli godkänd behöver vi ta del av förskottsbetalningen. Det går bra att betala direkt via Swish eller Bankgiro.
-                    </p>
-                    
-                    <div className="space-y-2 bg-background/50 p-4 rounded-lg">
-                      <p className="font-semibold text-foreground">Nangarra Invest AB</p>
-                      <p className="text-muted-foreground">Swishnummer: <span className="font-medium text-foreground">123 155 02 27</span></p>
-                      <p className="text-muted-foreground">Bankgiro: <span className="font-medium text-foreground">5226-2243</span></p>
-                    </div>
-
-                    <p className="text-sm text-muted-foreground italic">
-                      Vi bekräftar även din bokning via e-post inom 24 timmar.
-                    </p>
-                    
-                    <p className="text-sm text-muted-foreground italic mt-2">
-                      Vi har mottagit din bokning och kommer att konfirmera när förskottsbetalningen är gjord.
-                    </p>
-                  </div>
+                  <p className="text-foreground leading-relaxed">
+                    Tack för din förfrågan! Vi har tagit emot ditt meddelande och
+                    återkommer med mer information så snart vi kan.
+                  </p>
                 </Card>
               )}
             </Card>
