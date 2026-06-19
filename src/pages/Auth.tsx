@@ -63,11 +63,29 @@ const Auth = () => {
     }
   };
 
+  const validatePassword = (pwd: string): string | null => {
+    if (pwd.length < 12) return "Lösenordet måste vara minst 12 tecken.";
+    if (!/[A-Z]/.test(pwd)) return "Lösenordet måste innehålla minst en stor bokstav.";
+    if (!/[a-z]/.test(pwd)) return "Lösenordet måste innehålla minst en liten bokstav.";
+    if (!/[0-9]/.test(pwd)) return "Lösenordet måste innehålla minst en siffra.";
+    if (!/[^A-Za-z0-9]/.test(pwd)) return "Lösenordet måste innehålla minst ett specialtecken.";
+    const common = ["password", "password1", "123456", "12345678", "qwerty", "iloveyou", "admin123", "welcome1"];
+    if (common.includes(pwd.toLowerCase())) return "Lösenordet är för vanligt. Välj något starkare.";
+    return null;
+  };
+
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
+      const pwdError = validatePassword(password);
+      if (pwdError) {
+        toast({ title: "Svagt lösenord", description: pwdError, variant: "destructive" });
+        setIsLoading(false);
+        return;
+      }
+
       const { error } = await supabase.auth.signUp({
         email,
         password,
@@ -159,9 +177,12 @@ const Auth = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    minLength={6}
+                    minLength={12}
                     disabled={isLoading}
                   />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Minst 12 tecken med stor och liten bokstav, siffra och specialtecken.
+                  </p>
                 </div>
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
