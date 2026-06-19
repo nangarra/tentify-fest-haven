@@ -11,6 +11,9 @@ import Auth from "./pages/Auth";
 import TaltBrollop from "./pages/TaltBrollop";
 import GlampingSwedenRock from "./pages/GlampingSwedenRock";
 import DeSwedenRockGlamping from "./pages/DeSwedenRockGlamping";
+import HyraTaltSkane from "./pages/HyraTaltSkane";
+import HyraTaltMalmo from "./pages/HyraTaltMalmo";
+import FestivalGlamping from "./pages/FestivalGlamping";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
 
@@ -29,6 +32,9 @@ const App = () => (
           <Route path="/talt-brollop" element={<TaltBrollop />} />
           <Route path="/glamping-sweden-rock" element={<GlampingSwedenRock />} />
           <Route path="/de/sweden-rock-glamping-unterkunft" element={<DeSwedenRockGlamping />} />
+          <Route path="/hyra-talt-skane" element={<HyraTaltSkane />} />
+          <Route path="/hyra-talt-malmo" element={<HyraTaltMalmo />} />
+          <Route path="/festival-glamping" element={<FestivalGlamping />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/zenadmin" element={<ZenAdmin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
