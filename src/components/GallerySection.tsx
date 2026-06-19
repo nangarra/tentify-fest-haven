@@ -13,6 +13,23 @@ import image6 from "@/assets/tentify-festivaltalt-utomhus-setup.webp";
 import image7 from "@/assets/glampingtalt-familj-festival-upplevelse.webp";
 import image8 from "@/assets/camping-sang-lyxig-festival-boende.webp";
 
+// Sweden Rock – tidigare event
+import srImg1 from "@/assets/sweden-rock-glamping-4-2.webp.asset.json";
+import srImg2 from "@/assets/sweden-rock-glamping-5-2.webp.asset.json";
+import srImg3 from "@/assets/sweden-rock-glamping-6-2.webp.asset.json";
+import srImg4 from "@/assets/sweden-rock-glamping-7.webp.asset.json";
+import srImg5 from "@/assets/sweden-rock-glamping-8-2.webp.asset.json";
+import srImg6 from "@/assets/sweden-rock-glamping-9-3.webp.asset.json";
+
+const swedenRockImages = [
+  { src: srImg1.url, alt: "Glampingtält på Sweden Rock i kvällsljus" },
+  { src: srImg2.url, alt: "Festivalboende med glampingtält i rad under Sweden Rock" },
+  { src: srImg3.url, alt: "Färdigt uppsatt glampingtält till Sweden Rock" },
+  { src: srImg4.url, alt: "Bekväm sovplats med dubbelsäng i glampingtält på Sweden Rock" },
+  { src: srImg5.url, alt: "Inrett glampingtält med säng och mysig inredning på Sweden Rock" },
+  { src: srImg6.url, alt: "Bekvämt festivalboende med två sovplatser i Tentifys glampingtält" },
+];
+
 const galleryImages = [
   {
     src: image1,
