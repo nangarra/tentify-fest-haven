@@ -150,6 +150,24 @@ const TaltBrollop = () => {
             </div>
           </section>
 
+          {/* Bildrad – sovplatser för bröllopsgäster */}
+          <section className="py-8 bg-background">
+            <div className="container mx-auto px-4 max-w-6xl grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+              {sovbilder.map((b) => (
+                <img
+                  key={b.src}
+                  src={b.src}
+                  alt={b.alt}
+                  loading="lazy"
+                  decoding="async"
+                  width={800}
+                  height={600}
+                  className="w-full aspect-[4/3] object-cover rounded-lg shadow-card"
+                />
+              ))}
+            </div>
+          </section>
+
           {/* Sektion 2 – Vad ingår */}
           <section className="py-16 bg-gradient-subtle">
             <div className="container mx-auto px-4 max-w-4xl">
@@ -218,6 +236,23 @@ const TaltBrollop = () => {
             </div>
           </section>
 
+          {/* Bröllops-thumbnails */}
+          <section className="py-8 bg-gradient-subtle">
+            <div className="container mx-auto px-4 max-w-6xl grid grid-cols-2 md:grid-cols-4 gap-4">
+              {brollopThumbs.map((b) => (
+                <img
+                  key={b.src}
+                  src={b.src}
+                  alt={b.alt}
+                  loading="lazy"
+                  decoding="async"
+                  width={600}
+                  height={450}
+                  className="w-full aspect-[4/3] object-cover rounded-lg shadow-card"
+                />
+              ))}
+            </div>
+
           {/* Sektion 4 – Skillnaden */}
           <section className="py-16 bg-background">
             <div className="container mx-auto px-4 max-w-4xl">
@@ -264,6 +299,33 @@ const TaltBrollop = () => {
               <Button asChild size="lg" className="btn-hero text-lg px-8">
                 <Link to="/#kontakt">Be om offert för bröllop</Link>
               </Button>
+            </div>
+          </section>
+
+          {/* Galleri */}
+          <section className="py-16 bg-background">
+            <div className="container mx-auto px-4 max-w-6xl">
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 text-center">
+                Galleri från våra tält och event
+              </h2>
+              <p className="text-lg text-muted-foreground text-center mb-10 max-w-2xl mx-auto">
+                Se exempel på hur våra glampingtält kan skapa en mysig och bekväm
+                känsla för bröllop, event och övernattande gäster.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                {galleriBilder.map((b) => (
+                  <img
+                    key={b.src}
+                    src={b.src}
+                    alt={b.alt}
+                    loading="lazy"
+                    decoding="async"
+                    width={800}
+                    height={600}
+                    className="w-full aspect-[4/3] object-cover rounded-xl shadow-card hover:shadow-lg transition-shadow"
+                  />
+                ))}
+              </div>
             </div>
           </section>
 
