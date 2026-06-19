@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, MapPin, Sparkles, CheckCircle2 } from "lucide-react";
+import { Calendar, MapPin, Sparkles, CheckCircle2, Star } from "lucide-react";
 import heroImage from "@/assets/sweden-rock-glamping-talt.webp.asset.json";
 import interiorImage from "@/assets/glampingtalt-sweden-rock-interior.webp.asset.json";
 
