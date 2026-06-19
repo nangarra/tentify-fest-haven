@@ -59,6 +59,54 @@ export type Database = {
         }
         Relationships: []
       }
+      contact_requests: {
+        Row: {
+          admin_note: string | null
+          created_at: string
+          email: string
+          event_date: string | null
+          event_type: string | null
+          guest_count: string | null
+          handled: boolean
+          handled_at: string | null
+          id: string
+          message: string
+          name: string
+          phone: string | null
+          source_page: string | null
+        }
+        Insert: {
+          admin_note?: string | null
+          created_at?: string
+          email: string
+          event_date?: string | null
+          event_type?: string | null
+          guest_count?: string | null
+          handled?: boolean
+          handled_at?: string | null
+          id?: string
+          message: string
+          name: string
+          phone?: string | null
+          source_page?: string | null
+        }
+        Update: {
+          admin_note?: string | null
+          created_at?: string
+          email?: string
+          event_date?: string | null
+          event_type?: string | null
+          guest_count?: string | null
+          handled?: boolean
+          handled_at?: string | null
+          id?: string
+          message?: string
+          name?: string
+          phone?: string | null
+          source_page?: string | null
+        }
+        Relationships: []
+      }
       tent_inventory: {
         Row: {
           available_count: number
