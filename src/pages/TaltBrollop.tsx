@@ -11,6 +11,41 @@ import {
 import glampingNatur from "@/assets/glamping-talt-naturmiljo-skane.webp";
 import glampingUtemoebler from "@/assets/glamping-talt-utemoebler-komfort.webp";
 import festivalTalt from "@/assets/festival-glamping-talt-inuti-komfort.webp";
+import sangLyxig from "@/assets/camping-sang-lyxig-festival-boende.webp";
+import inredningLyxig from "@/assets/festival-talt-inredning-lyxig-camping.webp";
+import inutiSovplats from "@/assets/glamping-talt-inuti-sovplats.webp";
+import utomhusmobler from "@/assets/glamping-talt-utomhusmobler-festival.webp";
+import dubbelsang from "@/assets/glampingtalt-dubbelsang.webp";
+import enkelsang from "@/assets/glampingtalt-enkelsang.webp";
+import familjUpplevelse from "@/assets/glampingtalt-familj-festival-upplevelse.webp";
+import lyxigtTentify from "@/assets/lyxigt-glampingtalt-festival-tentify.webp";
+import utomhusSetup from "@/assets/tentify-festivaltalt-utomhus-setup.webp";
+import bekvamlighet from "@/assets/tentify-glampingtalt-bekvamlighet-festival.webp";
+
+const sovbilder = [
+  { src: dubbelsang, alt: "Glampingtält med dubbelsäng för bröllopsgäster" },
+  { src: enkelsang, alt: "Möblerat glampingtält med enkelsäng och inredning" },
+  { src: inutiSovplats, alt: "Mysig sovplats inuti glampingtält för övernattande gäster" },
+];
+
+const brollopThumbs = [
+  { src: utomhusmobler, alt: "Glampingtält med utomhusmöbler vid utomhusbröllop" },
+  { src: lyxigtTentify, alt: "Lyxigt glampingtält till bröllop i Skåne" },
+  { src: utomhusSetup, alt: "Bröllopscamp med glampingtält uppställda utomhus" },
+  { src: bekvamlighet, alt: "Bekvämt glampingtält för bröllopsgäster" },
+];
+
+const galleriBilder = [
+  { src: glampingNatur, alt: "Glampingtält till bröllop i Skåne i naturmiljö" },
+  { src: glampingUtemoebler, alt: "Möblerat glampingtält med utemöbler" },
+  { src: festivalTalt, alt: "Inrett tält för bröllop och event" },
+  { src: sangLyxig, alt: "Lyxig säng i glampingtält för bröllopsgäster" },
+  { src: inredningLyxig, alt: "Mysig inredning i glampingtält för bröllop" },
+  { src: familjUpplevelse, alt: "Glamping bröllop med färdiga sovtält för gäster" },
+  { src: lyxigtTentify, alt: "Tentify glamping till bröllop" },
+  { src: utomhusSetup, alt: "Bröllopscamp med glampingtält från Tentify" },
+  { src: bekvamlighet, alt: "Mysigt glampingtält för övernattande bröllopsgäster" },
+];
 
 const TaltBrollop = () => {
   const faqItems = [
@@ -99,6 +134,7 @@ const TaltBrollop = () => {
             </div>
           </section>
 
+
           {/* Sektion 1 – Hyr tält till bröllopsgäster */}
           <section className="py-16 bg-background">
             <div className="container mx-auto px-4 max-w-4xl">
@@ -111,6 +147,24 @@ const TaltBrollop = () => {
                 stämningsfull lösning. Tentify hjälper er skapa ett litet
                 bröllopscamp där gästerna får en mysig sovplats nära festen.
               </p>
+            </div>
+          </section>
+
+          {/* Bildrad – sovplatser för bröllopsgäster */}
+          <section className="py-8 bg-background">
+            <div className="container mx-auto px-4 max-w-6xl grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+              {sovbilder.map((b) => (
+                <img
+                  key={b.src}
+                  src={b.src}
+                  alt={b.alt}
+                  loading="lazy"
+                  decoding="async"
+                  width={800}
+                  height={600}
+                  className="w-full aspect-[4/3] object-cover rounded-lg shadow-card"
+                />
+              ))}
             </div>
           </section>
 
@@ -182,6 +236,25 @@ const TaltBrollop = () => {
             </div>
           </section>
 
+          {/* Bröllops-thumbnails */}
+          <section className="py-8 bg-gradient-subtle">
+            <div className="container mx-auto px-4 max-w-6xl grid grid-cols-2 md:grid-cols-4 gap-4">
+              {brollopThumbs.map((b) => (
+                <img
+                  key={b.src}
+                  src={b.src}
+                  alt={b.alt}
+                  loading="lazy"
+                  decoding="async"
+                  width={600}
+                  height={450}
+                  className="w-full aspect-[4/3] object-cover rounded-lg shadow-card"
+                />
+              ))}
+            </div>
+          </section>
+
+
           {/* Sektion 4 – Skillnaden */}
           <section className="py-16 bg-background">
             <div className="container mx-auto px-4 max-w-4xl">
@@ -228,6 +301,33 @@ const TaltBrollop = () => {
               <Button asChild size="lg" className="btn-hero text-lg px-8">
                 <Link to="/#kontakt">Be om offert för bröllop</Link>
               </Button>
+            </div>
+          </section>
+
+          {/* Galleri */}
+          <section className="py-16 bg-background">
+            <div className="container mx-auto px-4 max-w-6xl">
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 text-center">
+                Galleri från våra tält och event
+              </h2>
+              <p className="text-lg text-muted-foreground text-center mb-10 max-w-2xl mx-auto">
+                Se exempel på hur våra glampingtält kan skapa en mysig och bekväm
+                känsla för bröllop, event och övernattande gäster.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                {galleriBilder.map((b) => (
+                  <img
+                    key={b.src}
+                    src={b.src}
+                    alt={b.alt}
+                    loading="lazy"
+                    decoding="async"
+                    width={800}
+                    height={600}
+                    className="w-full aspect-[4/3] object-cover rounded-xl shadow-card hover:shadow-lg transition-shadow"
+                  />
+                ))}
+              </div>
             </div>
           </section>
 
