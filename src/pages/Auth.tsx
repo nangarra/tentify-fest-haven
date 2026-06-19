@@ -177,9 +177,12 @@ const Auth = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    minLength={6}
+                    minLength={12}
                     disabled={isLoading}
                   />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Minst 12 tecken med stor och liten bokstav, siffra och specialtecken.
+                  </p>
                 </div>
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
