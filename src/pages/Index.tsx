@@ -3,7 +3,7 @@ import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
 import IncludedSection from "@/components/IncludedSection";
 import ExtrasSection from "@/components/ExtrasSection";
-import ClsrBookingSection from "@/components/ClsrBookingSection";
+import SwedenRock2027Section from "@/components/SwedenRock2027Section";
 import EventRentalSection from "@/components/EventRentalSection";
 import WeddingSection from "@/components/WeddingSection";
 import TentSpecsSection from "@/components/TentSpecsSection";
@@ -29,7 +29,7 @@ const Index = () => {
           </Link>
         </div>
       </div>
-      <ClsrBookingSection />
+      <SwedenRock2027Section />
       <AboutSection />
       <IncludedSection />
       <ExtrasSection />
