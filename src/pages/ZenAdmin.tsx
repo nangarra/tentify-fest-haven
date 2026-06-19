@@ -52,6 +52,22 @@ interface WaitlistEntry {
   created_at: string;
 }
 
+interface ContactRequest {
+  id: string;
+  created_at: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  message: string;
+  source_page: string | null;
+  event_type: string | null;
+  event_date: string | null;
+  guest_count: string | null;
+  handled: boolean;
+  handled_at: string | null;
+  admin_note: string | null;
+}
+
 type EventKey = "sweden-rock" | "sweden-rock-2027" | "clsr-boutique-2026";
 
 const EVENT_OPTIONS: { key: EventKey; label: string }[] = [
@@ -83,6 +99,8 @@ const ZenAdmin = () => {
   const [isLoadingInventory, setIsLoadingInventory] = useState(false);
   const [waitlist, setWaitlist] = useState<WaitlistEntry[]>([]);
   const [isLoadingWaitlist, setIsLoadingWaitlist] = useState(false);
+  const [contactRequests, setContactRequests] = useState<ContactRequest[]>([]);
+  const [isLoadingContacts, setIsLoadingContacts] = useState(false);
 
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -103,6 +121,7 @@ const ZenAdmin = () => {
       fetchBookings();
       fetchInventory();
       fetchWaitlist();
+      fetchContactRequests();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAdmin, selectedEvent]);
@@ -241,6 +260,56 @@ const ZenAdmin = () => {
       setIsLoadingWaitlist(false);
     }
   };
+
+  const fetchContactRequests = async () => {
+    try {
+      setIsLoadingContacts(true);
+      const { data, error } = await supabase
+        .from('contact_requests')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setContactRequests((data as ContactRequest[]) || []);
+    } catch (error) {
+      console.error('Error fetching contact requests:', error);
+      toast({
+        title: "Fel",
+        description: "Kunde inte hämta kontaktförfrågningar.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoadingContacts(false);
+    }
+  };
+
+  const toggleContactHandled = async (entry: ContactRequest) => {
+    try {
+      const next = !entry.handled;
+      const { error } = await supabase
+        .from('contact_requests')
+        .update({ handled: next, handled_at: next ? new Date().toISOString() : null })
+        .eq('id', entry.id);
+      if (error) throw error;
+      await fetchContactRequests();
+    } catch (error) {
+      console.error('Error toggling contact handled:', error);
+      toast({ title: "Fel", description: "Kunde inte uppdatera status.", variant: "destructive" });
+    }
+  };
+
+  const deleteContactRequest = async (id: string) => {
+    try {
+      const { error } = await supabase.from('contact_requests').delete().eq('id', id);
+      if (error) throw error;
+      await fetchContactRequests();
+      toast({ title: "Raderad", description: "Kontaktförfrågan raderad." });
+    } catch (error) {
+      console.error('Error deleting contact request:', error);
+      toast({ title: "Fel", description: "Kunde inte radera.", variant: "destructive" });
+    }
+  };
+
 
   const toggleContacted = async (entry: WaitlistEntry) => {
     try {
@@ -700,6 +769,7 @@ const ZenAdmin = () => {
         <TabsList className="mb-4">
           <TabsTrigger value="bookings">Bokningar – {currentEventLabel} ({filteredBookings.length})</TabsTrigger>
           <TabsTrigger value="waitlist">Väntelista Sweden Rock ({waitlist.length})</TabsTrigger>
+          <TabsTrigger value="contacts">Kontaktförfrågningar ({contactRequests.length})</TabsTrigger>
 
         </TabsList>
 
@@ -848,6 +918,83 @@ const ZenAdmin = () => {
                               onCheckedChange={() => toggleContacted(entry)}
                             />
                           </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="contacts">
+          <Card>
+            <CardHeader>
+              <CardTitle>Kontaktförfrågningar</CardTitle>
+              <CardDescription>
+                Allmänna kontakt- och offertförfrågningar från hemsidan. Dessa är inte kopplade till något specifikt event eller bokning.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {isLoadingContacts ? (
+                <p className="text-center text-muted-foreground py-8">Laddar...</p>
+              ) : contactRequests.length === 0 ? (
+                <p className="text-center text-muted-foreground py-8">Inga kontaktförfrågningar ännu</p>
+              ) : (
+                <div className="space-y-3">
+                  {contactRequests.map((c) => (
+                    <div
+                      key={c.id}
+                      className={`border rounded-lg p-4 transition-colors ${c.handled ? 'bg-muted/30' : 'hover:bg-muted/50'}`}
+                    >
+                      <div className="flex flex-col md:flex-row md:items-start justify-between gap-3">
+                        <div className="flex-1 min-w-0 space-y-1">
+                          <div className="flex items-center gap-3 mb-1 flex-wrap">
+                            <h3 className="font-semibold truncate">{c.name}</h3>
+                            {c.handled && (
+                              <Badge variant="default" className="bg-green-600">
+                                <Check className="mr-1 h-3 w-3" />
+                                Hanterad
+                              </Badge>
+                            )}
+                            {c.source_page && (
+                              <Badge variant="outline" className="font-mono text-xs">{c.source_page}</Badge>
+                            )}
+                          </div>
+                          <p className="text-sm text-muted-foreground truncate">
+                            {c.email}{c.phone ? ` • ${c.phone}` : ''}
+                          </p>
+                          <p className="text-sm text-foreground whitespace-pre-wrap break-words pt-1">
+                            {c.message}
+                          </p>
+                          {(c.event_type || c.event_date || c.guest_count) && (
+                            <p className="text-xs text-muted-foreground pt-1">
+                              {c.event_type && <>Eventtyp: {c.event_type} </>}
+                              {c.event_date && <>• Datum: {c.event_date} </>}
+                              {c.guest_count && <>• Antal: {c.guest_count}</>}
+                            </p>
+                          )}
+                          <p className="text-xs text-muted-foreground pt-1">
+                            Inkom: {new Date(c.created_at).toLocaleString('sv-SE')}
+                          </p>
+                        </div>
+
+                        <div className="flex items-center gap-3 shrink-0">
+                          <div className="flex items-center gap-2">
+                            <Label className="text-sm">Hanterad:</Label>
+                            <Switch
+                              checked={c.handled}
+                              onCheckedChange={() => toggleContactHandled(c)}
+                            />
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => deleteContactRequest(c.id)}
+                          >
+                            <Trash2 className="h-4 w-4 text-destructive" />
+                          </Button>
                         </div>
                       </div>
                     </div>
