@@ -261,6 +261,56 @@ const ZenAdmin = () => {
     }
   };
 
+  const fetchContactRequests = async () => {
+    try {
+      setIsLoadingContacts(true);
+      const { data, error } = await supabase
+        .from('contact_requests')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setContactRequests((data as ContactRequest[]) || []);
+    } catch (error) {
+      console.error('Error fetching contact requests:', error);
+      toast({
+        title: "Fel",
+        description: "Kunde inte hämta kontaktförfrågningar.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoadingContacts(false);
+    }
+  };
+
+  const toggleContactHandled = async (entry: ContactRequest) => {
+    try {
+      const next = !entry.handled;
+      const { error } = await supabase
+        .from('contact_requests')
+        .update({ handled: next, handled_at: next ? new Date().toISOString() : null })
+        .eq('id', entry.id);
+      if (error) throw error;
+      await fetchContactRequests();
+    } catch (error) {
+      console.error('Error toggling contact handled:', error);
+      toast({ title: "Fel", description: "Kunde inte uppdatera status.", variant: "destructive" });
+    }
+  };
+
+  const deleteContactRequest = async (id: string) => {
+    try {
+      const { error } = await supabase.from('contact_requests').delete().eq('id', id);
+      if (error) throw error;
+      await fetchContactRequests();
+      toast({ title: "Raderad", description: "Kontaktförfrågan raderad." });
+    } catch (error) {
+      console.error('Error deleting contact request:', error);
+      toast({ title: "Fel", description: "Kunde inte radera.", variant: "destructive" });
+    }
+  };
+
+
   const toggleContacted = async (entry: WaitlistEntry) => {
     try {
       const newContactedStatus = !entry.contacted;
