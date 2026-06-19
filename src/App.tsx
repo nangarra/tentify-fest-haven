@@ -14,6 +14,7 @@ import DeSwedenRockGlamping from "./pages/DeSwedenRockGlamping";
 import HyraTaltSkane from "./pages/HyraTaltSkane";
 import HyraTaltMalmo from "./pages/HyraTaltMalmo";
 import FestivalGlamping from "./pages/FestivalGlamping";
+import HyraGlampingtalt from "./pages/HyraGlampingtalt";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
 
@@ -35,6 +36,7 @@ const App = () => (
           <Route path="/hyra-talt-skane" element={<HyraTaltSkane />} />
           <Route path="/hyra-talt-malmo" element={<HyraTaltMalmo />} />
           <Route path="/festival-glamping" element={<FestivalGlamping />} />
+          <Route path="/hyra-glampingtalt" element={<HyraGlampingtalt />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/zenadmin" element={<ZenAdmin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
