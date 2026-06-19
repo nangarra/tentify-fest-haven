@@ -134,22 +134,6 @@ const TaltBrollop = () => {
             </div>
           </section>
 
-          {/* Bildrad – sovplatser för bröllopsgäster */}
-          <section className="py-8 bg-background">
-            <div className="container mx-auto px-4 max-w-6xl grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {sovbilder.map((b) => (
-                <img
-                  key={b.src}
-                  src={b.src}
-                  alt={b.alt}
-                  loading="lazy"
-                  decoding="async"
-                  width={800}
-                  height={600}
-                  className="w-full aspect-[4/3] object-cover rounded-lg shadow-card"
-                />
-              ))}
-            </div>
 
           {/* Sektion 1 – Hyr tält till bröllopsgäster */}
           <section className="py-16 bg-background">
