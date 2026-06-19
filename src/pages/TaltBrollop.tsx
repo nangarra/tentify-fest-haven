@@ -265,7 +265,7 @@ const TaltBrollop = () => {
             <div className="container mx-auto px-4 max-w-4xl text-center">
               <p className="text-muted-foreground">
                 Se även:{" "}
-                <Link to="/hyr-glamping" className="text-primary underline">hyra glampingtält</Link>,{" "}
+                <Link to="/hyra-glampingtalt" className="text-primary underline">hyra glampingtält</Link>,{" "}
                 <Link to="/hyra-talt-skane" className="text-primary underline">hyra tält i Skåne</Link>{" "}
                 och{" "}
                 <Link to="/festival-glamping" className="text-primary underline">festival glamping</Link>.

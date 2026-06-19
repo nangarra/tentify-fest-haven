@@ -83,7 +83,7 @@ export const PopularSolutionsSection = () => (
 );
 
 const internalLinks = [
-  { label: "Hyra glampingtält", href: "/hyr-glamping" },
+  { label: "hyra glampingtält", href: "/hyra-glampingtalt" },
   { label: "Hyra tält i Skåne", href: "/hyra-talt-skane" },
   { label: "Hyra tält i Malmö", href: "/hyra-talt-malmo" },
   { label: "Festival glamping", href: "/festival-glamping" },

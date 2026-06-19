@@ -65,6 +65,11 @@ const Footer = () => {
                   </Link>
                 </li>
                 <li>
+                  <Link to="/hyra-glampingtalt" className="hover:text-primary-foreground transition-smooth">
+                    Hyra glampingtält
+                  </Link>
+                </li>
+                <li>
                   <Link to="/talt-brollop" className="hover:text-primary-foreground transition-smooth">
                     Glamping bröllop i Skåne
                   </Link>

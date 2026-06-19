@@ -447,7 +447,7 @@ const GlampingSwedenRock = () => {
                 festival glamping
               </Link>
               ,{" "}
-              <Link to="/hyr-glamping" className="underline text-primary">
+              <Link to="/hyra-glampingtalt" className="underline text-primary">
                 hyra glampingtält
               </Link>{" "}
               och{" "}
