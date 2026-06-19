@@ -68,6 +68,29 @@ const SwedenRock2027Section = () => {
               Ingen betalning krävs för förhandsbokning. Du får besked innan
               platserna släpps offentligt.
             </p>
+
+            {/* Review */}
+            <div className="mt-8">
+              <h3 className="text-lg font-semibold text-foreground mb-1">
+                Vad tidigare gäster säger
+              </h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                En äkta upplevelse från våra Sweden Rock-gäster.
+              </p>
+              <div className="rounded-2xl bg-accent/20 border border-accent/30 p-5 md:p-6 shadow-sm">
+                <div className="flex items-center gap-0.5 mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-primary text-primary" />
+                  ))}
+                </div>
+                <blockquote className="text-sm md:text-base text-foreground italic leading-relaxed mb-4">
+                  “Hejsan Niklas. Tack för en underbar Rock Festival, du gjorde den så perfekt med din härliga utstrålning, härlig frukost och bra service ❤️ Hoppas att vi ses nästa år också ❤️”
+                </blockquote>
+                <p className="text-sm font-semibold text-foreground">
+                  – Monica & Micke
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
