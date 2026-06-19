@@ -819,7 +819,7 @@ const ZenAdmin = () => {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-3 mb-2">
                             <h3 className="font-semibold truncate">{entry.name}</h3>
-                            <Badge variant="secondary">Sweden Rock</Badge>
+                            <Badge variant="secondary">{FESTIVAL_LABELS[entry.festival] ?? entry.festival}</Badge>
                             {entry.contacted && (
                               <Badge variant="default" className="bg-green-600">
                                 <Check className="mr-1 h-3 w-3" />
