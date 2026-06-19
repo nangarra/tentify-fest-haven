@@ -182,6 +182,10 @@ const GallerySection = () => {
             ))}
           </div>
 
+          <div className="mt-8">
+            <ThumbnailSlider images={galleriThumbnails} />
+          </div>
+
           {/* Previous Events */}
           <div className="mt-20">
             <div className="text-center mb-8">
@@ -206,6 +210,12 @@ const GallerySection = () => {
                   </div>
                 </Card>
               ))}
+            </div>
+            <div className="mt-6">
+              <h4 className="text-lg font-semibold text-foreground mb-3 text-center">
+                Sweden Rock 2026
+              </h4>
+              <ThumbnailSlider images={swedenRockThumbnails} />
             </div>
             <p className="text-center text-xs text-muted-foreground mt-4">
               Bilder från Sweden Rock 2026.
