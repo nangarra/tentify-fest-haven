@@ -27,11 +27,12 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import heroImg from "@/assets/glamping-sweden-rock-2027-tentify.webp.asset.json";
-import camplineImg from "@/assets/sweden-rock-glamping-talt.webp.asset.json";
-import fardigtTaltImg from "@/assets/fardigt-talt-sweden-rock.webp.asset.json";
-import interiorImg from "@/assets/glampingtalt-sweden-rock-interior.webp.asset.json";
-import bekvamtBoendeImg from "@/assets/bekvamt-boende-sweden-rock-glamping.webp.asset.json";
+import heroImg from "@/assets/sweden-rock-glamping-4-2.webp.asset.json";
+import camplineImg from "@/assets/sweden-rock-glamping-5-2.webp.asset.json";
+import fardigtTaltImg from "@/assets/sweden-rock-glamping-6-2.webp.asset.json";
+import interiorImg from "@/assets/sweden-rock-glamping-7.webp.asset.json";
+import bekvamtBoendeImg from "@/assets/sweden-rock-glamping-8-2.webp.asset.json";
+import sovplatsImg from "@/assets/sweden-rock-glamping-9-3.webp.asset.json";
 
 const FESTIVAL_KEY = "sweden-rock-2027";
 const WAITLIST_CAP = 100;
@@ -90,11 +91,12 @@ const faq = [
 ];
 
 const galleryImages = [
-  { src: heroImg.url, alt: "Glamping Sweden Rock 2027 med färdigt tält från Tentify" },
-  { src: camplineImg.url, alt: "Sweden Rock glamping med inrett festivaltält på campingen" },
-  { src: fardigtTaltImg.url, alt: "Färdigt glampingtält till Sweden Rock i solnedgång" },
-  { src: interiorImg.url, alt: "Inrett tält för glamping nära Sweden Rock Festival" },
-  { src: bekvamtBoendeImg.url, alt: "Bekvämt festivalboende under Sweden Rock med dubbelsäng" },
+  { src: heroImg.url, alt: "Glampingtält på Sweden Rock 2027 i kvällsljus" },
+  { src: camplineImg.url, alt: "Festivalboende med glampingtält i rad under Sweden Rock" },
+  { src: fardigtTaltImg.url, alt: "Färdigt uppsatt glampingtält till Sweden Rock 2027" },
+  { src: sovplatsImg.url, alt: "Bekväm sovplats med dubbelsäng i glampingtält på Sweden Rock" },
+  { src: interiorImg.url, alt: "Inrett glampingtält med säng och mysig inredning på Sweden Rock" },
+  { src: bekvamtBoendeImg.url, alt: "Bekvämt festivalboende med två sovplatser i Tentifys glampingtält" },
 ];
 
 const GlampingSwedenRock = () => {
