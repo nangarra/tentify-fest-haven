@@ -769,6 +769,7 @@ const ZenAdmin = () => {
         <TabsList className="mb-4">
           <TabsTrigger value="bookings">Bokningar – {currentEventLabel} ({filteredBookings.length})</TabsTrigger>
           <TabsTrigger value="waitlist">Väntelista Sweden Rock ({waitlist.length})</TabsTrigger>
+          <TabsTrigger value="contacts">Kontaktförfrågningar ({contactRequests.length})</TabsTrigger>
 
         </TabsList>
 
