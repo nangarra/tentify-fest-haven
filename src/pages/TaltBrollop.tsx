@@ -11,6 +11,41 @@ import {
 import glampingNatur from "@/assets/glamping-talt-naturmiljo-skane.webp";
 import glampingUtemoebler from "@/assets/glamping-talt-utemoebler-komfort.webp";
 import festivalTalt from "@/assets/festival-glamping-talt-inuti-komfort.webp";
+import sangLyxig from "@/assets/camping-sang-lyxig-festival-boende.webp";
+import inredningLyxig from "@/assets/festival-talt-inredning-lyxig-camping.webp";
+import inutiSovplats from "@/assets/glamping-talt-inuti-sovplats.webp";
+import utomhusmobler from "@/assets/glamping-talt-utomhusmobler-festival.webp";
+import dubbelsang from "@/assets/glampingtalt-dubbelsang.webp";
+import enkelsang from "@/assets/glampingtalt-enkelsang.webp";
+import familjUpplevelse from "@/assets/glampingtalt-familj-festival-upplevelse.webp";
+import lyxigtTentify from "@/assets/lyxigt-glampingtalt-festival-tentify.webp";
+import utomhusSetup from "@/assets/tentify-festivaltalt-utomhus-setup.webp";
+import bekvamlighet from "@/assets/tentify-glampingtalt-bekvamlighet-festival.webp";
+
+const sovbilder = [
+  { src: dubbelsang, alt: "Glampingtält med dubbelsäng för bröllopsgäster" },
+  { src: enkelsang, alt: "Möblerat glampingtält med enkelsäng och inredning" },
+  { src: inutiSovplats, alt: "Mysig sovplats inuti glampingtält för övernattande gäster" },
+];
+
+const brollopThumbs = [
+  { src: utomhusmobler, alt: "Glampingtält med utomhusmöbler vid utomhusbröllop" },
+  { src: lyxigtTentify, alt: "Lyxigt glampingtält till bröllop i Skåne" },
+  { src: utomhusSetup, alt: "Bröllopscamp med glampingtält uppställda utomhus" },
+  { src: bekvamlighet, alt: "Bekvämt glampingtält för bröllopsgäster" },
+];
+
+const galleriBilder = [
+  { src: glampingNatur, alt: "Glampingtält till bröllop i Skåne i naturmiljö" },
+  { src: glampingUtemoebler, alt: "Möblerat glampingtält med utemöbler" },
+  { src: festivalTalt, alt: "Inrett tält för bröllop och event" },
+  { src: sangLyxig, alt: "Lyxig säng i glampingtält för bröllopsgäster" },
+  { src: inredningLyxig, alt: "Mysig inredning i glampingtält för bröllop" },
+  { src: familjUpplevelse, alt: "Glamping bröllop med färdiga sovtält för gäster" },
+  { src: lyxigtTentify, alt: "Tentify glamping till bröllop" },
+  { src: utomhusSetup, alt: "Bröllopscamp med glampingtält från Tentify" },
+  { src: bekvamlighet, alt: "Mysigt glampingtält för övernattande bröllopsgäster" },
+];
 
 const TaltBrollop = () => {
   const faqItems = [
