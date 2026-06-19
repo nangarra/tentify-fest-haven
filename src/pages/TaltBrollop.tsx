@@ -252,6 +252,8 @@ const TaltBrollop = () => {
                 />
               ))}
             </div>
+          </section>
+
 
           {/* Sektion 4 – Skillnaden */}
           <section className="py-16 bg-background">
