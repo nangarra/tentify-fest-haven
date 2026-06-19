@@ -52,6 +52,22 @@ interface WaitlistEntry {
   created_at: string;
 }
 
+interface ContactRequest {
+  id: string;
+  created_at: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  message: string;
+  source_page: string | null;
+  event_type: string | null;
+  event_date: string | null;
+  guest_count: string | null;
+  handled: boolean;
+  handled_at: string | null;
+  admin_note: string | null;
+}
+
 type EventKey = "sweden-rock" | "sweden-rock-2027" | "clsr-boutique-2026";
 
 const EVENT_OPTIONS: { key: EventKey; label: string }[] = [
@@ -83,6 +99,8 @@ const ZenAdmin = () => {
   const [isLoadingInventory, setIsLoadingInventory] = useState(false);
   const [waitlist, setWaitlist] = useState<WaitlistEntry[]>([]);
   const [isLoadingWaitlist, setIsLoadingWaitlist] = useState(false);
+  const [contactRequests, setContactRequests] = useState<ContactRequest[]>([]);
+  const [isLoadingContacts, setIsLoadingContacts] = useState(false);
 
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -103,6 +121,7 @@ const ZenAdmin = () => {
       fetchBookings();
       fetchInventory();
       fetchWaitlist();
+      fetchContactRequests();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAdmin, selectedEvent]);
