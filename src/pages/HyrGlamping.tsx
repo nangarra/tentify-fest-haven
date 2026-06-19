@@ -169,20 +169,22 @@ const HyrGlamping = () => {
   return (
     <>
       <Helmet>
-        <title>Hyr Glamping Tält i Skåne | Tentify - Bröllopstält & Eventtält Malmö, Lund, Eslöv</title>
-        <meta name="description" content="Hyr lyxiga glamping-tält i Skåne för bröllop, festivaler och event. Vi levererar till Malmö, Lund, Eslöv och hela Skåne. Perfekt för extra sovplatser och exklusiva evenemang." />
-        <meta name="keywords" content="hyra glamping tält Skåne, glamping tält Malmö, tält till bröllop Malmö, hyra tält till fest Skåne, glamping för event Skåne, exklusivt tält bröllop, sovplatser tält uthyrning, bröllopstält med inredning, hyra lyxtält Skåne, eventtält Malmö hyra" />
-        
+        <title>Hyr glampingtält i Skåne | Tentify</title>
+        <meta name="description" content="Hyr glampingtält till festival, bröllop och event. Tentify levererar färdiga tält med säng, inredning och bekväm sovplats i Skåne." />
+        <link rel="canonical" href="https://tentify.se/hyr-glamping" />
+        <meta name="keywords" content="hyra glampingtält, glamping tält hyra, hyra glamping, glampingtält, glamping tält, glamping tält pris, lyxiga tält, lyxtält, hyra tält Skåne, glamping Skåne" />
+
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Hyr Glamping Tält i Skåne | Tentify - Bröllopstält & Eventtält" />
-        <meta property="og:description" content="Hyr lyxiga glamping-tält i Skåne för bröllop, festivaler och event. Vi levererar till Malmö, Lund, Eslöv och hela Skåne." />
+        <meta property="og:title" content="Hyr glampingtält i Skåne | Tentify" />
+        <meta property="og:description" content="Hyr färdiga glampingtält till festival, bröllop och event – med säng, inredning och bekväm sovplats." />
+        <meta property="og:url" content="https://tentify.se/hyr-glamping" />
         <meta property="og:image" content={glampingNatur} />
-        
+
         {/* Twitter */}
         <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:title" content="Hyr Glamping Tält i Skåne | Tentify" />
-        <meta property="twitter:description" content="Hyr lyxiga glamping-tält i Skåne för bröllop, festivaler och event." />
+        <meta property="twitter:title" content="Hyr glampingtält i Skåne | Tentify" />
+        <meta property="twitter:description" content="Färdiga glampingtält till festival, bröllop och event i Skåne." />
         <meta property="twitter:image" content={glampingNatur} />
         
         {/* Structured Data */}
@@ -224,7 +226,7 @@ const HyrGlamping = () => {
             <div className="container mx-auto px-4 relative z-10">
               <div className="max-w-4xl mx-auto text-center">
                 <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                  Hyr glamping set & tält i Skåne
+                  Hyr glampingtält till festival, bröllop och event
                 </h1>
                 <p className="text-xl md:text-2xl mb-8 text-white/90">
                   Planerar du bröllop, fest eller event och vill skapa en unik och minnesvärd atmosfär? 
@@ -388,11 +390,12 @@ const HyrGlamping = () => {
                 <p className="mt-8 text-white/80 text-lg">
                   Ring oss för offert eller för att boka ditt tält idag.
                 </p>
-                <p className="mt-4 text-white/80">
-                  <Link to="/talt-brollop" className="underline hover:text-white font-medium">
-                    Hyra tält bröllop Skåne
-                  </Link>{" "}
-                  – läs mer om våra bröllopstjänster.
+                <p className="mt-4 text-white/80 flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm">
+                  <Link to="/talt-brollop" className="underline hover:text-white font-medium">Glamping bröllop i Skåne</Link>
+                  <Link to="/festival-glamping" className="underline hover:text-white font-medium">Festival glamping</Link>
+                  <Link to="/glamping-sweden-rock" className="underline hover:text-white font-medium">Glamping Sweden Rock 2027</Link>
+                  <Link to="/hyra-talt-skane" className="underline hover:text-white font-medium">Hyra tält i Skåne</Link>
+                  <Link to="/hyra-talt-malmo" className="underline hover:text-white font-medium">Hyra tält i Malmö</Link>
                 </p>
               </div>
             </div>

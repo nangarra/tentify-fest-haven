@@ -42,12 +42,17 @@ const TaltBrollop = () => {
   return (
     <>
       <Helmet>
-        <title>Glamping bröllop Skåne | Hyra tält bröllop | Tentify</title>
+        <title>Glamping bröllop Skåne | Hyr tält till bröllop</title>
         <meta
           name="description"
-          content="Hyr tält till bröllop i Skåne. Glamping bröllop med fullt möblerade tält för gäster. Flexibel hyra 2–7 dagar. Skapa en magisk bröllopshelg."
+          content="Hyr glampingtält till bröllop i Skåne. Färdiga tält med säng, inredning och mysig känsla för gäster på bröllop och fest."
         />
         <link rel="canonical" href="https://tentify.se/talt-brollop" />
+        <meta property="og:title" content="Glamping bröllop Skåne | Hyr tält till bröllop" />
+        <meta property="og:description" content="Möblerade glampingtält som boende för bröllopsgäster i Skåne." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://tentify.se/talt-brollop" />
+        <meta property="og:image" content={glampingNatur} />
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
@@ -72,12 +77,17 @@ const TaltBrollop = () => {
             <div className="container mx-auto px-4 relative z-10">
               <div className="max-w-4xl mx-auto text-center">
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-                  Glamping bröllop i Skåne – Hyra tält till bröllop
+                  Glamping bröllop i Skåne – hyr tält till bröllop
                 </h1>
-                <p className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed">
-                  Drömmer ni om ett lantligt bröllop med övernattning? Med våra
-                  eleganta och fullt möblerade tält skapar vi en komplett
-                  glampingmiljö för bröllop i Skåne.
+                <p className="text-xl md:text-2xl text-white/90 mb-4 leading-relaxed">
+                  Tentify hyr ut möblerade glampingtält som boende åt era
+                  bröllopsgäster. Färdiga sovplatser, vacker inredning och en
+                  lantlig känsla – perfekt för utomhusbröllop och lantliga bröllop
+                  i Skåne.
+                </p>
+                <p className="text-base text-white/80">
+                  Obs: vi specialiserar oss på möblerade glampingtält som boende,
+                  inte stora partytält eller glastält.
                 </p>
               </div>
             </div>
