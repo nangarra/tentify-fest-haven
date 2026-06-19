@@ -73,6 +73,54 @@ const galleryImages = [
   }
 ];
 
+const galleriThumbnails = [
+  { src: "", alt: "Glampingtält med inredning från Tentify" },
+  { src: "", alt: "Mysigt glampingtält med säng" },
+  { src: "", alt: "Tentify glamping på event" },
+  { src: "", alt: "Inrett tält för festivalboende" },
+  { src: "", alt: "Lyxigt glampingtält utomhus" },
+  { src: "", alt: "Glampingtält med bekväm säng och inredning" },
+];
+
+const swedenRockThumbnails = [
+  { src: "", alt: "Tentify glamping på Sweden Rock 2026" },
+  { src: "", alt: "Glampingtält på Sweden Rock" },
+  { src: "", alt: "Festivalboende med glampingtält" },
+  { src: "", alt: "Sweden Rock 2026 glampingområde" },
+  { src: "", alt: "Bekvämt tältboende på Sweden Rock" },
+  { src: "", alt: "Glampingtält i rad på festival" },
+];
+
+const ThumbnailSlider = ({ images }: { images: { src: string; alt: string }[] }) => (
+  <div
+    className="overflow-x-auto pb-4 sr-scrollbar"
+    style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+  >
+    <style>{`
+      .sr-scrollbar::-webkit-scrollbar { display: none; }
+    `}</style>
+    <div className="flex gap-3" style={{ width: "max-content" }}>
+      {images.map((img, i) =>
+        img.src ? (
+          <div
+            key={i}
+            className="relative flex-shrink-0 w-36 h-24 sm:w-44 sm:h-30 md:w-52 md:h-36 rounded-lg overflow-hidden shadow-card bg-muted"
+          >
+            <img
+              src={img.src}
+              alt={img.alt}
+              loading="lazy"
+              decoding="async"
+              className="w-full h-full object-cover"
+              style={{ cursor: "default" }}
+            />
+          </div>
+        ) : null
+      )}
+    </div>
+  </div>
+);
+
 const GallerySection = () => {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
 
