@@ -34,7 +34,7 @@ const WaitlistForm = () => {
       const { error } = await supabase
         .from('waitlist')
         .insert([{
-          festival: 'sweden-rock',
+          festival: 'sweden-rock-2027',
           name: name.trim(),
           email: email.trim(),
           phone: phone.trim()

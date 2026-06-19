@@ -52,15 +52,22 @@ interface WaitlistEntry {
   created_at: string;
 }
 
-type EventKey = "sweden-rock" | "clsr-boutique-2026";
+type EventKey = "sweden-rock" | "sweden-rock-2027" | "clsr-boutique-2026";
 
 const EVENT_OPTIONS: { key: EventKey; label: string }[] = [
+  { key: "sweden-rock-2027", label: "Sweden Rock 2027" },
   { key: "clsr-boutique-2026", label: "CLSR Butikfestival" },
   { key: "sweden-rock", label: "Sweden Rock 2026" },
 ];
 
+const FESTIVAL_LABELS: Record<string, string> = {
+  "sweden-rock": "Sweden Rock 2026",
+  "sweden-rock-2027": "Sweden Rock 2027",
+  "clsr-boutique-2026": "CLSR Butikfestival",
+};
+
 const ZenAdmin = () => {
-  const [selectedEvent, setSelectedEvent] = useState<EventKey>("clsr-boutique-2026");
+  const [selectedEvent, setSelectedEvent] = useState<EventKey>("sweden-rock-2027");
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [filteredBookings, setFilteredBookings] = useState<Booking[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -280,7 +287,7 @@ const ZenAdmin = () => {
       entry.name,
       entry.email,
       entry.phone,
-      entry.festival === 'sweden-rock' ? 'Sweden Rock' : entry.festival,
+      FESTIVAL_LABELS[entry.festival] ?? entry.festival,
       entry.contacted ? 'Ja' : 'Nej'
     ]);
 
@@ -812,7 +819,7 @@ const ZenAdmin = () => {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-3 mb-2">
                             <h3 className="font-semibold truncate">{entry.name}</h3>
-                            <Badge variant="secondary">Sweden Rock</Badge>
+                            <Badge variant="secondary">{FESTIVAL_LABELS[entry.festival] ?? entry.festival}</Badge>
                             {entry.contacted && (
                               <Badge variant="default" className="bg-green-600">
                                 <Check className="mr-1 h-3 w-3" />
