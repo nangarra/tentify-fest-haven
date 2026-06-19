@@ -927,6 +927,83 @@ const ZenAdmin = () => {
             </CardContent>
           </Card>
         </TabsContent>
+
+        <TabsContent value="contacts">
+          <Card>
+            <CardHeader>
+              <CardTitle>Kontaktförfrågningar</CardTitle>
+              <CardDescription>
+                Allmänna kontakt- och offertförfrågningar från hemsidan. Dessa är inte kopplade till något specifikt event eller bokning.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {isLoadingContacts ? (
+                <p className="text-center text-muted-foreground py-8">Laddar...</p>
+              ) : contactRequests.length === 0 ? (
+                <p className="text-center text-muted-foreground py-8">Inga kontaktförfrågningar ännu</p>
+              ) : (
+                <div className="space-y-3">
+                  {contactRequests.map((c) => (
+                    <div
+                      key={c.id}
+                      className={`border rounded-lg p-4 transition-colors ${c.handled ? 'bg-muted/30' : 'hover:bg-muted/50'}`}
+                    >
+                      <div className="flex flex-col md:flex-row md:items-start justify-between gap-3">
+                        <div className="flex-1 min-w-0 space-y-1">
+                          <div className="flex items-center gap-3 mb-1 flex-wrap">
+                            <h3 className="font-semibold truncate">{c.name}</h3>
+                            {c.handled && (
+                              <Badge variant="default" className="bg-green-600">
+                                <Check className="mr-1 h-3 w-3" />
+                                Hanterad
+                              </Badge>
+                            )}
+                            {c.source_page && (
+                              <Badge variant="outline" className="font-mono text-xs">{c.source_page}</Badge>
+                            )}
+                          </div>
+                          <p className="text-sm text-muted-foreground truncate">
+                            {c.email}{c.phone ? ` • ${c.phone}` : ''}
+                          </p>
+                          <p className="text-sm text-foreground whitespace-pre-wrap break-words pt-1">
+                            {c.message}
+                          </p>
+                          {(c.event_type || c.event_date || c.guest_count) && (
+                            <p className="text-xs text-muted-foreground pt-1">
+                              {c.event_type && <>Eventtyp: {c.event_type} </>}
+                              {c.event_date && <>• Datum: {c.event_date} </>}
+                              {c.guest_count && <>• Antal: {c.guest_count}</>}
+                            </p>
+                          )}
+                          <p className="text-xs text-muted-foreground pt-1">
+                            Inkom: {new Date(c.created_at).toLocaleString('sv-SE')}
+                          </p>
+                        </div>
+
+                        <div className="flex items-center gap-3 shrink-0">
+                          <div className="flex items-center gap-2">
+                            <Label className="text-sm">Hanterad:</Label>
+                            <Switch
+                              checked={c.handled}
+                              onCheckedChange={() => toggleContactHandled(c)}
+                            />
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => deleteContactRequest(c.id)}
+                          >
+                            <Trash2 className="h-4 w-4 text-destructive" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
       </Tabs>
 
       {/* Delete Confirmation Dialog */}
