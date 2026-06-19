@@ -52,12 +52,19 @@ interface WaitlistEntry {
   created_at: string;
 }
 
-type EventKey = "sweden-rock" | "clsr-boutique-2026";
+type EventKey = "sweden-rock" | "sweden-rock-2027" | "clsr-boutique-2026";
 
 const EVENT_OPTIONS: { key: EventKey; label: string }[] = [
+  { key: "sweden-rock-2027", label: "Sweden Rock 2027" },
   { key: "clsr-boutique-2026", label: "CLSR Butikfestival" },
   { key: "sweden-rock", label: "Sweden Rock 2026" },
 ];
+
+const FESTIVAL_LABELS: Record<string, string> = {
+  "sweden-rock": "Sweden Rock 2026",
+  "sweden-rock-2027": "Sweden Rock 2027",
+  "clsr-boutique-2026": "CLSR Butikfestival",
+};
 
 const ZenAdmin = () => {
   const [selectedEvent, setSelectedEvent] = useState<EventKey>("clsr-boutique-2026");
