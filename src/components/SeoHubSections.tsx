@@ -84,12 +84,12 @@ export const PopularSolutionsSection = () => (
 
 const internalLinks = [
   { label: "Hyra glampingtält", href: "/hyr-glamping" },
-  { label: "Glamping i Skåne", href: "/hyr-glamping" },
-  { label: "Glamping till festival", href: "/hyr-glamping" },
-  { label: "Glamping till bröllop", href: "/talt-brollop" },
+  { label: "Hyra tält i Skåne", href: "/hyra-talt-skane" },
+  { label: "Hyra tält i Malmö", href: "/hyra-talt-malmo" },
+  { label: "Festival glamping", href: "/festival-glamping" },
+  { label: "Glamping bröllop i Skåne", href: "/talt-brollop" },
   { label: "Glamping till företagsevent", href: "/hyr-glamping" },
-  { label: "Glamping Sweden Rock", href: "/glamping-sweden-rock" },
-  { label: "Hyra tält till event", href: "/hyr-glamping" },
+  { label: "Glamping Sweden Rock 2027", href: "/glamping-sweden-rock" },
 ];
 
 export const InternalLinksSection = () => (

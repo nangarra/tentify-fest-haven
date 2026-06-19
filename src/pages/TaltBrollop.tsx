@@ -236,6 +236,43 @@ const TaltBrollop = () => {
             </div>
           </section>
 
+          {/* Skillnaden mellan partytält och glampingtält */}
+          <section className="py-16 bg-gradient-subtle">
+            <div className="container mx-auto px-4">
+              <div className="max-w-4xl mx-auto">
+                <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
+                  Skillnaden mellan partytält och glampingtält
+                </h2>
+                <p className="text-lg text-muted-foreground mb-4">
+                  Ett klassiskt partytält eller ett glastält är en stor
+                  evenemangsyta för middag, ceremoni eller dans. Ett glampingtält
+                  från Tentify är istället ett möblerat boendetält där
+                  bröllopsgästerna kan sova bekvämt – med säng, bäddmadrass,
+                  täcke, kudde och inredning.
+                </p>
+                <p className="text-lg text-muted-foreground">
+                  Tentify är specialiserade på just det: <strong>möblerade
+                  glampingtält som sovplats för gäster</strong>. Behöver ni en
+                  stor festyta utöver det, kombinera gärna våra glampingtält
+                  med ett separat partytält från annan leverantör.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* Intern länkning */}
+          <section className="py-12 bg-background">
+            <div className="container mx-auto px-4 max-w-4xl text-center">
+              <p className="text-muted-foreground">
+                Se även:{" "}
+                <Link to="/hyr-glamping" className="text-primary underline">hyra glampingtält</Link>,{" "}
+                <Link to="/hyra-talt-skane" className="text-primary underline">hyra tält i Skåne</Link>{" "}
+                och{" "}
+                <Link to="/festival-glamping" className="text-primary underline">festival glamping</Link>.
+              </p>
+            </div>
+          </section>
+
           {/* FAQ */}
           <section className="py-16 bg-gradient-subtle">
             <div className="container mx-auto px-4">

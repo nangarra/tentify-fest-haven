@@ -66,22 +66,27 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link to="/talt-brollop" className="hover:text-primary-foreground transition-smooth">
-                    Glamping bröllop
+                    Glamping bröllop i Skåne
                   </Link>
                 </li>
                 <li>
                   <Link to="/glamping-sweden-rock" className="hover:text-primary-foreground transition-smooth">
-                    Glamping Sweden Rock
+                    Glamping Sweden Rock 2027
                   </Link>
                 </li>
                 <li>
-                  <Link to="/hyr-glamping" className="hover:text-primary-foreground transition-smooth">
-                    Hyra tält till event
+                  <Link to="/festival-glamping" className="hover:text-primary-foreground transition-smooth">
+                    Festival glamping
                   </Link>
                 </li>
                 <li>
-                  <Link to="/glamping-sweden-rock" className="hover:text-primary-foreground transition-smooth">
-                    Festivalboende Sweden Rock
+                  <Link to="/hyra-talt-skane" className="hover:text-primary-foreground transition-smooth">
+                    Hyra tält i Skåne
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/hyra-talt-malmo" className="hover:text-primary-foreground transition-smooth">
+                    Hyra tält i Malmö
                   </Link>
                 </li>
               </ul>
