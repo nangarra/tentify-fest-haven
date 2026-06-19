@@ -67,7 +67,7 @@ const FESTIVAL_LABELS: Record<string, string> = {
 };
 
 const ZenAdmin = () => {
-  const [selectedEvent, setSelectedEvent] = useState<EventKey>("clsr-boutique-2026");
+  const [selectedEvent, setSelectedEvent] = useState<EventKey>("sweden-rock-2027");
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [filteredBookings, setFilteredBookings] = useState<Booking[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
