@@ -200,12 +200,12 @@ const GlampingSwedenRock = () => {
         {/* HERO */}
         <section className="relative min-h-[78vh] flex items-center justify-center overflow-hidden pt-20">
           <img
-            src={heroImg.url}
-            alt="Glampingtält på Sweden Rock 2027 – festivalboende från Tentify"
+            src={hero2027Img.url}
+            alt="Glampingtält på Sweden Rock 2027 med festivalscen i bakgrunden"
             loading="eager"
             fetchPriority="high"
             decoding="async"
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover object-center"
           />
           <div className="absolute inset-0 bg-black/55" />
           <div className="relative z-10 container mx-auto px-4 text-center text-white max-w-4xl py-16">
