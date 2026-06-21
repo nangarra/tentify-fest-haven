@@ -361,15 +361,29 @@ const GlampingSwedenRock = () => {
         </section>
 
         {/* VÄNTELISTA */}
-        <section id="vantelista" className="py-16 bg-muted/30">
-          <div className="container mx-auto px-4 max-w-2xl">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
+        <section id="vantelista" className="relative py-16 overflow-hidden">
+          <video
+            className="absolute inset-0 w-full h-full object-cover"
+            src={WAITLIST_VIDEO_URL}
+            poster={hero2027Img.url}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-hidden="true"
+            tabIndex={-1}
+          />
+          <div className="absolute inset-0 bg-black/65" />
+          <div className="relative z-10 container mx-auto px-4 max-w-2xl">
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-white" style={{ textShadow: "0 2px 12px rgba(0,0,0,0.6)" }}>
               Skriv upp dig på väntelistan för Sweden Rock 2027
             </h2>
-            <p className="text-center text-muted-foreground mb-8">
+            <p className="text-center text-white/90 mb-8">
               Vi öppnar intresseanmälan för glamping till Sweden Rock 2027. Skriv upp dig på
               väntelistan för att få information först när platserna släpps.
             </p>
+
 
             <Card className="p-6 md:p-8 shadow-elegant">
               {/* Counter */}
