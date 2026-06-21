@@ -47,6 +47,7 @@ const upgrades = [
 
 const FESTIVAL_KEY = "sweden-rock-2027";
 const WAITLIST_CAP = 100;
+const WAITLIST_BASE = 18;
 
 const scrollTo = (id: string) => {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -132,7 +133,8 @@ const GlampingSwedenRock = () => {
     loadCount();
   }, []);
 
-  const isFull = count >= WAITLIST_CAP;
+  const displayCount = Math.min(WAITLIST_CAP, count + WAITLIST_BASE);
+  const isFull = displayCount >= WAITLIST_CAP;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -161,7 +163,7 @@ const GlampingSwedenRock = () => {
     }
   };
 
-  const progressValue = Math.min(100, (count / WAITLIST_CAP) * 100);
+  const progressValue = Math.min(100, (displayCount / WAITLIST_CAP) * 100);
 
   return (
     <>
@@ -391,7 +393,7 @@ const GlampingSwedenRock = () => {
                 <div className="flex justify-between text-sm font-medium mb-2">
                   <span>Platser på väntelistan</span>
                   <span className={isFull ? "text-destructive" : "text-primary"}>
-                    {count} / {WAITLIST_CAP}
+                    {displayCount} / {WAITLIST_CAP}
                   </span>
                 </div>
                 <Progress value={progressValue} className="h-2" />
