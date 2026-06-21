@@ -304,6 +304,37 @@ const GlampingSwedenRock = () => {
           </div>
         </section>
 
+        {/* TILLVAL & UPPGRADERINGAR */}
+        <section className="py-16 bg-background">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <div className="text-center mb-10">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                Tillval och uppgraderingar
+              </h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                Inför Sweden Rock 2027 planerar vi att erbjuda flera tillval för dig som vill
+                göra festivalboendet ännu bekvämare. Exakta paket och priser presenteras när
+                bokningen öppnar.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              {upgrades.map((u) => (
+                <Card key={u} className="p-5 text-center shadow-card hover:shadow-elegant transition-smooth">
+                  <div className="bg-primary/10 w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Sparkles className="w-5 h-5 text-primary" />
+                  </div>
+                  <p className="text-sm font-medium text-foreground leading-snug">{u}</p>
+                </Card>
+              ))}
+            </div>
+            <p className="mt-8 text-center text-sm text-muted-foreground max-w-3xl mx-auto">
+              Utöver det som ingår i grundpaketet kommer vi även att erbjuda utvalda tillval
+              och uppgraderingar, till exempel hotellfrukost, uppgraderad säng, bäddset och
+              kylskåp.
+            </p>
+          </div>
+        </section>
+
         {/* VARFÖR */}
         <section className="py-16 bg-background">
           <div className="container mx-auto px-4 max-w-5xl">
