@@ -33,6 +33,17 @@ import fardigtTaltImg from "@/assets/sweden-rock-glamping-6-2.webp.asset.json";
 import interiorImg from "@/assets/sweden-rock-glamping-7.webp.asset.json";
 import bekvamtBoendeImg from "@/assets/sweden-rock-glamping-8-2.webp.asset.json";
 import sovplatsImg from "@/assets/sweden-rock-glamping-9-3.webp.asset.json";
+import hero2027Img from "@/assets/sweden-rock-2027-hero.png.asset.json";
+
+const WAITLIST_VIDEO_URL = "https://swedenrock-prod.storage.googleapis.com/wp-content/uploads/2026/06/SRF_Recap_Hemsida_16x9_.mp4#t=0.1";
+
+const upgrades = [
+  "Härlig hotellfrukost",
+  "Uppgraderad säng",
+  "Bäddset",
+  "Kylskåp",
+  "Extra komfort och praktiska tillval",
+];
 
 const FESTIVAL_KEY = "sweden-rock-2027";
 const WAITLIST_CAP = 100;
@@ -189,12 +200,12 @@ const GlampingSwedenRock = () => {
         {/* HERO */}
         <section className="relative min-h-[78vh] flex items-center justify-center overflow-hidden pt-20">
           <img
-            src={heroImg.url}
-            alt="Glampingtält på Sweden Rock 2027 – festivalboende från Tentify"
+            src={hero2027Img.url}
+            alt="Glampingtält på Sweden Rock 2027 med festivalscen i bakgrunden"
             loading="eager"
             fetchPriority="high"
             decoding="async"
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover object-center"
           />
           <div className="absolute inset-0 bg-black/55" />
           <div className="relative z-10 container mx-auto px-4 text-center text-white max-w-4xl py-16">
@@ -246,6 +257,26 @@ const GlampingSwedenRock = () => {
               väntelistan så får du information först när platserna släpps.
             </p>
           </div>
+
+          {/* Horisontellt scrollande galleri */}
+          <div className="mt-12 -mx-4 md:mx-0">
+            <div
+              className="flex gap-4 overflow-x-auto px-4 md:px-0 md:max-w-6xl md:mx-auto snap-x snap-mandatory pb-4 scroll-smooth"
+              style={{ scrollbarWidth: "thin" }}
+              aria-label="Bilder från Tentifys glampingtält"
+            >
+              {galleryImages.map((img, i) => (
+                <img
+                  key={i}
+                  src={img.src}
+                  alt={img.alt}
+                  loading={i < 2 ? "eager" : "lazy"}
+                  decoding="async"
+                  className="snap-start flex-shrink-0 w-64 h-44 md:w-80 md:h-56 object-cover rounded-xl shadow-card"
+                />
+              ))}
+            </div>
+          </div>
         </section>
 
         {/* VAD INGÅR */}
@@ -270,6 +301,37 @@ const GlampingSwedenRock = () => {
                 av extra madrasser och täcken.
               </p>
             </div>
+          </div>
+        </section>
+
+        {/* TILLVAL & UPPGRADERINGAR */}
+        <section className="py-16 bg-background">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <div className="text-center mb-10">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                Tillval och uppgraderingar
+              </h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                Inför Sweden Rock 2027 planerar vi att erbjuda flera tillval för dig som vill
+                göra festivalboendet ännu bekvämare. Exakta paket och priser presenteras när
+                bokningen öppnar.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              {upgrades.map((u) => (
+                <Card key={u} className="p-5 text-center shadow-card hover:shadow-elegant transition-smooth">
+                  <div className="bg-primary/10 w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Sparkles className="w-5 h-5 text-primary" />
+                  </div>
+                  <p className="text-sm font-medium text-foreground leading-snug">{u}</p>
+                </Card>
+              ))}
+            </div>
+            <p className="mt-8 text-center text-sm text-muted-foreground max-w-3xl mx-auto">
+              Utöver det som ingår i grundpaketet kommer vi även att erbjuda utvalda tillval
+              och uppgraderingar, till exempel hotellfrukost, uppgraderad säng, bäddset och
+              kylskåp.
+            </p>
           </div>
         </section>
 
@@ -299,15 +361,29 @@ const GlampingSwedenRock = () => {
         </section>
 
         {/* VÄNTELISTA */}
-        <section id="vantelista" className="py-16 bg-muted/30">
-          <div className="container mx-auto px-4 max-w-2xl">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
+        <section id="vantelista" className="relative py-16 overflow-hidden">
+          <video
+            className="absolute inset-0 w-full h-full object-cover"
+            src={WAITLIST_VIDEO_URL}
+            poster={hero2027Img.url}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-hidden="true"
+            tabIndex={-1}
+          />
+          <div className="absolute inset-0 bg-black/65" />
+          <div className="relative z-10 container mx-auto px-4 max-w-2xl">
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-white" style={{ textShadow: "0 2px 12px rgba(0,0,0,0.6)" }}>
               Skriv upp dig på väntelistan för Sweden Rock 2027
             </h2>
-            <p className="text-center text-muted-foreground mb-8">
+            <p className="text-center text-white/90 mb-8">
               Vi öppnar intresseanmälan för glamping till Sweden Rock 2027. Skriv upp dig på
               väntelistan för att få information först när platserna släpps.
             </p>
+
 
             <Card className="p-6 md:p-8 shadow-elegant">
               {/* Counter */}
