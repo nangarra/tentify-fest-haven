@@ -163,7 +163,7 @@ const GlampingSwedenRock = () => {
     }
   };
 
-  const progressValue = Math.min(100, (count / WAITLIST_CAP) * 100);
+  const progressValue = Math.min(100, (displayCount / WAITLIST_CAP) * 100);
 
   return (
     <>
