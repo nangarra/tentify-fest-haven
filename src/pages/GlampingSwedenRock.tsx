@@ -133,7 +133,8 @@ const GlampingSwedenRock = () => {
     loadCount();
   }, []);
 
-  const isFull = count >= WAITLIST_CAP;
+  const displayCount = Math.min(WAITLIST_CAP, count + WAITLIST_BASE);
+  const isFull = displayCount >= WAITLIST_CAP;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
