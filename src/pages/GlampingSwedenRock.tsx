@@ -257,6 +257,26 @@ const GlampingSwedenRock = () => {
               väntelistan så får du information först när platserna släpps.
             </p>
           </div>
+
+          {/* Horisontellt scrollande galleri */}
+          <div className="mt-12 -mx-4 md:mx-0">
+            <div
+              className="flex gap-4 overflow-x-auto px-4 md:px-0 md:max-w-6xl md:mx-auto snap-x snap-mandatory pb-4 scroll-smooth"
+              style={{ scrollbarWidth: "thin" }}
+              aria-label="Bilder från Tentifys glampingtält"
+            >
+              {galleryImages.map((img, i) => (
+                <img
+                  key={i}
+                  src={img.src}
+                  alt={img.alt}
+                  loading={i < 2 ? "eager" : "lazy"}
+                  decoding="async"
+                  className="snap-start flex-shrink-0 w-64 h-44 md:w-80 md:h-56 object-cover rounded-xl shadow-card"
+                />
+              ))}
+            </div>
+          </div>
         </section>
 
         {/* VAD INGÅR */}
