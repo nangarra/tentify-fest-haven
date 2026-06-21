@@ -33,6 +33,17 @@ import fardigtTaltImg from "@/assets/sweden-rock-glamping-6-2.webp.asset.json";
 import interiorImg from "@/assets/sweden-rock-glamping-7.webp.asset.json";
 import bekvamtBoendeImg from "@/assets/sweden-rock-glamping-8-2.webp.asset.json";
 import sovplatsImg from "@/assets/sweden-rock-glamping-9-3.webp.asset.json";
+import hero2027Img from "@/assets/sweden-rock-2027-hero.png.asset.json";
+
+const WAITLIST_VIDEO_URL = "https://swedenrock-prod.storage.googleapis.com/wp-content/uploads/2026/06/SRF_Recap_Hemsida_16x9_.mp4#t=0.1";
+
+const upgrades = [
+  "Härlig hotellfrukost",
+  "Uppgraderad säng",
+  "Bäddset",
+  "Kylskåp",
+  "Extra komfort och praktiska tillval",
+];
 
 const FESTIVAL_KEY = "sweden-rock-2027";
 const WAITLIST_CAP = 100;
