@@ -393,7 +393,7 @@ const GlampingSwedenRock = () => {
                 <div className="flex justify-between text-sm font-medium mb-2">
                   <span>Platser på väntelistan</span>
                   <span className={isFull ? "text-destructive" : "text-primary"}>
-                    {count} / {WAITLIST_CAP}
+                    {displayCount} / {WAITLIST_CAP}
                   </span>
                 </div>
                 <Progress value={progressValue} className="h-2" />
