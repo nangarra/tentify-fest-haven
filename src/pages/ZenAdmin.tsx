@@ -25,6 +25,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { User } from "@supabase/supabase-js";
+import AdminNotes from "@/components/admin/AdminNotes";
 
 interface Booking {
   id: string;
@@ -763,6 +764,8 @@ const ZenAdmin = () => {
           )}
         </CardContent>
       </Card>
+
+      <AdminNotes />
 
       {/* Tabs for Bookings and Waitlist */}
       <Tabs defaultValue="bookings" className="w-full">
