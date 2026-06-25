@@ -765,6 +765,8 @@ const ZenAdmin = () => {
         </CardContent>
       </Card>
 
+      <AdminNotes />
+
       {/* Tabs for Bookings and Waitlist */}
       <Tabs defaultValue="bookings" className="w-full">
         <TabsList className="mb-4">
