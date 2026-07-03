@@ -22,7 +22,7 @@ export type Lang = "sv" | "en";
 export type Localized = Record<Lang, string>;
 
 export type IncludedItem = {
-  icon: string;
+  Icon: LucideIcon;
   label: Localized;
 };
 
