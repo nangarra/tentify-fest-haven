@@ -313,7 +313,8 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
         .select("id")
         .single();
       if (error) throw error;
-      setBookingId(inserted?.id ?? null);
+      const newBookingId = inserted?.id as string;
+      setBookingId(newBookingId ?? null);
 
       await supabase.rpc("decrease_tent_inventory", {
         p_festival: festival.id,
@@ -324,8 +325,28 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
         ...prev,
         [selectedTent.id]: Math.max(0, (prev[selectedTent.id] ?? 0) - 1),
       }));
-      setStep("confirmation");
-      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      // Create Stripe Checkout Session and redirect
+      const returnUrl = window.location.origin + window.location.pathname;
+      const { data: checkout, error: fnError } = await supabase.functions.invoke(
+        "create-stripe-checkout",
+        {
+          body: {
+            bookingId: newBookingId,
+            amount: depositAmount,
+            currency: "sek",
+            description: `${festival.name} – ${selectedTent.name.sv} (${guests} ${guests === 1 ? "gäst" : "gäster"})`,
+            customerEmail: email,
+            successUrl: returnUrl,
+            cancelUrl: returnUrl,
+          },
+        },
+      );
+      if (fnError || !checkout?.url) {
+        throw new Error(fnError?.message || "Kunde inte starta betalning");
+      }
+      window.location.href = checkout.url as string;
+
     } catch (e: any) {
       console.error(e);
       toast.error(t("errorSubmit", lang));
