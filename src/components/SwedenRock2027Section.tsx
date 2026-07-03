@@ -60,13 +60,12 @@ const SwedenRock2027Section = () => {
             </ul>
 
             <Button asChild size="lg" className="btn-hero w-full sm:w-auto">
-              <Link to="/glamping-sweden-rock#vantelista">
-                Förhandsboka Sweden Rock 2027
+              <Link to="/book/sweden-rock-2027">
+                Boka Sweden Rock 2027
               </Link>
             </Button>
             <p className="text-xs text-muted-foreground mt-3">
-              Ingen betalning krävs för förhandsbokning. Du får besked innan
-              platserna släpps offentligt.
+              Välj tält, gäster och tillval – se totalpris direkt och slutför bokningen.
             </p>
 
             {/* Review */}
