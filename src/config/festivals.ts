@@ -36,6 +36,8 @@ export type TentType = {
   maxGuests: number;
   image: string;
   includedStandard?: IncludedItem[];
+  /** Number of physical tents of this type in inventory. */
+  totalCount?: number;
 };
 
 export type AddOnType = {
