@@ -26,9 +26,8 @@ import interiorImg from "@/assets/sweden-rock-glamping-7.webp.asset.json";
 import bekvamtBoendeImg from "@/assets/sweden-rock-glamping-8-2.webp.asset.json";
 import sovplatsImg from "@/assets/sweden-rock-glamping-9-3.webp.asset.json";
 import hero2027Img from "@/assets/sweden-rock-2027-hero.png.asset.json";
+import { BookingFlow } from "@/pages/EventBookingPage";
 import { getFestival } from "@/config/festivals";
-import WaitlistForm from "@/components/WaitlistForm";
-import { Lock } from "lucide-react";
 
 const upgrades = [
   "Härlig hotellfrukost",
