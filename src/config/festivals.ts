@@ -135,6 +135,7 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
       price: 500,
       perPerson: false,
       category: "comfort",
+      image: luxuryBedImg.url,
     },
     {
       id: "extra-bed",
@@ -146,6 +147,7 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
       price: 500,
       perPerson: false,
       category: "comfort",
+      image: extraBedImg.url,
     },
     {
       id: "bedding",
@@ -157,6 +159,7 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
       price: 400,
       perPerson: true,
       category: "comfort",
+      image: beddingImg.url,
     },
     {
       id: "breakfast",
