@@ -611,9 +611,20 @@ const AddOnCard = ({
   const isPackage = addOn.category === "package";
   return (
     <Card className={`p-6 flex flex-col text-center transition-all ${selected ? "ring-2 ring-primary bg-primary/5 shadow-md" : "hover:shadow-md"} ${isPackage ? "border-primary/30" : ""}`}>
-      <div className={`mx-auto mb-4 w-20 h-20 rounded-2xl flex items-center justify-center ${isPackage ? "bg-primary text-primary-foreground shadow-sm" : "bg-primary/10 text-primary"}`}>
-        <Icon className="w-10 h-10" />
-      </div>
+      {addOn.image ? (
+        <div className="mx-auto mb-4 w-32 h-32 rounded-2xl overflow-hidden bg-muted/40 border border-border/50 shadow-sm">
+          <img
+            src={addOn.image}
+            alt={addOn.name[lang]}
+            loading="lazy"
+            className="w-full h-full object-cover"
+          />
+        </div>
+      ) : (
+        <div className={`mx-auto mb-4 w-20 h-20 rounded-2xl flex items-center justify-center ${isPackage ? "bg-primary text-primary-foreground shadow-sm" : "bg-primary/10 text-primary"}`}>
+          <Icon className="w-10 h-10" />
+        </div>
+      )}
 
       <div className="flex flex-wrap items-center justify-center gap-2 mb-1">
         <h3 className="font-semibold text-base">{addOn.name[lang]}</h3>
