@@ -1,6 +1,9 @@
 import bekvamtImg from "@/assets/bekvamt-boende-sweden-rock-glamping.webp.asset.json";
 import interiorImg from "@/assets/glampingtalt-sweden-rock-interior.webp.asset.json";
 import heroImg from "@/assets/sweden-rock-2027-hero.png.asset.json";
+import luxuryBedImg from "@/assets/dubbelbad-swedenrock.webp.asset.json";
+import extraBedImg from "@/assets/extra-sang-swedenrock.webp.asset.json";
+import beddingImg from "@/assets/baddset-swedenrock.webp.asset.json";
 
 export type Lang = "sv" | "en";
 export type Localized = Record<Lang, string>;
