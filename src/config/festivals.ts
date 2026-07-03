@@ -34,6 +34,7 @@ export type AddOnType = {
   category: "comfort" | "food" | "extra" | "package";
   badge?: Localized;
   includedItems?: Localized[];
+  image?: string;
 };
 
 
