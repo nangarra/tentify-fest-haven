@@ -88,6 +88,7 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
       price: 7900,
       maxGuests: 2,
       image: bekvamtImg.url,
+      includedStandard: STANDARD_INCLUDED,
     },
     {
       id: "deluxe",
@@ -101,8 +102,10 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
       price: 11900,
       maxGuests: 4,
       image: interiorImg.url,
+      includedStandard: STANDARD_INCLUDED,
     },
   ],
+
   addOns: [
     {
       id: "luxury-bed",
