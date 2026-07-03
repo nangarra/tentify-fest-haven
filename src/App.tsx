@@ -15,7 +15,7 @@ import HyraTaltSkane from "./pages/HyraTaltSkane";
 import HyraTaltMalmo from "./pages/HyraTaltMalmo";
 import FestivalGlamping from "./pages/FestivalGlamping";
 import HyraGlampingtalt from "./pages/HyraGlampingtalt";
-import BookSwedenRock2027 from "./pages/BookSwedenRock2027";
+import EventBookingPage from "./pages/EventBookingPage";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
 
