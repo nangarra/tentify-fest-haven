@@ -561,33 +561,48 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
               </Card>
 
               <Card className="p-6 md:p-8">
-                <h2 className="text-2xl font-bold mb-6">{t("payment", lang)}</h2>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <PaymentOption
-                    active={paymentOption === "deposit"}
-                    onClick={() => setPaymentOption("deposit")}
-                    title={t("payDeposit", lang)}
-                    subtitle={t("payDepositDesc", lang)}
-                    price={fmt(depositAmount, festival.currency)}
-                    label={t("depositLabel", lang)}
+                <h2 className="text-2xl font-bold mb-4">{t("reviewBooking", lang)}</h2>
+                <div className="rounded-lg border bg-muted/30 p-4 md:p-5 space-y-2 text-sm">
+                  <SummaryRow label={t("step1", lang)} value={selectedTent.name[lang]} />
+                  <SummaryRow
+                    label={`${t("checkin", lang)} → ${t("checkout", lang)}`}
+                    value={`${festival.checkIn[lang]} → ${festival.checkOut[lang]}`}
                   />
-                  <PaymentOption
-                    active={paymentOption === "full"}
-                    onClick={() => setPaymentOption("full")}
-                    title={t("payFull", lang)}
-                    subtitle={t("payFullDesc", lang)}
-                    price={fmt(total, festival.currency)}
-                    label={t("fullAmountLabel", lang)}
+                  <SummaryRow
+                    label={t("nightsLabel", lang)}
+                    value={String(festival.nights)}
+                  />
+                  <SummaryRow label={t("guestsLabel", lang)} value={String(guests)} />
+                  {addOnLines.length > 0 && (
+                    <SummaryRow
+                      label={t("step3", lang)}
+                      value={addOnLines.map((l) => l.addOn.name[lang]).join(", ")}
+                    />
+                  )}
+                  <Separator className="my-2" />
+                  <SummaryRow
+                    label={t("total", lang)}
+                    value={fmt(total, festival.currency)}
+                    strong
+                  />
+                  <SummaryRow
+                    label={t("depositLine", lang)}
+                    value={fmt(depositAmount, festival.currency)}
+                    strong
+                  />
+                  <SummaryRow
+                    label={t("remainingLine", lang)}
+                    value={fmt(remainingAmount, festival.currency)}
                   />
                 </div>
                 <p className="text-xs text-muted-foreground mt-4 flex items-start gap-2">
                   <Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
-                  {t("paymentNote", lang)}
+                  {t("thanksBody", lang)}
                 </p>
               </Card>
 
               <Button size="lg" className="w-full" onClick={handleConfirm} disabled={!canConfirm || isSubmitting}>
-                {isSubmitting ? t("submitting", lang) : t("confirmBooking", lang)}
+                {isSubmitting ? t("submitting", lang) : t("sendBookingRequest", lang)}
               </Button>
             </div>
 
@@ -599,23 +614,65 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
 
         {step === "confirmation" && selectedTent && (
           <div className="max-w-2xl mx-auto">
-            <Card className="p-8 md:p-10 text-center">
-              <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-5">
-                <Check className="w-7 h-7 text-primary" />
+            <Card className="p-8 md:p-10">
+              <div className="text-center">
+                <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-5">
+                  <Check className="w-7 h-7 text-primary" />
+                </div>
+                <h1 className="text-3xl font-bold mb-3">{t("thanks", lang)}</h1>
+                <p className="text-muted-foreground mb-6">
+                  {t("thanksBody", lang)}
+                </p>
               </div>
-              <h1 className="text-3xl font-bold mb-3">{t("thanks", lang)}</h1>
-              <p className="text-muted-foreground mb-6">
-                {t("thanksBody", lang)}{" "}
-                <span className="font-medium text-foreground">{email}</span>.
-              </p>
-              <div className="text-left bg-muted/40 rounded-lg p-5 mb-6 text-sm space-y-2">
-                <div className="flex justify-between"><span>{t("step1", lang)}</span><span className="font-medium">{selectedTent.name[lang]}</span></div>
-                <div className="flex justify-between"><span>{t("guestsLabel", lang)}</span><span className="font-medium">{guests}</span></div>
-                <div className="flex justify-between"><span>{t("total", lang)}</span><span className="font-semibold text-primary">{fmt(total, festival.currency)}</span></div>
+
+              {bookingId && (
+                <div className="text-center mb-6 text-sm">
+                  <span className="text-muted-foreground">{t("bookingNumber", lang)}: </span>
+                  <span className="font-mono font-semibold text-foreground">
+                    {bookingId.slice(0, 8).toUpperCase()}
+                  </span>
+                </div>
+              )}
+
+              <div className="rounded-lg border bg-muted/30 p-5 mb-6 text-sm space-y-2">
+                <div className="text-xs uppercase tracking-wide text-muted-foreground mb-2">
+                  {t("paymentInfo", lang)}
+                </div>
+                <SummaryRow label={t("totalAmountLabel", lang)} value={fmt(total, festival.currency)} />
+                <SummaryRow label={t("depositLine", lang)} value={fmt(depositAmount, festival.currency)} strong />
+                <SummaryRow label={t("remainingLine", lang)} value={fmt(remainingAmount, festival.currency)} />
               </div>
-              <Button asChild variant="outline">
-                <Link to="/">{t("backHome", lang)}</Link>
-              </Button>
+
+              <div className="grid md:grid-cols-2 gap-4 mb-6">
+                <div className="rounded-lg border p-5">
+                  <div className="text-xs uppercase tracking-wide text-muted-foreground mb-1">
+                    {t("swishTitle", lang)}
+                  </div>
+                  <div className="text-lg font-bold mb-1">{PAYMENT_INFO.swish}</div>
+                  <p className="text-xs text-muted-foreground">{t("markPayment", lang)}</p>
+                </div>
+                <div className="rounded-lg border p-5">
+                  <div className="text-xs uppercase tracking-wide text-muted-foreground mb-1">
+                    {t("bankgiroTitle", lang)}
+                  </div>
+                  <div className="text-lg font-bold">{PAYMENT_INFO.bankgiro}</div>
+                  <div className="text-xs text-muted-foreground mb-2">
+                    {PAYMENT_INFO.bankgiroHolder}
+                  </div>
+                  <p className="text-xs text-muted-foreground">{t("markPayment", lang)}</p>
+                </div>
+              </div>
+
+              <div className="rounded-lg bg-accent/20 border border-accent/30 p-4 mb-6 text-sm">
+                <div className="font-semibold mb-1">{t("confirmationTitle", lang)}</div>
+                <p className="text-muted-foreground">{t("confirmationBody", lang)}</p>
+              </div>
+
+              <div className="text-center">
+                <Button asChild variant="outline">
+                  <Link to="/">{t("backHome", lang)}</Link>
+                </Button>
+              </div>
             </Card>
           </div>
         )}
