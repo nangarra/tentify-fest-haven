@@ -6,7 +6,11 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-const WaitlistForm = () => {
+interface WaitlistFormProps {
+  variant?: "sold-out" | "pre-booking";
+}
+
+const WaitlistForm = ({ variant = "sold-out" }: WaitlistFormProps) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
