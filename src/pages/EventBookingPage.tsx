@@ -584,10 +584,10 @@ const TentCard = ({
           <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
             {t("includedAsStandard", lang)}
           </div>
-          <ul className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-sm">
+          <ul className="grid grid-cols-2 gap-x-3 gap-y-2 text-sm">
             {tent.includedStandard.map((item, i) => (
-              <li key={i} className="flex items-center gap-1.5">
-                <span aria-hidden className="text-base leading-none">{item.icon}</span>
+              <li key={i} className="flex items-center gap-2">
+                <item.Icon aria-hidden className="w-4 h-4 text-primary flex-shrink-0" />
                 <span className="text-foreground/80">{item.label[lang]}</span>
               </li>
             ))}
