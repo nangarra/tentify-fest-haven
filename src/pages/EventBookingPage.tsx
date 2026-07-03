@@ -371,31 +371,60 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
         </div>
 
         <div className="container mx-auto px-4 -mt-6 relative z-20">
-          <Card className="p-4 md:p-5 flex flex-col md:flex-row md:items-center gap-4 md:gap-6">
-            <div className="flex-1">
-              <div className="flex justify-between mb-2 text-sm">
-                <span className="font-semibold">
-                  {soldOut
-                    ? lang === "sv" ? "Slutsålt" : "Sold out"
-                    : lang === "sv"
-                    ? `Endast ${available} av ${festival.totalTents} tält kvar`
-                    : `${available} of ${festival.totalTents} tents left`}
-                </span>
-                <span className="text-muted-foreground">
-                  {lang === "sv"
-                    ? `${displayBooked} redan bokade`
-                    : `${displayBooked} already booked`}
-                </span>
+          <Card className="p-4 md:p-5 flex flex-col gap-4">
+            <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6">
+              <div className="flex-1">
+                <div className="flex justify-between mb-2 text-sm">
+                  <span className="font-semibold">
+                    {soldOut
+                      ? t("allSoldOut", lang)
+                      : lang === "sv"
+                      ? `Endast ${available} av ${festival.totalTents} tält kvar`
+                      : `${available} of ${festival.totalTents} tents left`}
+                  </span>
+                  <span className="text-muted-foreground">
+                    {displayBooked} {t("alreadyBookedTag", lang)}
+                  </span>
+                </div>
+                <Progress
+                  value={((festival.totalTents - available) / festival.totalTents) * 100}
+                />
               </div>
-              <Progress
-                value={((festival.totalTents - available) / festival.totalTents) * 100}
-              />
+              <div className="text-sm text-muted-foreground md:border-l md:pl-6">
+                <span className="font-medium text-foreground">
+                  {festival.nights} {t("nights", lang)}
+                </span>{" "}
+                · {t("checkinTime", lang)}
+              </div>
             </div>
-            <div className="text-sm text-muted-foreground md:border-l md:pl-6">
-              <span className="font-medium text-foreground">
-                {festival.nights} {t("nights", lang)}
-              </span>{" "}
-              · {t("checkinTime", lang)}
+            <div className="flex flex-wrap gap-2 pt-1">
+              {festival.tents.map((tt) => {
+                const left = availabilityByType[tt.id] ?? 0;
+                const totalT = tt.totalCount ?? 0;
+                const isSold = left <= 0;
+                return (
+                  <span
+                    key={tt.id}
+                    className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium ${
+                      isSold
+                        ? "bg-muted text-muted-foreground border-border"
+                        : "bg-primary/5 text-foreground border-primary/20"
+                    }`}
+                  >
+                    <span
+                      className={`w-2 h-2 rounded-full ${
+                        isSold ? "bg-muted-foreground/50" : "bg-primary"
+                      }`}
+                    />
+                    {tt.name[lang]}:{" "}
+                    {isSold
+                      ? lang === "sv"
+                        ? "slutsålt"
+                        : "sold out"
+                      : `${left} ${t("ofLabel", lang)} ${totalT} ${t("availabilityLine", lang)}`}
+                  </span>
+                );
+              })}
             </div>
           </Card>
         </div>
