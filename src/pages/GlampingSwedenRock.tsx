@@ -67,7 +67,7 @@ const forWho = [
 const faq = [
   {
     q: "Kan jag boka glamping till Sweden Rock 2027?",
-    a: "Just nu kan du skriva upp dig på väntelistan för Sweden Rock 2027. Då får du information när nya platser eller bokningsmöjligheter öppnar.",
+    a: "Ja, bokningen för Sweden Rock 2027 görs direkt på denna sida när platserna är släppta. Antalet tält är begränsat.",
   },
   {
     q: "Vad ingår i glampingtältet?",
@@ -78,18 +78,19 @@ const faq = [
     a: "Ja, Tentifys glamping är för dig som vill bo bekvämare än i ett vanligt tält och slippa ta med all campingutrustning själv.",
   },
   {
-    q: "Hur fungerar väntelistan?",
-    a: "Du skriver upp dig med dina kontaktuppgifter och får information när platser eller bokningsmöjligheter inför Sweden Rock 2027 öppnar.",
+    q: "Hur fungerar bokningen?",
+    a: "Du väljer tält, antal gäster och eventuella tillval direkt på sidan. Innan betalning ser du hela din bokning och totalsumma.",
   },
   {
     q: "Är platserna begränsade?",
-    a: "Ja, antalet glampingtält är begränsat och tidigare år har intresset varit stort. Därför rekommenderar vi att skriva upp sig på väntelistan.",
+    a: "Ja, antalet glampingtält är begränsat och tidigare år har intresset varit stort. Vi rekommenderar att boka i god tid.",
   },
   {
     q: "Var ligger tälten?",
     a: "Exakt platsinformation uppdateras inför 2027 när campingen och upplägget är fastställt.",
   },
 ];
+
 
 const galleryImages = [
   { src: heroImg.url, alt: "Glampingtält på Sweden Rock 2027 i kvällsljus" },
