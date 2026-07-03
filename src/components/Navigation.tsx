@@ -132,18 +132,6 @@ const Navigation = () => {
                   Kontakt
                 </Link>
               )}
-              {isHomePage ? (
-                <Button
-                  onClick={() => scrollToSection("boka-talt")}
-                  className="btn-hero"
-                >
-                  Boka nu
-                </Button>
-              ) : (
-                <Button asChild className="btn-hero">
-                  <Link to="/#boka-talt">Boka nu</Link>
-                </Button>
-              )}
             </div>
           </div>
 
