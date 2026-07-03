@@ -5,6 +5,11 @@ import heroImg from "@/assets/sweden-rock-2027-hero.png.asset.json";
 export type Lang = "sv" | "en";
 export type Localized = Record<Lang, string>;
 
+export type IncludedItem = {
+  icon: string;
+  label: Localized;
+};
+
 export type TentType = {
   id: string;
   name: Localized;
@@ -14,6 +19,7 @@ export type TentType = {
   price: number;
   maxGuests: number;
   image: string;
+  includedStandard?: IncludedItem[];
 };
 
 export type AddOnType = {
@@ -22,8 +28,11 @@ export type AddOnType = {
   description: Localized;
   price: number;
   perPerson: boolean;
-  category: "comfort" | "food" | "extra";
+  category: "comfort" | "food" | "extra" | "package";
+  badge?: Localized;
+  includedItems?: Localized[];
 };
+
 
 export type FestivalConfig = {
   slug: string;
@@ -43,7 +52,21 @@ export type FestivalConfig = {
   addOns: AddOnType[];
 };
 
+const STANDARD_INCLUDED: IncludedItem[] = [
+  { icon: "🪑", label: { sv: "2 stolar", en: "2 chairs" } },
+  { icon: "🪵", label: { sv: "Bord", en: "Table" } },
+  { icon: "🧺", label: { sv: "Filt", en: "Blanket" } },
+  { icon: "🟫", label: { sv: "Matta", en: "Rug" } },
+  { icon: "🎁", label: { sv: "Goodiebag med toarulle", en: "Goodie bag with toilet paper" } },
+  { icon: "🧻", label: { sv: "Våtservetter", en: "Wet wipes" } },
+  { icon: "💡", label: { sv: "USB-lampa", en: "USB lamp" } },
+  { icon: "🚪", label: { sv: "Dörrmatta", en: "Doormat" } },
+  { icon: "🔌", label: { sv: "El", en: "Electricity" } },
+  { icon: "🚗", label: { sv: "Parkering", en: "Parking" } },
+];
+
 export const SWEDEN_ROCK_2027: FestivalConfig = {
+
   slug: "sweden-rock-2027",
   id: "sweden-rock-2027",
   name: "Sweden Rock Festival 2027",
@@ -79,6 +102,7 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
       price: 7900,
       maxGuests: 2,
       image: bekvamtImg.url,
+      includedStandard: STANDARD_INCLUDED,
     },
     {
       id: "deluxe",
@@ -92,8 +116,10 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
       price: 11900,
       maxGuests: 4,
       image: interiorImg.url,
+      includedStandard: STANDARD_INCLUDED,
     },
   ],
+
   addOns: [
     {
       id: "luxury-bed",
@@ -161,8 +187,45 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
       perPerson: false,
       category: "extra",
     },
+    {
+      id: "comfort-pack",
+      name: { sv: "Comfort Pack", en: "Comfort Pack" },
+      description: {
+        sv: "Gör tältet ännu bekvämare med extra saker för vila och häng.",
+        en: "Make your tent even cosier with extras for resting and hanging out.",
+      },
+      price: 499,
+      perPerson: false,
+      category: "package",
+      badge: { sv: "Bekvämlighetspaket", en: "Comfort package" },
+      includedItems: [
+        { sv: "Extra stol", en: "Extra chair" },
+        { sv: "Extra kudde", en: "Extra pillow" },
+        { sv: "Extra filt", en: "Extra blanket" },
+      ],
+    },
+    {
+      id: "festival-survival-pack",
+      name: { sv: "Festival Survival Pack", en: "Festival Survival Pack" },
+      description: {
+        sv: "Ett praktiskt festivalpaket med saker som gör vistelsen enklare och skönare.",
+        en: "A practical festival pack with essentials that make your stay easier.",
+      },
+      price: 499,
+      perPerson: true,
+      category: "package",
+      badge: { sv: "Perfekt för festivalen", en: "Perfect for the festival" },
+      includedItems: [
+        { sv: "Vatten", en: "Water" },
+        { sv: "Snacks", en: "Snacks" },
+        { sv: "Regnponcho", en: "Rain poncho" },
+        { sv: "Öronproppar", en: "Earplugs" },
+        { sv: "Ögonbindel", en: "Sleep mask" },
+      ],
+    },
   ],
 };
+
 
 export const FESTIVALS: Record<string, FestivalConfig> = {
   [SWEDEN_ROCK_2027.slug]: SWEDEN_ROCK_2027,

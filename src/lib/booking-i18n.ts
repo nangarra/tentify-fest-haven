@@ -1,7 +1,10 @@
 import type { Lang } from "@/config/festivals";
 
 export const BOOKING_STRINGS = {
+  includedAsStandard: { sv: "Ingår som standard", en: "Included as standard" },
+  packageIncludes: { sv: "Ingår i paketet", en: "Included in the package" },
   bookingOpen: { sv: "Bokning öppen", en: "Booking open" },
+
   tentsLeft: { sv: "tält kvar av", en: "of" },
   tentsSuffix: { sv: "", en: "tents left" },
   limitedAvailability: { sv: "Begränsat antal", en: "Limited availability" },
