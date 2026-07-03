@@ -54,7 +54,10 @@ const addOnIcons: Record<string, React.ComponentType<{ className?: string }>> = 
   breakfast: Coffee,
   towel: Bath,
   fridge: Refrigerator,
+  "comfort-pack": Package,
+  "festival-survival-pack": Backpack,
 };
+
 
 const fmt = (n: number, currency: string) =>
   `${n.toLocaleString("sv-SE")} ${currency}`;
