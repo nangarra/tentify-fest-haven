@@ -144,7 +144,7 @@ const GlampingSwedenRock = () => {
         {/* HERO */}
         <section className="relative min-h-[78vh] flex items-center justify-center overflow-hidden pt-20">
           <img
-            src={hero2027Img.url}
+            src={heroImg.url}
             alt="Glampingtält på Sweden Rock 2027 med festivalscen i bakgrunden"
             loading="eager"
             fetchPriority="high"
@@ -169,7 +169,7 @@ const GlampingSwedenRock = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Button size="lg" className="btn-hero" onClick={() => scrollTo("booking")}>
-                Boka glamping
+                Boka nu
               </Button>
 
               <Button
@@ -191,14 +191,34 @@ const GlampingSwedenRock = () => {
 
         {/* BOKNING */}
         <section id="booking" className="py-10 bg-background">
-          <div className="container mx-auto px-4 max-w-5xl text-center mb-4">
-            <h2 className="text-3xl md:text-4xl font-bold mb-3">
-              Boka glamping till Sweden Rock 2027
-            </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Välj tält, antal gäster och tillval. Du ser hela tiden din bokning och
-              totalsumma innan du går vidare till betalning.
-            </p>
+          <div className="container mx-auto px-4 max-w-5xl mb-8">
+            <div className="relative rounded-2xl overflow-hidden shadow-elegant mb-8 aspect-[21/9]">
+              <img
+                src={camplineImg.url}
+                alt="Tentify glampingtält uppradade nära Sweden Rock"
+                loading="lazy"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-6 md:p-8 text-white">
+                <Badge className="mb-3 bg-primary text-primary-foreground border-transparent">
+                  Bokning öppen
+                </Badge>
+                <h2 className="text-3xl md:text-4xl font-bold mb-2" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>
+                  Boka glamping till Sweden Rock 2027
+                </h2>
+              </div>
+            </div>
+            <div className="text-center max-w-2xl mx-auto">
+              <p className="text-muted-foreground mb-3">
+                Nu är bokningen öppen för Sweden Rock 2027. Välj tält, antal gäster och tillval
+                direkt på sidan. Du ser hela tiden din bokning, dina tillval och totalsumman
+                innan du går vidare till betalning.
+              </p>
+              <p className="text-sm font-medium text-primary">
+                Endast ett begränsat antal tält finns tillgängliga. Först till kvarn gäller.
+              </p>
+            </div>
           </div>
           {festival && <BookingFlow festival={festival} />}
         </section>
