@@ -1,6 +1,19 @@
+import type { LucideIcon } from "lucide-react";
+import {
+  Armchair,
+  Square,
+  Layers,
+  LayoutGrid,
+  Gift,
+  Droplets,
+  Lightbulb,
+  DoorOpen,
+  Zap,
+  Car,
+} from "lucide-react";
 import bekvamtImg from "@/assets/bekvamt-boende-sweden-rock-glamping.webp.asset.json";
 import interiorImg from "@/assets/glampingtalt-sweden-rock-interior.webp.asset.json";
-import heroImg from "@/assets/sweden-rock-2027-hero.png.asset.json";
+import bookingHeroImg from "@/assets/sweden-rock-glamping-5-2.webp.asset.json";
 import luxuryBedImg from "@/assets/dubbelbad-swedenrock.webp.asset.json";
 import extraBedImg from "@/assets/extra-sang-swedenrock.webp.asset.json";
 import beddingImg from "@/assets/baddset-swedenrock.webp.asset.json";
@@ -9,7 +22,7 @@ export type Lang = "sv" | "en";
 export type Localized = Record<Lang, string>;
 
 export type IncludedItem = {
-  icon: string;
+  Icon: LucideIcon;
   label: Localized;
 };
 
@@ -57,16 +70,16 @@ export type FestivalConfig = {
 };
 
 const STANDARD_INCLUDED: IncludedItem[] = [
-  { icon: "🪑", label: { sv: "2 stolar", en: "2 chairs" } },
-  { icon: "🪵", label: { sv: "Bord", en: "Table" } },
-  { icon: "🧺", label: { sv: "Filt", en: "Blanket" } },
-  { icon: "🟫", label: { sv: "Matta", en: "Rug" } },
-  { icon: "🎁", label: { sv: "Goodiebag med toarulle", en: "Goodie bag with toilet paper" } },
-  { icon: "🧻", label: { sv: "Våtservetter", en: "Wet wipes" } },
-  { icon: "💡", label: { sv: "USB-lampa", en: "USB lamp" } },
-  { icon: "🚪", label: { sv: "Dörrmatta", en: "Doormat" } },
-  { icon: "🔌", label: { sv: "El", en: "Electricity" } },
-  { icon: "🚗", label: { sv: "Parkering", en: "Parking" } },
+  { Icon: Armchair, label: { sv: "2 stolar", en: "2 chairs" } },
+  { Icon: Square, label: { sv: "Bord", en: "Table" } },
+  { Icon: Layers, label: { sv: "Filt", en: "Blanket" } },
+  { Icon: LayoutGrid, label: { sv: "Matta", en: "Rug" } },
+  { Icon: Gift, label: { sv: "Goodiebag", en: "Goodie bag" } },
+  { Icon: Droplets, label: { sv: "Våtservetter", en: "Wet wipes" } },
+  { Icon: Lightbulb, label: { sv: "USB-lampa", en: "USB lamp" } },
+  { Icon: DoorOpen, label: { sv: "Dörrmatta", en: "Doormat" } },
+  { Icon: Zap, label: { sv: "El", en: "Electricity" } },
+  { Icon: Car, label: { sv: "Parkering", en: "Parking" } },
 ];
 
 export const SWEDEN_ROCK_2027: FestivalConfig = {
@@ -86,11 +99,11 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
     sv: "Nära Sweden Rock Festival",
     en: "Near Sweden Rock Festival",
   },
-  checkIn: { sv: "8 juni 2027", en: "8 June 2027" },
-  checkOut: { sv: "13 juni 2027", en: "13 June 2027" },
-  nights: 5,
-  totalTents: 10,
-  heroImage: heroImg.url,
+  checkIn: { sv: "8 juni 2026", en: "8 June 2026" },
+  checkOut: { sv: "12 juni 2026", en: "12 June 2026" },
+  nights: 4,
+  totalTents: 20,
+  heroImage: bookingHeroImg.url,
   currency: "SEK",
   extraGuestPrice: 500,
   tents: [
@@ -98,13 +111,13 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
       id: "medium",
       name: { sv: "Medium tält", en: "Medium Tent" },
       size: "6 m²",
-      bestFor: { sv: "1–2 gäster", en: "1–2 guests" },
+      bestFor: { sv: "2–3 gäster", en: "2–3 guests" },
       description: {
         sv: "Enkel och bekväm festivalglamping. Klart när du kommer.",
         en: "Simple and comfortable festival glamping. Ready when you arrive.",
       },
       price: 7900,
-      maxGuests: 2,
+      maxGuests: 3,
       image: bekvamtImg.url,
       includedStandard: STANDARD_INCLUDED,
     },

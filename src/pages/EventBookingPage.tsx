@@ -101,7 +101,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   const [selectedTentId, setSelectedTentId] = useState<string | null>(null);
   const [guests, setGuests] = useState<number>(1);
   const [selectedAddOns, setSelectedAddOns] = useState<Set<string>>(new Set());
-  const [available, setAvailable] = useState<number>(festival.totalTents);
+  const [realAvailable, setRealAvailable] = useState<number>(festival.totalTents);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -123,11 +123,21 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
         (sum, r) => sum + (r.available_count ?? 0),
         0,
       );
-      if (typeof total === "number" && total > 0) {
-        setAvailable(Math.min(total, festival.totalTents));
+      if (typeof total === "number" && total >= 0 && (data as any[])?.length) {
+        setRealAvailable(Math.min(total, festival.totalTents));
       }
     })();
   }, [festival.id]);
+
+  // Social-proof fake bookings: show 3 booked at start, but never block real customers.
+  const FAKE_BOOKED = 3;
+  const realBookings = festival.totalTents - realAvailable;
+  const displayBooked =
+    realBookings < festival.totalTents - FAKE_BOOKED
+      ? realBookings + FAKE_BOOKED
+      : realBookings;
+  const available = festival.totalTents - displayBooked;
+  const soldOut = realBookings >= festival.totalTents;
 
   useEffect(() => {
     document.title = `${festival.displayTitle[lang]} | Tentify`;
@@ -159,7 +169,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   const total = tentPrice + extraGuestsCost + addOnsTotal;
   const depositAmount = Math.round(total * 0.2);
 
-  const canCheckout = !!selectedTent && guests > 0;
+  const canCheckout = !!selectedTent && guests > 0 && !soldOut;
   const canConfirm =
     canCheckout &&
     firstName.trim() &&
@@ -295,11 +305,17 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
             <div className="flex-1">
               <div className="flex justify-between mb-2 text-sm">
                 <span className="font-semibold">
-                  {lang === "sv"
+                  {soldOut
+                    ? lang === "sv" ? "Slutsålt" : "Sold out"
+                    : lang === "sv"
                     ? `Endast ${available} av ${festival.totalTents} tält kvar`
                     : `${available} of ${festival.totalTents} tents left`}
                 </span>
-                <span className="text-muted-foreground">{t("limitedAvailability", lang)}</span>
+                <span className="text-muted-foreground">
+                  {lang === "sv"
+                    ? `${displayBooked} redan bokade`
+                    : `${displayBooked} already booked`}
+                </span>
               </div>
               <Progress
                 value={((festival.totalTents - available) / festival.totalTents) * 100}
@@ -371,6 +387,14 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                       </Button>
                     </div>
                   </div>
+                  {selectedTent?.id === "medium" && guests >= maxGuests && (
+                    <p className="mt-3 text-xs text-muted-foreground flex items-start gap-1.5">
+                      <Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
+                      {lang === "sv"
+                        ? "Medium tält har plats för upp till 3 gäster. Välj Deluxe för fler gäster."
+                        : "The Medium tent fits up to 3 guests. Choose Deluxe for more guests."}
+                    </p>
+                  )}
                 </Card>
               </StepBlock>
 
@@ -584,10 +608,10 @@ const TentCard = ({
           <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
             {t("includedAsStandard", lang)}
           </div>
-          <ul className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-sm">
+          <ul className="grid grid-cols-2 gap-x-3 gap-y-2 text-sm">
             {tent.includedStandard.map((item, i) => (
-              <li key={i} className="flex items-center gap-1.5">
-                <span aria-hidden className="text-base leading-none">{item.icon}</span>
+              <li key={i} className="flex items-center gap-2">
+                <item.Icon aria-hidden className="w-4 h-4 text-primary flex-shrink-0" />
                 <span className="text-foreground/80">{item.label[lang]}</span>
               </li>
             ))}
