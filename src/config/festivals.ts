@@ -137,6 +137,7 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
       maxGuests: 4,
       image: interiorImg.url,
       includedStandard: STANDARD_INCLUDED,
+      totalCount: 10,
     },
   ],
 
