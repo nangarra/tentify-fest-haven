@@ -125,6 +125,25 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingId, setBookingId] = useState<string | null>(null);
 
+  // Handle Stripe return URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const stripeStatus = params.get("stripe");
+    const returnedBooking = params.get("booking");
+    if (stripeStatus === "success" && returnedBooking) {
+      setBookingId(returnedBooking);
+      setStep("confirmation");
+      // Clean URL
+      window.history.replaceState({}, "", window.location.pathname);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else if (stripeStatus === "cancel") {
+      toast.error(
+        "Betalningen avbröts. Din bokning har inte sparats – försök igen.",
+      );
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  }, []);
+
   useEffect(() => {
     (async () => {
       const { data } = await supabase.rpc("get_tent_availability", {
@@ -141,6 +160,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
       }
     })();
   }, [festival.id, initialAvailability]);
+
 
   // Social-proof fake bookings: show 3 booked in the header, but never block real customers.
   const FAKE_BOOKED = 3;
@@ -253,9 +273,9 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
         `Nätter: ${festival.nights}\n` +
         `Tillval: ${addOnLines.map((l) => `${l.addOn.name.sv} (${l.total} kr)`).join(", ") || "Inga"}\n` +
         `Totalt: ${total} kr\n` +
-        `Förskott 20%: ${depositAmount} kr\n` +
+        `Förskott 20%: ${depositAmount} kr (via Stripe)\n` +
         `Resterande 80%: ${remainingAmount} kr\n` +
-        `Status: Väntar på bekräftelse (förskottsbetalning ej mottagen)`;
+        `Status: Väntar på Stripe-betalning`;
 
       const { data: inserted, error } = await supabase
         .from("bookings")
@@ -293,7 +313,8 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
         .select("id")
         .single();
       if (error) throw error;
-      setBookingId(inserted?.id ?? null);
+      const newBookingId = inserted?.id as string;
+      setBookingId(newBookingId ?? null);
 
       await supabase.rpc("decrease_tent_inventory", {
         p_festival: festival.id,
@@ -304,8 +325,28 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
         ...prev,
         [selectedTent.id]: Math.max(0, (prev[selectedTent.id] ?? 0) - 1),
       }));
-      setStep("confirmation");
-      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      // Create Stripe Checkout Session and redirect
+      const returnUrl = window.location.origin + window.location.pathname;
+      const { data: checkout, error: fnError } = await supabase.functions.invoke(
+        "create-stripe-checkout",
+        {
+          body: {
+            bookingId: newBookingId,
+            amount: depositAmount,
+            currency: "sek",
+            description: `${festival.name} – ${selectedTent.name.sv} (${guests} ${guests === 1 ? "gäst" : "gäster"})`,
+            customerEmail: email,
+            successUrl: returnUrl,
+            cancelUrl: returnUrl,
+          },
+        },
+      );
+      if (fnError || !checkout?.url) {
+        throw new Error(fnError?.message || "Kunde inte starta betalning");
+      }
+      window.location.href = checkout.url as string;
+
     } catch (e: any) {
       console.error(e);
       toast.error(t("errorSubmit", lang));
@@ -641,30 +682,40 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
 
               <div className="rounded-lg border bg-muted/30 p-5 mb-6 text-sm space-y-2">
                 <div className="text-xs uppercase tracking-wide text-muted-foreground mb-2">
-                  {t("paymentInfo", lang)}
+                  {lang === "sv" ? "Betalning" : "Payment"}
                 </div>
                 <SummaryRow label={t("totalAmountLabel", lang)} value={fmt(total, festival.currency)} />
-                <SummaryRow label={t("depositLine", lang)} value={fmt(depositAmount, festival.currency)} strong />
+                <SummaryRow
+                  label={lang === "sv" ? "Betalt förskott 20% (Stripe)" : "Deposit paid 20% (Stripe)"}
+                  value={fmt(depositAmount, festival.currency)}
+                  strong
+                />
                 <SummaryRow label={t("remainingLine", lang)} value={fmt(remainingAmount, festival.currency)} />
               </div>
 
-              <div className="grid md:grid-cols-2 gap-4 mb-6">
-                <div className="rounded-lg border p-5">
-                  <div className="text-xs uppercase tracking-wide text-muted-foreground mb-1">
-                    {t("swishTitle", lang)}
-                  </div>
-                  <div className="text-lg font-bold mb-1">{PAYMENT_INFO.swish}</div>
-                  <p className="text-xs text-muted-foreground">{t("markPayment", lang)}</p>
+              <div className="rounded-lg border p-5 mb-6 text-sm">
+                <div className="text-xs uppercase tracking-wide text-muted-foreground mb-2">
+                  {lang === "sv" ? "Slutbetalning (80%)" : "Final payment (80%)"}
                 </div>
-                <div className="rounded-lg border p-5">
-                  <div className="text-xs uppercase tracking-wide text-muted-foreground mb-1">
-                    {t("bankgiroTitle", lang)}
+                <p className="text-muted-foreground mb-3">
+                  {lang === "sv"
+                    ? "Resterande belopp betalas närmare festivalen via Swish eller Bankgiro:"
+                    : "The remaining amount is paid closer to the festival via Swish or bank transfer:"}
+                </p>
+                <div className="grid md:grid-cols-2 gap-3">
+                  <div>
+                    <div className="text-xs uppercase tracking-wide text-muted-foreground">
+                      {t("swishTitle", lang)}
+                    </div>
+                    <div className="text-base font-bold">{PAYMENT_INFO.swish}</div>
                   </div>
-                  <div className="text-lg font-bold">{PAYMENT_INFO.bankgiro}</div>
-                  <div className="text-xs text-muted-foreground mb-2">
-                    {PAYMENT_INFO.bankgiroHolder}
+                  <div>
+                    <div className="text-xs uppercase tracking-wide text-muted-foreground">
+                      {t("bankgiroTitle", lang)}
+                    </div>
+                    <div className="text-base font-bold">{PAYMENT_INFO.bankgiro}</div>
+                    <div className="text-xs text-muted-foreground">{PAYMENT_INFO.bankgiroHolder}</div>
                   </div>
-                  <p className="text-xs text-muted-foreground">{t("markPayment", lang)}</p>
                 </div>
               </div>
 
@@ -672,6 +723,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                 <div className="font-semibold mb-1">{t("confirmationTitle", lang)}</div>
                 <p className="text-muted-foreground">{t("confirmationBody", lang)}</p>
               </div>
+
 
               <div className="text-center">
                 <Button asChild variant="outline">
