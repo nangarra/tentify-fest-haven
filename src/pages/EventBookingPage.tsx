@@ -629,15 +629,6 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                     value={fmt(total, festival.currency)}
                     strong
                   />
-                  <SummaryRow
-                    label={t("depositLine", lang)}
-                    value={fmt(depositAmount, festival.currency)}
-                    strong
-                  />
-                  <SummaryRow
-                    label={t("remainingLine", lang)}
-                    value={fmt(remainingAmount, festival.currency)}
-                  />
                 </div>
                 <p className="text-xs text-muted-foreground mt-4 flex items-start gap-2">
                   <Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
