@@ -706,7 +706,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                 </Button>
               ) : (
                 <Button size="sm" onClick={handleConfirm} disabled={!canConfirm || isSubmitting}>
-                  {t("confirmBooking", lang)}
+                  {t("sendBookingRequest", lang)}
                 </Button>
               )}
             </div>
