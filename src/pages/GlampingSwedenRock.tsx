@@ -197,9 +197,10 @@ const GlampingSwedenRock = () => {
             <p className="text-lg text-muted-foreground leading-relaxed">
               Vill du bo bekvämt under Sweden Rock 2027 utan att släpa med tält, madrasser och
               all utrustning? Tentify förbereder färdiga glampingtält för Sweden Rock med
-              sovplats, täcke, kudde, bäddmadrass och mysig inredning. Skriv upp dig på
-              väntelistan så får du information först när platserna släpps.
+              sovplats, täcke, kudde, bäddmadrass och mysig inredning. Välj tält, antal
+              gäster och tillval direkt på sidan – du ser hela din bokning innan betalning.
             </p>
+
           </div>
 
           {/* Horisontellt scrollande galleri */}
