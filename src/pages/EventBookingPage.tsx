@@ -444,7 +444,12 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                       lang={lang}
                       currency={festival.currency}
                       selected={selectedTentId === tent.id}
-                      onSelect={() => setSelectedTentId(tent.id)}
+                      soldOut={!!soldOutByType[tent.id]}
+                      available={availabilityByType[tent.id] ?? 0}
+                      onSelect={() => {
+                        if (soldOutByType[tent.id]) return;
+                        setSelectedTentId(tent.id);
+                      }}
                     />
                   ))}
                 </div>
