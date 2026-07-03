@@ -101,7 +101,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   const [selectedTentId, setSelectedTentId] = useState<string | null>(null);
   const [guests, setGuests] = useState<number>(1);
   const [selectedAddOns, setSelectedAddOns] = useState<Set<string>>(new Set());
-  const [available, setAvailable] = useState<number>(festival.totalTents);
+  const [realAvailable, setRealAvailable] = useState<number>(festival.totalTents);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -123,11 +123,21 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
         (sum, r) => sum + (r.available_count ?? 0),
         0,
       );
-      if (typeof total === "number" && total > 0) {
-        setAvailable(Math.min(total, festival.totalTents));
+      if (typeof total === "number" && total >= 0 && (data as any[])?.length) {
+        setRealAvailable(Math.min(total, festival.totalTents));
       }
     })();
   }, [festival.id]);
+
+  // Social-proof fake bookings: show 3 booked at start, but never block real customers.
+  const FAKE_BOOKED = 3;
+  const realBookings = festival.totalTents - realAvailable;
+  const displayBooked =
+    realBookings < festival.totalTents - FAKE_BOOKED
+      ? realBookings + FAKE_BOOKED
+      : realBookings;
+  const available = festival.totalTents - displayBooked;
+  const soldOut = realBookings >= festival.totalTents;
 
   useEffect(() => {
     document.title = `${festival.displayTitle[lang]} | Tentify`;
