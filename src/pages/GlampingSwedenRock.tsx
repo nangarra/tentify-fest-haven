@@ -167,9 +167,10 @@ const GlampingSwedenRock = () => {
               och mysig festivalkänsla nära Sweden Rock.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Button size="lg" className="btn-hero" onClick={() => scrollTo("vantelista")}>
-                Skriv upp mig på väntelistan
+              <Button size="lg" className="btn-hero" onClick={() => scrollTo("booking")}>
+                Boka glamping
               </Button>
+
               <Button
                 size="lg"
                 variant="outline"
