@@ -188,22 +188,22 @@ const GlampingSwedenRock = () => {
           </div>
         </section>
 
-        {/* BOKNING */}
+        {/* FÖRHANDSBOKNING / VÄNTELISTA */}
         <section id="booking" className="py-10 bg-background">
-          <div className="container mx-auto px-4 max-w-5xl">
+          <div className="container mx-auto px-4 max-w-3xl">
             <div className="text-center max-w-2xl mx-auto mb-8">
               <p className="text-muted-foreground mb-3">
-                Nu är bokningen öppen för Sweden Rock 2027. Välj tält, antal gäster och tillval
-                direkt på sidan. Du ser hela tiden din bokning, dina tillval och totalsumman
-                innan du skickar bokningsförfrågan.
+                Bokningen för Sweden Rock 2027 är tillfälligt stängd. Anmäl dig till
+                förhandsbokningen nedan så kontaktar vi dig så snart platserna släpps.
               </p>
               <p className="text-sm font-medium text-primary">
-                Endast ett begränsat antal tält finns tillgängliga. Först till kvarn gäller.
+                Endast ett begränsat antal tält kommer att finnas tillgängliga.
               </p>
             </div>
+            <WaitlistForm />
           </div>
-          {festival && <BookingFlow festival={festival} />}
         </section>
+
 
 
         {/* INTRO */}
