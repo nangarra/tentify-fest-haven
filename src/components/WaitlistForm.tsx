@@ -6,7 +6,11 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-const WaitlistForm = () => {
+interface WaitlistFormProps {
+  variant?: "sold-out" | "pre-booking";
+}
+
+const WaitlistForm = ({ variant = "sold-out" }: WaitlistFormProps) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -66,12 +70,17 @@ const WaitlistForm = () => {
     <Card className="p-8 bg-muted/50 border-border">
       <div className="text-center mb-6">
         <h3 className="text-xl font-bold text-foreground mb-3">
-          Alla tält till Sweden Rock är nu fullbokade.
+          {variant === "pre-booking"
+            ? "Anmäl dig till väntelistan för Sweden Rock 2027"
+            : "Alla tält till Sweden Rock är nu fullbokade."}
         </h3>
         <p className="text-muted-foreground">
-          Men du kan ställa dig på vår väntelista. Om någon avbokar eller om fler platser öppnas kontaktar vi dig direkt.
+          {variant === "pre-booking"
+            ? "Lämna dina uppgifter så kontaktar vi dig så snart bokningen öppnar eller platser släpps."
+            : "Men du kan ställa dig på vår väntelista. Om någon avbokar eller om fler platser öppnas kontaktar vi dig direkt."}
         </p>
       </div>
+
 
       <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto">
         <div>

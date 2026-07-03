@@ -200,7 +200,7 @@ const GlampingSwedenRock = () => {
                 Endast ett begränsat antal tält kommer att finnas tillgängliga.
               </p>
             </div>
-            <WaitlistForm />
+            <WaitlistForm variant="pre-booking" />
           </div>
         </section>
 
