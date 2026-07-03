@@ -38,6 +38,7 @@ const App = () => (
           <Route path="/hyra-talt-malmo" element={<HyraTaltMalmo />} />
           <Route path="/festival-glamping" element={<FestivalGlamping />} />
           <Route path="/hyra-glampingtalt" element={<HyraGlampingtalt />} />
+          <Route path="/book/sweden-rock-2027" element={<BookSwedenRock2027 />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/zenadmin" element={<ZenAdmin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
