@@ -36,6 +36,8 @@ export type TentType = {
   maxGuests: number;
   image: string;
   includedStandard?: IncludedItem[];
+  /** Number of physical tents of this type in inventory. */
+  totalCount?: number;
 };
 
 export type AddOnType = {
@@ -120,6 +122,7 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
       maxGuests: 3,
       image: bekvamtImg.url,
       includedStandard: STANDARD_INCLUDED,
+      totalCount: 10,
     },
     {
       id: "deluxe",
@@ -134,6 +137,7 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
       maxGuests: 4,
       image: interiorImg.url,
       includedStandard: STANDARD_INCLUDED,
+      totalCount: 10,
     },
   ],
 

@@ -46,6 +46,7 @@ import {
   type TentType,
 } from "@/config/festivals";
 import { t } from "@/lib/booking-i18n";
+import { PAYMENT_INFO } from "@/config/payment-info";
 
 const addOnIcons: Record<string, React.ComponentType<{ className?: string }>> = {
   "luxury-bed": BedDouble,
@@ -101,7 +102,17 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   const [selectedTentId, setSelectedTentId] = useState<string | null>(null);
   const [guests, setGuests] = useState<number>(1);
   const [selectedAddOns, setSelectedAddOns] = useState<Set<string>>(new Set());
-  const [realAvailable, setRealAvailable] = useState<number>(festival.totalTents);
+
+  // Per-tent-type real availability from backend.
+  const initialAvailability = useMemo(() => {
+    const rec: Record<string, number> = {};
+    festival.tents.forEach((tt) => {
+      rec[tt.id] = tt.totalCount ?? 0;
+    });
+    return rec;
+  }, [festival]);
+  const [availabilityByType, setAvailabilityByType] =
+    useState<Record<string, number>>(initialAvailability);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -111,33 +122,40 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   const [address, setAddress] = useState("");
   const [postalCode, setPostalCode] = useState("");
   const [city, setCity] = useState("");
-  const [paymentOption, setPaymentOption] = useState<"deposit" | "full">("deposit");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [bookingId, setBookingId] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
       const { data } = await supabase.rpc("get_tent_availability", {
         p_festival: festival.id,
       });
-      const total = (data as any[])?.reduce(
-        (sum, r) => sum + (r.available_count ?? 0),
-        0,
-      );
-      if (typeof total === "number" && total >= 0 && (data as any[])?.length) {
-        setRealAvailable(Math.min(total, festival.totalTents));
+      if (Array.isArray(data) && data.length) {
+        const rec: Record<string, number> = { ...initialAvailability };
+        (data as any[]).forEach((r) => {
+          if (r.tent_type in rec) {
+            rec[r.tent_type] = Math.max(0, r.available_count ?? 0);
+          }
+        });
+        setAvailabilityByType(rec);
       }
     })();
-  }, [festival.id]);
+  }, [festival.id, initialAvailability]);
 
-  // Social-proof fake bookings: show 3 booked at start, but never block real customers.
+  // Social-proof fake bookings: show 3 booked in the header, but never block real customers.
   const FAKE_BOOKED = 3;
+  const realAvailable = Object.values(availabilityByType).reduce((s, n) => s + n, 0);
   const realBookings = festival.totalTents - realAvailable;
   const displayBooked =
     realBookings < festival.totalTents - FAKE_BOOKED
       ? realBookings + FAKE_BOOKED
       : realBookings;
   const available = festival.totalTents - displayBooked;
-  const soldOut = realBookings >= festival.totalTents;
+  const soldOut = realAvailable <= 0;
+  const soldOutByType: Record<string, boolean> = {};
+  festival.tents.forEach((tt) => {
+    soldOutByType[tt.id] = (availabilityByType[tt.id] ?? 0) <= 0;
+  });
 
   useEffect(() => {
     document.title = `${festival.displayTitle[lang]} | Tentify`;
@@ -189,8 +207,35 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
     });
   };
 
+  const remainingAmount = total - depositAmount;
+
   const handleConfirm = async () => {
     if (!canConfirm || !selectedTent) return;
+
+    // Re-check availability just before saving so we don't oversell.
+    try {
+      const { data: latest } = await supabase.rpc("get_tent_availability", {
+        p_festival: festival.id,
+      });
+      const row = Array.isArray(latest)
+        ? (latest as any[]).find((r) => r.tent_type === selectedTent.id)
+        : null;
+      if (row && (row.available_count ?? 0) <= 0) {
+        toast.error(t("soldOutTypeError", lang));
+        // Refresh local availability
+        if (Array.isArray(latest)) {
+          const rec = { ...availabilityByType };
+          (latest as any[]).forEach((r) => {
+            if (r.tent_type in rec) rec[r.tent_type] = Math.max(0, r.available_count ?? 0);
+          });
+          setAvailabilityByType(rec);
+        }
+        return;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+
     setIsSubmitting(true);
     try {
       const addOnMeta = addOnLines.map((l) => ({
@@ -205,36 +250,60 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
         `Tält: ${selectedTent.name.sv} (${selectedTent.size})\n` +
         `Gäster: ${guests}\n` +
         `Incheckning: ${festival.checkIn.sv}\nUtcheckning: ${festival.checkOut.sv}\n` +
+        `Nätter: ${festival.nights}\n` +
         `Tillval: ${addOnLines.map((l) => `${l.addOn.name.sv} (${l.total} kr)`).join(", ") || "Inga"}\n` +
-        `Totalt: ${total} kr\nBetalning: ${paymentOption === "deposit" ? `Handpenning ${depositAmount} kr` : "Hela beloppet"}`;
+        `Totalt: ${total} kr\n` +
+        `Förskott 20%: ${depositAmount} kr\n` +
+        `Resterande 80%: ${remainingAmount} kr\n` +
+        `Status: Väntar på bekräftelse (förskottsbetalning ej mottagen)`;
 
-      const { error } = await supabase.from("bookings").insert({
-        name: `${firstName} ${lastName}`.trim(),
-        email,
-        phone,
-        message,
-        meta: {
-          festival: festival.id,
-          event: festival.name,
-          tentType: selectedTent.id,
-          tentBatch: selectedTent.id,
-          tentName: selectedTent.name.sv,
-          guests,
-          addOns: addOnMeta,
-          totalPrice: total,
-          deposit: depositAmount,
-          paymentOption,
-          address: { country, address, postalCode, city },
-          eventDates: `${festival.checkIn.sv} – ${festival.checkOut.sv}`,
-          language: lang,
-        },
-      });
+      const { data: inserted, error } = await supabase
+        .from("bookings")
+        .insert({
+          name: `${firstName} ${lastName}`.trim(),
+          email,
+          phone,
+          message,
+          meta: {
+            festival: festival.id,
+            event: festival.name,
+            tentType: selectedTent.id,
+            tentBatch: selectedTent.id,
+            tentName: selectedTent.name.sv,
+            tentBasePrice: selectedTent.price,
+            guests,
+            extraGuestsCost,
+            addOns: addOnMeta,
+            addOnsTotal,
+            totalPrice: total,
+            deposit: depositAmount,
+            depositPercent: 20,
+            remainingAmount,
+            paymentOption: "deposit",
+            paymentStatus: "awaiting_deposit",
+            bookingStatus: "pending_confirmation",
+            checkIn: festival.checkIn.sv,
+            checkOut: festival.checkOut.sv,
+            nights: festival.nights,
+            address: { country, address, postalCode, city },
+            eventDates: `${festival.checkIn.sv} – ${festival.checkOut.sv}`,
+            language: lang,
+          },
+        })
+        .select("id")
+        .single();
       if (error) throw error;
+      setBookingId(inserted?.id ?? null);
 
       await supabase.rpc("decrease_tent_inventory", {
         p_festival: festival.id,
         p_tent_type: selectedTent.id,
       });
+      // Update local availability
+      setAvailabilityByType((prev) => ({
+        ...prev,
+        [selectedTent.id]: Math.max(0, (prev[selectedTent.id] ?? 0) - 1),
+      }));
       setStep("confirmation");
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (e: any) {
@@ -244,6 +313,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
       setIsSubmitting(false);
     }
   };
+
 
   const summary = (
     <BookingSummary
@@ -301,31 +371,60 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
         </div>
 
         <div className="container mx-auto px-4 -mt-6 relative z-20">
-          <Card className="p-4 md:p-5 flex flex-col md:flex-row md:items-center gap-4 md:gap-6">
-            <div className="flex-1">
-              <div className="flex justify-between mb-2 text-sm">
-                <span className="font-semibold">
-                  {soldOut
-                    ? lang === "sv" ? "Slutsålt" : "Sold out"
-                    : lang === "sv"
-                    ? `Endast ${available} av ${festival.totalTents} tält kvar`
-                    : `${available} of ${festival.totalTents} tents left`}
-                </span>
-                <span className="text-muted-foreground">
-                  {lang === "sv"
-                    ? `${displayBooked} redan bokade`
-                    : `${displayBooked} already booked`}
-                </span>
+          <Card className="p-4 md:p-5 flex flex-col gap-4">
+            <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6">
+              <div className="flex-1">
+                <div className="flex justify-between mb-2 text-sm">
+                  <span className="font-semibold">
+                    {soldOut
+                      ? t("allSoldOut", lang)
+                      : lang === "sv"
+                      ? `Endast ${available} av ${festival.totalTents} tält kvar`
+                      : `${available} of ${festival.totalTents} tents left`}
+                  </span>
+                  <span className="text-muted-foreground">
+                    {displayBooked} {t("alreadyBookedTag", lang)}
+                  </span>
+                </div>
+                <Progress
+                  value={((festival.totalTents - available) / festival.totalTents) * 100}
+                />
               </div>
-              <Progress
-                value={((festival.totalTents - available) / festival.totalTents) * 100}
-              />
+              <div className="text-sm text-muted-foreground md:border-l md:pl-6">
+                <span className="font-medium text-foreground">
+                  {festival.nights} {t("nights", lang)}
+                </span>{" "}
+                · {t("checkinTime", lang)}
+              </div>
             </div>
-            <div className="text-sm text-muted-foreground md:border-l md:pl-6">
-              <span className="font-medium text-foreground">
-                {festival.nights} {t("nights", lang)}
-              </span>{" "}
-              · {t("checkinTime", lang)}
+            <div className="flex flex-wrap gap-2 pt-1">
+              {festival.tents.map((tt) => {
+                const left = availabilityByType[tt.id] ?? 0;
+                const totalT = tt.totalCount ?? 0;
+                const isSold = left <= 0;
+                return (
+                  <span
+                    key={tt.id}
+                    className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium ${
+                      isSold
+                        ? "bg-muted text-muted-foreground border-border"
+                        : "bg-primary/5 text-foreground border-primary/20"
+                    }`}
+                  >
+                    <span
+                      className={`w-2 h-2 rounded-full ${
+                        isSold ? "bg-muted-foreground/50" : "bg-primary"
+                      }`}
+                    />
+                    {tt.name[lang]}:{" "}
+                    {isSold
+                      ? lang === "sv"
+                        ? "slutsålt"
+                        : "sold out"
+                      : `${left} ${t("ofLabel", lang)} ${totalT} ${t("availabilityLine", lang)}`}
+                  </span>
+                );
+              })}
             </div>
           </Card>
         </div>
@@ -345,7 +444,12 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                       lang={lang}
                       currency={festival.currency}
                       selected={selectedTentId === tent.id}
-                      onSelect={() => setSelectedTentId(tent.id)}
+                      soldOut={!!soldOutByType[tent.id]}
+                      available={availabilityByType[tent.id] ?? 0}
+                      onSelect={() => {
+                        if (soldOutByType[tent.id]) return;
+                        setSelectedTentId(tent.id);
+                      }}
                     />
                   ))}
                 </div>
@@ -462,33 +566,48 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
               </Card>
 
               <Card className="p-6 md:p-8">
-                <h2 className="text-2xl font-bold mb-6">{t("payment", lang)}</h2>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <PaymentOption
-                    active={paymentOption === "deposit"}
-                    onClick={() => setPaymentOption("deposit")}
-                    title={t("payDeposit", lang)}
-                    subtitle={t("payDepositDesc", lang)}
-                    price={fmt(depositAmount, festival.currency)}
-                    label={t("depositLabel", lang)}
+                <h2 className="text-2xl font-bold mb-4">{t("reviewBooking", lang)}</h2>
+                <div className="rounded-lg border bg-muted/30 p-4 md:p-5 space-y-2 text-sm">
+                  <SummaryRow label={t("step1", lang)} value={selectedTent.name[lang]} />
+                  <SummaryRow
+                    label={`${t("checkin", lang)} → ${t("checkout", lang)}`}
+                    value={`${festival.checkIn[lang]} → ${festival.checkOut[lang]}`}
                   />
-                  <PaymentOption
-                    active={paymentOption === "full"}
-                    onClick={() => setPaymentOption("full")}
-                    title={t("payFull", lang)}
-                    subtitle={t("payFullDesc", lang)}
-                    price={fmt(total, festival.currency)}
-                    label={t("fullAmountLabel", lang)}
+                  <SummaryRow
+                    label={t("nightsLabel", lang)}
+                    value={String(festival.nights)}
+                  />
+                  <SummaryRow label={t("guestsLabel", lang)} value={String(guests)} />
+                  {addOnLines.length > 0 && (
+                    <SummaryRow
+                      label={t("step3", lang)}
+                      value={addOnLines.map((l) => l.addOn.name[lang]).join(", ")}
+                    />
+                  )}
+                  <Separator className="my-2" />
+                  <SummaryRow
+                    label={t("total", lang)}
+                    value={fmt(total, festival.currency)}
+                    strong
+                  />
+                  <SummaryRow
+                    label={t("depositLine", lang)}
+                    value={fmt(depositAmount, festival.currency)}
+                    strong
+                  />
+                  <SummaryRow
+                    label={t("remainingLine", lang)}
+                    value={fmt(remainingAmount, festival.currency)}
                   />
                 </div>
                 <p className="text-xs text-muted-foreground mt-4 flex items-start gap-2">
                   <Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
-                  {t("paymentNote", lang)}
+                  {t("thanksBody", lang)}
                 </p>
               </Card>
 
               <Button size="lg" className="w-full" onClick={handleConfirm} disabled={!canConfirm || isSubmitting}>
-                {isSubmitting ? t("submitting", lang) : t("confirmBooking", lang)}
+                {isSubmitting ? t("submitting", lang) : t("sendBookingRequest", lang)}
               </Button>
             </div>
 
@@ -500,23 +619,65 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
 
         {step === "confirmation" && selectedTent && (
           <div className="max-w-2xl mx-auto">
-            <Card className="p-8 md:p-10 text-center">
-              <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-5">
-                <Check className="w-7 h-7 text-primary" />
+            <Card className="p-8 md:p-10">
+              <div className="text-center">
+                <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-5">
+                  <Check className="w-7 h-7 text-primary" />
+                </div>
+                <h1 className="text-3xl font-bold mb-3">{t("thanks", lang)}</h1>
+                <p className="text-muted-foreground mb-6">
+                  {t("thanksBody", lang)}
+                </p>
               </div>
-              <h1 className="text-3xl font-bold mb-3">{t("thanks", lang)}</h1>
-              <p className="text-muted-foreground mb-6">
-                {t("thanksBody", lang)}{" "}
-                <span className="font-medium text-foreground">{email}</span>.
-              </p>
-              <div className="text-left bg-muted/40 rounded-lg p-5 mb-6 text-sm space-y-2">
-                <div className="flex justify-between"><span>{t("step1", lang)}</span><span className="font-medium">{selectedTent.name[lang]}</span></div>
-                <div className="flex justify-between"><span>{t("guestsLabel", lang)}</span><span className="font-medium">{guests}</span></div>
-                <div className="flex justify-between"><span>{t("total", lang)}</span><span className="font-semibold text-primary">{fmt(total, festival.currency)}</span></div>
+
+              {bookingId && (
+                <div className="text-center mb-6 text-sm">
+                  <span className="text-muted-foreground">{t("bookingNumber", lang)}: </span>
+                  <span className="font-mono font-semibold text-foreground">
+                    {bookingId.slice(0, 8).toUpperCase()}
+                  </span>
+                </div>
+              )}
+
+              <div className="rounded-lg border bg-muted/30 p-5 mb-6 text-sm space-y-2">
+                <div className="text-xs uppercase tracking-wide text-muted-foreground mb-2">
+                  {t("paymentInfo", lang)}
+                </div>
+                <SummaryRow label={t("totalAmountLabel", lang)} value={fmt(total, festival.currency)} />
+                <SummaryRow label={t("depositLine", lang)} value={fmt(depositAmount, festival.currency)} strong />
+                <SummaryRow label={t("remainingLine", lang)} value={fmt(remainingAmount, festival.currency)} />
               </div>
-              <Button asChild variant="outline">
-                <Link to="/">{t("backHome", lang)}</Link>
-              </Button>
+
+              <div className="grid md:grid-cols-2 gap-4 mb-6">
+                <div className="rounded-lg border p-5">
+                  <div className="text-xs uppercase tracking-wide text-muted-foreground mb-1">
+                    {t("swishTitle", lang)}
+                  </div>
+                  <div className="text-lg font-bold mb-1">{PAYMENT_INFO.swish}</div>
+                  <p className="text-xs text-muted-foreground">{t("markPayment", lang)}</p>
+                </div>
+                <div className="rounded-lg border p-5">
+                  <div className="text-xs uppercase tracking-wide text-muted-foreground mb-1">
+                    {t("bankgiroTitle", lang)}
+                  </div>
+                  <div className="text-lg font-bold">{PAYMENT_INFO.bankgiro}</div>
+                  <div className="text-xs text-muted-foreground mb-2">
+                    {PAYMENT_INFO.bankgiroHolder}
+                  </div>
+                  <p className="text-xs text-muted-foreground">{t("markPayment", lang)}</p>
+                </div>
+              </div>
+
+              <div className="rounded-lg bg-accent/20 border border-accent/30 p-4 mb-6 text-sm">
+                <div className="font-semibold mb-1">{t("confirmationTitle", lang)}</div>
+                <p className="text-muted-foreground">{t("confirmationBody", lang)}</p>
+              </div>
+
+              <div className="text-center">
+                <Button asChild variant="outline">
+                  <Link to="/">{t("backHome", lang)}</Link>
+                </Button>
+              </div>
             </Card>
           </div>
         )}
@@ -550,7 +711,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                 </Button>
               ) : (
                 <Button size="sm" onClick={handleConfirm} disabled={!canConfirm || isSubmitting}>
-                  {t("confirmBooking", lang)}
+                  {t("sendBookingRequest", lang)}
                 </Button>
               )}
             </div>
@@ -576,54 +737,123 @@ const StepBlock = ({ number, title, children }: { number: number; title: string;
 );
 
 const TentCard = ({
-  tent, lang, currency, selected, onSelect,
-}: { tent: TentType; lang: Lang; currency: string; selected: boolean; onSelect: () => void }) => (
-  <Card
-    className={`overflow-hidden transition-all cursor-pointer ${selected ? "ring-2 ring-primary shadow-lg" : "hover:shadow-md"}`}
-    onClick={onSelect}
-  >
-    <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-      <img src={tent.image} alt={tent.name[lang]} className="w-full h-full object-cover" loading="lazy" />
-      {selected && (
-        <div className="absolute top-3 right-3 bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center shadow">
-          <Check className="w-4 h-4" />
-        </div>
-      )}
-    </div>
-    <div className="p-5">
-      <div className="flex items-start justify-between gap-3 mb-2">
-        <div>
-          <h3 className="font-bold text-lg">{tent.name[lang]}</h3>
-          <p className="text-sm text-muted-foreground">{tent.size} · {tent.bestFor[lang]}</p>
-        </div>
-        <div className="text-right">
-          <div className="text-lg font-bold text-primary">{tent.price.toLocaleString("sv-SE")} {currency}</div>
-          <div className="text-xs text-muted-foreground">{t("totalStay", lang)}</div>
-        </div>
-      </div>
-      <p className="text-sm text-muted-foreground mb-4">{tent.description[lang]}</p>
-
-      {tent.includedStandard && tent.includedStandard.length > 0 && (
-        <div className="mb-4 rounded-lg border bg-muted/30 p-3">
-          <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
-            {t("includedAsStandard", lang)}
+  tent, lang, currency, selected, soldOut, available, onSelect,
+}: {
+  tent: TentType;
+  lang: Lang;
+  currency: string;
+  selected: boolean;
+  soldOut: boolean;
+  available: number;
+  onSelect: () => void;
+}) => {
+  const totalT = tent.totalCount ?? 0;
+  return (
+    <Card
+      className={`overflow-hidden transition-all ${
+        soldOut
+          ? "opacity-60 cursor-not-allowed"
+          : selected
+          ? "ring-2 ring-primary shadow-lg cursor-pointer"
+          : "hover:shadow-md cursor-pointer"
+      }`}
+      onClick={soldOut ? undefined : onSelect}
+      aria-disabled={soldOut}
+    >
+      <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+        <img src={tent.image} alt={tent.name[lang]} className="w-full h-full object-cover" loading="lazy" />
+        {selected && !soldOut && (
+          <div className="absolute top-3 right-3 bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center shadow">
+            <Check className="w-4 h-4" />
           </div>
-          <ul className="grid grid-cols-2 gap-x-3 gap-y-2 text-sm">
-            {tent.includedStandard.map((item, i) => (
-              <li key={i} className="flex items-center gap-2">
-                <item.Icon aria-hidden className="w-4 h-4 text-primary flex-shrink-0" />
-                <span className="text-foreground/80">{item.label[lang]}</span>
-              </li>
-            ))}
-          </ul>
+        )}
+        {soldOut && (
+          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+            <Badge className="bg-background text-foreground text-sm px-3 py-1">
+              {tent.id === "medium"
+                ? t("mediumSoldOut", lang)
+                : tent.id === "deluxe"
+                ? t("deluxeSoldOut", lang)
+                : lang === "sv"
+                ? "Slutsålt"
+                : "Sold out"}
+            </Badge>
+          </div>
+        )}
+      </div>
+      <div className="p-5">
+        <div className="flex items-start justify-between gap-3 mb-2">
+          <div>
+            <h3 className="font-bold text-lg">{tent.name[lang]}</h3>
+            <p className="text-sm text-muted-foreground">{tent.size} · {tent.bestFor[lang]}</p>
+          </div>
+          <div className="text-right">
+            <div className="text-lg font-bold text-primary">{tent.price.toLocaleString("sv-SE")} {currency}</div>
+            <div className="text-xs text-muted-foreground">{t("totalStay", lang)}</div>
+          </div>
         </div>
-      )}
+        <p className="text-sm text-muted-foreground mb-3">{tent.description[lang]}</p>
 
-      <Button variant={selected ? "default" : "outline"} className="w-full" onClick={(e) => { e.stopPropagation(); onSelect(); }}>
-        {selected ? (<><Check className="w-4 h-4 mr-1" /> {t("selected", lang)}</>) : t("select", lang)}
-      </Button>
-    </div>
-  </Card>
+        {totalT > 0 && (
+          <p className="text-xs font-medium mb-4">
+            {soldOut ? (
+              <span className="text-muted-foreground">
+                {tent.id === "medium"
+                  ? t("mediumSoldOut", lang)
+                  : tent.id === "deluxe"
+                  ? t("deluxeSoldOut", lang)
+                  : lang === "sv"
+                  ? "Slutsålt"
+                  : "Sold out"}
+              </span>
+            ) : (
+              <span className="text-foreground/80">
+                {available} {t("ofLabel", lang)} {totalT} {t("availabilityLine", lang)}
+              </span>
+            )}
+          </p>
+        )}
+
+        {tent.includedStandard && tent.includedStandard.length > 0 && (
+          <div className="mb-4 rounded-lg border bg-muted/30 p-3">
+            <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
+              {t("includedAsStandard", lang)}
+            </div>
+            <ul className="grid grid-cols-2 gap-x-3 gap-y-2 text-sm">
+              {tent.includedStandard.map((item, i) => (
+                <li key={i} className="flex items-center gap-2">
+                  <item.Icon aria-hidden className="w-4 h-4 text-primary flex-shrink-0" />
+                  <span className="text-foreground/80">{item.label[lang]}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <Button
+          variant={selected ? "default" : "outline"}
+          className="w-full"
+          disabled={soldOut}
+          onClick={(e) => { e.stopPropagation(); if (!soldOut) onSelect(); }}
+        >
+          {soldOut
+            ? (lang === "sv" ? "Slutsålt" : "Sold out")
+            : selected
+            ? (<><Check className="w-4 h-4 mr-1" /> {t("selected", lang)}</>)
+            : t("select", lang)}
+        </Button>
+      </div>
+    </Card>
+  );
+};
+
+const SummaryRow = ({
+  label, value, strong,
+}: { label: string; value: string; strong?: boolean }) => (
+  <div className="flex justify-between gap-4">
+    <span className="text-muted-foreground">{label}</span>
+    <span className={strong ? "font-semibold text-foreground" : "text-foreground"}>{value}</span>
+  </div>
 );
 
 
