@@ -682,30 +682,40 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
 
               <div className="rounded-lg border bg-muted/30 p-5 mb-6 text-sm space-y-2">
                 <div className="text-xs uppercase tracking-wide text-muted-foreground mb-2">
-                  {t("paymentInfo", lang)}
+                  {lang === "sv" ? "Betalning" : "Payment"}
                 </div>
                 <SummaryRow label={t("totalAmountLabel", lang)} value={fmt(total, festival.currency)} />
-                <SummaryRow label={t("depositLine", lang)} value={fmt(depositAmount, festival.currency)} strong />
+                <SummaryRow
+                  label={lang === "sv" ? "Betalt förskott 20% (Stripe)" : "Deposit paid 20% (Stripe)"}
+                  value={fmt(depositAmount, festival.currency)}
+                  strong
+                />
                 <SummaryRow label={t("remainingLine", lang)} value={fmt(remainingAmount, festival.currency)} />
               </div>
 
-              <div className="grid md:grid-cols-2 gap-4 mb-6">
-                <div className="rounded-lg border p-5">
-                  <div className="text-xs uppercase tracking-wide text-muted-foreground mb-1">
-                    {t("swishTitle", lang)}
-                  </div>
-                  <div className="text-lg font-bold mb-1">{PAYMENT_INFO.swish}</div>
-                  <p className="text-xs text-muted-foreground">{t("markPayment", lang)}</p>
+              <div className="rounded-lg border p-5 mb-6 text-sm">
+                <div className="text-xs uppercase tracking-wide text-muted-foreground mb-2">
+                  {lang === "sv" ? "Slutbetalning (80%)" : "Final payment (80%)"}
                 </div>
-                <div className="rounded-lg border p-5">
-                  <div className="text-xs uppercase tracking-wide text-muted-foreground mb-1">
-                    {t("bankgiroTitle", lang)}
+                <p className="text-muted-foreground mb-3">
+                  {lang === "sv"
+                    ? "Resterande belopp betalas närmare festivalen via Swish eller Bankgiro:"
+                    : "The remaining amount is paid closer to the festival via Swish or bank transfer:"}
+                </p>
+                <div className="grid md:grid-cols-2 gap-3">
+                  <div>
+                    <div className="text-xs uppercase tracking-wide text-muted-foreground">
+                      {t("swishTitle", lang)}
+                    </div>
+                    <div className="text-base font-bold">{PAYMENT_INFO.swish}</div>
                   </div>
-                  <div className="text-lg font-bold">{PAYMENT_INFO.bankgiro}</div>
-                  <div className="text-xs text-muted-foreground mb-2">
-                    {PAYMENT_INFO.bankgiroHolder}
+                  <div>
+                    <div className="text-xs uppercase tracking-wide text-muted-foreground">
+                      {t("bankgiroTitle", lang)}
+                    </div>
+                    <div className="text-base font-bold">{PAYMENT_INFO.bankgiro}</div>
+                    <div className="text-xs text-muted-foreground">{PAYMENT_INFO.bankgiroHolder}</div>
                   </div>
-                  <p className="text-xs text-muted-foreground">{t("markPayment", lang)}</p>
                 </div>
               </div>
 
@@ -713,6 +723,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                 <div className="font-semibold mb-1">{t("confirmationTitle", lang)}</div>
                 <p className="text-muted-foreground">{t("confirmationBody", lang)}</p>
               </div>
+
 
               <div className="text-center">
                 <Button asChild variant="outline">
