@@ -3,7 +3,7 @@ import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
 import IncludedSection from "@/components/IncludedSection";
 import ExtrasSection from "@/components/ExtrasSection";
-import SwedenRock2027Section from "@/components/SwedenRock2027Section";
+import BookingWidget from "@/components/BookingWidget";
 import EventRentalSection from "@/components/EventRentalSection";
 import WeddingSection from "@/components/WeddingSection";
 import TentSpecsSection from "@/components/TentSpecsSection";
