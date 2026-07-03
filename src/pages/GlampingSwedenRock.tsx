@@ -109,20 +109,21 @@ const GlampingSwedenRock = () => {
   return (
     <>
       <Helmet>
-        <title>Glamping Sweden Rock 2027 | Väntelista</title>
+        <title>Glamping Sweden Rock 2027 | Boka färdigt tält</title>
         <meta
           name="description"
-          content="Bo bekvämt under Sweden Rock 2027. Skriv upp dig på Tentifys väntelista för glamping med färdigt tält, sovplats och mysig inredning."
+          content="Boka glamping till Sweden Rock 2027. Färdigt tält med sovplats, tillval och totalpris innan betalning. Begränsat antal tält."
         />
         <link rel="canonical" href="https://tentify.se/glamping-sweden-rock" />
         <link rel="alternate" hrefLang="sv" href="https://tentify.se/glamping-sweden-rock" />
         <link rel="alternate" hrefLang="de" href="https://tentify.se/de/sweden-rock-glamping-unterkunft" />
         <link rel="alternate" hrefLang="x-default" href="https://tentify.se/glamping-sweden-rock" />
-        <meta property="og:title" content="Glamping Sweden Rock 2027 | Väntelista" />
+        <meta property="og:title" content="Glamping Sweden Rock 2027 | Boka färdigt tält" />
         <meta
           property="og:description"
-          content="Bo bekvämt under Sweden Rock 2027. Skriv upp dig på Tentifys väntelista för glamping med färdigt tält, sovplats och mysig inredning."
+          content="Boka glamping till Sweden Rock 2027. Färdigt tält med sovplats, tillval och totalpris innan betalning."
         />
+
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://tentify.se/glamping-sweden-rock" />
         <meta property="og:image" content={heroImg.url} />
