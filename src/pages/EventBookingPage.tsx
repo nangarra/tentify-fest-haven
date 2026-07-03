@@ -305,11 +305,17 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
             <div className="flex-1">
               <div className="flex justify-between mb-2 text-sm">
                 <span className="font-semibold">
-                  {lang === "sv"
+                  {soldOut
+                    ? lang === "sv" ? "Slutsålt" : "Sold out"
+                    : lang === "sv"
                     ? `Endast ${available} av ${festival.totalTents} tält kvar`
                     : `${available} of ${festival.totalTents} tents left`}
                 </span>
-                <span className="text-muted-foreground">{t("limitedAvailability", lang)}</span>
+                <span className="text-muted-foreground">
+                  {lang === "sv"
+                    ? `${displayBooked} redan bokade`
+                    : `${displayBooked} already booked`}
+                </span>
               </div>
               <Progress
                 value={((festival.totalTents - available) / festival.totalTents) * 100}
