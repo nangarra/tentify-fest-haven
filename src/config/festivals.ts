@@ -187,8 +187,45 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
       perPerson: false,
       category: "extra",
     },
+    {
+      id: "comfort-pack",
+      name: { sv: "Comfort Pack", en: "Comfort Pack" },
+      description: {
+        sv: "Gör tältet ännu bekvämare med extra saker för vila och häng.",
+        en: "Make your tent even cosier with extras for resting and hanging out.",
+      },
+      price: 499,
+      perPerson: false,
+      category: "package",
+      badge: { sv: "Bekvämlighetspaket", en: "Comfort package" },
+      includedItems: [
+        { sv: "Extra stol", en: "Extra chair" },
+        { sv: "Extra kudde", en: "Extra pillow" },
+        { sv: "Extra filt", en: "Extra blanket" },
+      ],
+    },
+    {
+      id: "festival-survival-pack",
+      name: { sv: "Festival Survival Pack", en: "Festival Survival Pack" },
+      description: {
+        sv: "Ett praktiskt festivalpaket med saker som gör vistelsen enklare och skönare.",
+        en: "A practical festival pack with essentials that make your stay easier.",
+      },
+      price: 499,
+      perPerson: true,
+      category: "package",
+      badge: { sv: "Perfekt för festivalen", en: "Perfect for the festival" },
+      includedItems: [
+        { sv: "Vatten", en: "Water" },
+        { sv: "Snacks", en: "Snacks" },
+        { sv: "Regnponcho", en: "Rain poncho" },
+        { sv: "Öronproppar", en: "Earplugs" },
+        { sv: "Ögonbindel", en: "Sleep mask" },
+      ],
+    },
   ],
 };
+
 
 export const FESTIVALS: Record<string, FestivalConfig> = {
   [SWEDEN_ROCK_2027.slug]: SWEDEN_ROCK_2027,
