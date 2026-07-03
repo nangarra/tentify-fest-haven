@@ -305,109 +305,20 @@ const GlampingSwedenRock = () => {
           </div>
         </section>
 
-        {/* VÄNTELISTA */}
-        <section id="vantelista" className="relative py-16 overflow-hidden">
-          <video
-            className="absolute inset-0 w-full h-full object-cover"
-            src={WAITLIST_VIDEO_URL}
-            poster={hero2027Img.url}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            aria-hidden="true"
-            tabIndex={-1}
-          />
-          <div className="absolute inset-0 bg-black/65" />
-          <div className="relative z-10 container mx-auto px-4 max-w-2xl">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-white" style={{ textShadow: "0 2px 12px rgba(0,0,0,0.6)" }}>
-              Skriv upp dig på väntelistan för Sweden Rock 2027
+        {/* BOKNING */}
+        <section id="booking" className="py-8 bg-background">
+          <div className="container mx-auto px-4 max-w-5xl text-center mb-2">
+            <h2 className="text-3xl md:text-4xl font-bold mb-3">
+              Boka glamping till Sweden Rock 2027
             </h2>
-            <p className="text-center text-white/90 mb-8">
-              Vi öppnar intresseanmälan för glamping till Sweden Rock 2027. Skriv upp dig på
-              väntelistan för att få information först när platserna släpps.
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Välj tält, antal gäster och tillval. Du ser hela tiden din bokning och
+              totalsumma innan du går vidare till betalning.
             </p>
-
-
-            <Card className="p-6 md:p-8 shadow-elegant">
-              {/* Counter */}
-              <div className="mb-6">
-                <div className="flex justify-between text-sm font-medium mb-2">
-                  <span>Platser på väntelistan</span>
-                  <span className={isFull ? "text-destructive" : "text-primary"}>
-                    {displayCount} / {WAITLIST_CAP}
-                  </span>
-                </div>
-                <Progress value={progressValue} className="h-2" />
-                {isFull && (
-                  <p className="text-center mt-3 font-semibold text-destructive">
-                    Väntelistan är full
-                  </p>
-                )}
-              </div>
-
-              {done ? (
-                <div className="text-center py-4">
-                  <CheckCircle2 className="w-12 h-12 text-primary mx-auto mb-4" />
-                  <h3 className="text-2xl font-bold mb-3">Du är på väntelistan!</h3>
-                  <p className="text-muted-foreground">
-                    Tack! Vi hör av oss så snart platserna för Sweden Rock 2027 släpps.
-                  </p>
-                </div>
-              ) : isFull ? (
-                <div className="text-center py-4">
-                  <p className="text-lg text-foreground">
-                    Väntelistan för Sweden Rock 2027 är just nu full.
-                  </p>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid md:grid-cols-2 gap-3">
-                    <div>
-                      <Label htmlFor="sr-name">Namn *</Label>
-                      <Input id="sr-name" value={name} onChange={(e) => setName(e.target.value)} required maxLength={100} />
-                    </div>
-                    <div>
-                      <Label htmlFor="sr-phone">Telefon *</Label>
-                      <Input id="sr-phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required maxLength={30} />
-                    </div>
-                  </div>
-                  <div>
-                    <Label htmlFor="sr-email">E-post *</Label>
-                    <Input id="sr-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required maxLength={255} />
-                  </div>
-                  <div>
-                    <Label htmlFor="sr-guests">Antal personer</Label>
-                    <Input
-                      id="sr-guests"
-                      type="number"
-                      min={1}
-                      max={4}
-                      value={guests}
-                      onChange={(e) =>
-                        setGuests(Math.max(1, Math.min(4, parseInt(e.target.value) || 1)))
-                      }
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="sr-notes">Meddelande eller fråga (valfritt)</Label>
-                    <Textarea
-                      id="sr-notes"
-                      value={notes}
-                      onChange={(e) => setNotes(e.target.value)}
-                      maxLength={500}
-                      rows={3}
-                    />
-                  </div>
-                  <Button type="submit" size="lg" className="w-full btn-hero" disabled={submitting}>
-                    {submitting ? "Skickar..." : "Skriv upp mig på väntelistan"}
-                  </Button>
-                </form>
-              )}
-            </Card>
           </div>
+          {festival && <BookingFlow festival={festival} />}
         </section>
+
 
         {/* FÖR VEM */}
         <section className="py-16 bg-background">
