@@ -5,6 +5,11 @@ import heroImg from "@/assets/sweden-rock-2027-hero.png.asset.json";
 export type Lang = "sv" | "en";
 export type Localized = Record<Lang, string>;
 
+export type IncludedItem = {
+  icon: string;
+  label: Localized;
+};
+
 export type TentType = {
   id: string;
   name: Localized;
@@ -14,6 +19,7 @@ export type TentType = {
   price: number;
   maxGuests: number;
   image: string;
+  includedStandard?: IncludedItem[];
 };
 
 export type AddOnType = {
@@ -22,8 +28,11 @@ export type AddOnType = {
   description: Localized;
   price: number;
   perPerson: boolean;
-  category: "comfort" | "food" | "extra";
+  category: "comfort" | "food" | "extra" | "package";
+  badge?: Localized;
+  includedItems?: Localized[];
 };
+
 
 export type FestivalConfig = {
   slug: string;
