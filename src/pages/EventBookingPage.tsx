@@ -46,6 +46,7 @@ import {
   type TentType,
 } from "@/config/festivals";
 import { t } from "@/lib/booking-i18n";
+import { PAYMENT_INFO } from "@/config/payment-info";
 
 const addOnIcons: Record<string, React.ComponentType<{ className?: string }>> = {
   "luxury-bed": BedDouble,
