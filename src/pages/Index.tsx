@@ -22,14 +22,7 @@ const Index = () => {
       <HeroSection />
       <SeoIntroSection />
       <PopularSolutionsSection />
-      <div className="bg-accent/20 border-y border-accent/40">
-        <div className="container mx-auto px-4 py-4 text-center text-sm md:text-base">
-          <Link to="/glamping-sweden-rock" className="font-medium text-primary hover:underline">
-            Glamping Sweden Rock 2027 – skriv upp dig på väntelistan →
-          </Link>
-        </div>
-      </div>
-      <SwedenRock2027Section />
+      <BookingWidget slug="sweden-rock-2027" />
       <AboutSection />
       <IncludedSection />
       <ExtrasSection />
