@@ -272,9 +272,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
         `Incheckning: ${festival.checkIn.sv}\nUtcheckning: ${festival.checkOut.sv}\n` +
         `Nätter: ${festival.nights}\n` +
         `Tillval: ${addOnLines.map((l) => `${l.addOn.name.sv} (${l.total} kr)`).join(", ") || "Inga"}\n` +
-        `Totalt: ${total} kr\n` +
-        `Förskott 20%: ${depositAmount} kr (via Stripe)\n` +
-        `Resterande 80%: ${remainingAmount} kr\n` +
+        `Totalt: ${total} kr (betalt via Stripe)\n` +
         `Status: Väntar på Stripe-betalning`;
 
       const { data: inserted, error } = await supabase
