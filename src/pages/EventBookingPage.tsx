@@ -387,6 +387,14 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                       </Button>
                     </div>
                   </div>
+                  {selectedTent?.id === "medium" && guests >= maxGuests && (
+                    <p className="mt-3 text-xs text-muted-foreground flex items-start gap-1.5">
+                      <Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
+                      {lang === "sv"
+                        ? "Medium tält har plats för upp till 3 gäster. Välj Deluxe för fler gäster."
+                        : "The Medium tent fits up to 3 guests. Choose Deluxe for more guests."}
+                    </p>
+                  )}
                 </Card>
               </StepBlock>
 
