@@ -610,25 +610,23 @@ const AddOnCard = ({
   const totalPrice = addOn.perPerson ? addOn.price * guests : addOn.price;
   const isPackage = addOn.category === "package";
   return (
-    <Card className={`p-5 transition-all ${selected ? "ring-2 ring-primary bg-primary/5" : ""} ${isPackage ? "border-primary/30" : ""}`}>
-      <div className="flex gap-4 mb-3">
-        <div className={`w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 ${isPackage ? "bg-primary text-primary-foreground" : "bg-primary/10 text-primary"}`}>
-          <Icon className="w-6 h-6" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex flex-wrap items-center gap-2">
-            <h3 className="font-semibold">{addOn.name[lang]}</h3>
-            {addOn.badge && (
-              <Badge variant="secondary" className="text-[10px] uppercase tracking-wide">
-                {addOn.badge[lang]}
-              </Badge>
-            )}
-          </div>
-          <p className="text-sm text-muted-foreground mt-0.5">{addOn.description[lang]}</p>
-        </div>
+    <Card className={`p-6 flex flex-col text-center transition-all ${selected ? "ring-2 ring-primary bg-primary/5 shadow-md" : "hover:shadow-md"} ${isPackage ? "border-primary/30" : ""}`}>
+      <div className={`mx-auto mb-4 w-20 h-20 rounded-2xl flex items-center justify-center ${isPackage ? "bg-primary text-primary-foreground shadow-sm" : "bg-primary/10 text-primary"}`}>
+        <Icon className="w-10 h-10" />
       </div>
+
+      <div className="flex flex-wrap items-center justify-center gap-2 mb-1">
+        <h3 className="font-semibold text-base">{addOn.name[lang]}</h3>
+        {addOn.badge && (
+          <Badge variant="secondary" className="text-[10px] uppercase tracking-wide">
+            {addOn.badge[lang]}
+          </Badge>
+        )}
+      </div>
+      <p className="text-sm text-muted-foreground mb-4">{addOn.description[lang]}</p>
+
       {addOn.includedItems && addOn.includedItems.length > 0 && (
-        <div className="mb-3 rounded-md bg-muted/40 p-3">
+        <div className="mb-4 rounded-md bg-muted/40 p-3 text-left">
           <div className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground mb-1.5">
             {t("packageIncludes", lang)}
           </div>
@@ -643,39 +641,46 @@ const AddOnCard = ({
         </div>
       )}
 
-      <div className="flex items-end justify-between gap-3 mb-4">
-        <div>
-          <div className="text-lg font-bold text-primary">
-            {addOn.price.toLocaleString("sv-SE")} {currency}
-            {addOn.perPerson && <span className="text-xs font-normal text-muted-foreground"> {t("perPerson", lang)}</span>}
+      <div className="mt-auto">
+        <div className="mb-4">
+          <div className="text-xs uppercase tracking-wide text-muted-foreground">{t("totalFor", lang)}</div>
+          <div className="text-2xl font-bold text-primary leading-tight">
+            {totalPrice.toLocaleString("sv-SE")} <span className="text-sm font-medium text-muted-foreground">{currency}</span>
           </div>
           {addOn.perPerson && (
-            <div className="text-xs text-muted-foreground">
-              {t("totalFor", lang)}: {totalPrice.toLocaleString("sv-SE")} {currency} · {guests} {guests === 1 ? t("guest", lang) : t("guests", lang)}
+            <div className="text-xs text-muted-foreground mt-0.5">
+              {guests} × {addOn.price.toLocaleString("sv-SE")} {currency}
             </div>
           )}
         </div>
+
+        {selected ? (
+          <div className="flex gap-2">
+            <Button variant="default" className="flex-1 shadow-sm" disabled>
+              <Check className="w-4 h-4 mr-1" /> {t("added", lang)}
+            </Button>
+            <Button variant="outline" size="icon" onClick={onToggle} aria-label={t("remove", lang)}>
+              <X className="w-4 h-4" />
+            </Button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-[auto_1fr] gap-2">
+            <Button variant="outline" onClick={onToggle} className="text-muted-foreground hover:text-foreground">
+              {t("noThanks", lang)}
+            </Button>
+            <Button
+              onClick={onToggle}
+              className="font-semibold shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5"
+            >
+              <Plus className="w-4 h-4 mr-1" /> {t("add", lang)}
+            </Button>
+          </div>
+        )}
       </div>
-      {selected ? (
-        <div className="flex gap-2">
-          <Button variant="default" className="flex-1" disabled>
-            <Check className="w-4 h-4 mr-1" /> {t("added", lang)}
-          </Button>
-          <Button variant="outline" size="icon" onClick={onToggle} aria-label={t("remove", lang)}>
-            <X className="w-4 h-4" />
-          </Button>
-        </div>
-      ) : (
-        <div className="flex gap-2">
-          <Button variant="ghost" className="flex-1" onClick={onToggle}>{t("noThanks", lang)}</Button>
-          <Button variant="default" className="flex-1" onClick={onToggle}>
-            <Plus className="w-4 h-4 mr-1" /> {t("add", lang)}
-          </Button>
-        </div>
-      )}
     </Card>
   );
 };
+
 
 const BookingSummary = ({
   festival, lang, selectedTent, guests, extraGuestsCost, addOnLines, total, canCheckout, step, onCheckout,
