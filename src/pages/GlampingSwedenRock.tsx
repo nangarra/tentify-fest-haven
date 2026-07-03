@@ -102,58 +102,9 @@ const galleryImages = [
 ];
 
 const GlampingSwedenRock = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [guests, setGuests] = useState(2);
-  const [notes, setNotes] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [done, setDone] = useState(false);
-  const [count, setCount] = useState<number>(0);
+  const festival = getFestival("sweden-rock-2027");
 
-  const loadCount = async () => {
-    const { count: c } = await supabase
-      .from("waitlist")
-      .select("*", { count: "exact", head: true })
-      .eq("festival", FESTIVAL_KEY);
-    setCount(c || 0);
-  };
 
-  useEffect(() => {
-    loadCount();
-  }, []);
-
-  const displayCount = Math.min(WAITLIST_CAP, count + WAITLIST_BASE);
-  const isFull = displayCount >= WAITLIST_CAP;
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name || !email || !phone) {
-      toast.error("Fyll i namn, e-post och telefon.");
-      return;
-    }
-    if (isFull) return;
-    setSubmitting(true);
-    try {
-      const { error } = await supabase.from("waitlist").insert({
-        festival: FESTIVAL_KEY,
-        name,
-        email,
-        phone,
-      });
-      if (error) throw error;
-      // Note: guests + notes are collected for UX but not persisted (waitlist table has no such columns)
-      setDone(true);
-      setCount((c) => c + 1);
-    } catch (err) {
-      console.error(err);
-      toast.error("Något gick fel. Försök igen.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const progressValue = Math.min(100, (displayCount / WAITLIST_CAP) * 100);
 
   return (
     <>
