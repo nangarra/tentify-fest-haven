@@ -572,12 +572,30 @@ const TentCard = ({
         </div>
       </div>
       <p className="text-sm text-muted-foreground mb-4">{tent.description[lang]}</p>
+
+      {tent.includedStandard && tent.includedStandard.length > 0 && (
+        <div className="mb-4 rounded-lg border bg-muted/30 p-3">
+          <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
+            {t("includedAsStandard", lang)}
+          </div>
+          <ul className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-sm">
+            {tent.includedStandard.map((item, i) => (
+              <li key={i} className="flex items-center gap-1.5">
+                <span aria-hidden className="text-base leading-none">{item.icon}</span>
+                <span className="text-foreground/80">{item.label[lang]}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       <Button variant={selected ? "default" : "outline"} className="w-full" onClick={(e) => { e.stopPropagation(); onSelect(); }}>
         {selected ? (<><Check className="w-4 h-4 mr-1" /> {t("selected", lang)}</>) : t("select", lang)}
       </Button>
     </div>
   </Card>
 );
+
 
 const AddOnCard = ({
   addOn, lang, currency, guests, selected, onToggle,
