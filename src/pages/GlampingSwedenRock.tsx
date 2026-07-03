@@ -189,6 +189,21 @@ const GlampingSwedenRock = () => {
           </div>
         </section>
 
+        {/* BOKNING */}
+        <section id="booking" className="py-10 bg-background">
+          <div className="container mx-auto px-4 max-w-5xl text-center mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-3">
+              Boka glamping till Sweden Rock 2027
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Välj tält, antal gäster och tillval. Du ser hela tiden din bokning och
+              totalsumma innan du går vidare till betalning.
+            </p>
+          </div>
+          {festival && <BookingFlow festival={festival} />}
+        </section>
+
+
         {/* INTRO */}
         <section className="py-16 bg-background">
           <div className="container mx-auto px-4 max-w-3xl text-center">
@@ -306,19 +321,6 @@ const GlampingSwedenRock = () => {
           </div>
         </section>
 
-        {/* BOKNING */}
-        <section id="booking" className="py-8 bg-background">
-          <div className="container mx-auto px-4 max-w-5xl text-center mb-2">
-            <h2 className="text-3xl md:text-4xl font-bold mb-3">
-              Boka glamping till Sweden Rock 2027
-            </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Välj tält, antal gäster och tillval. Du ser hela tiden din bokning och
-              totalsumma innan du går vidare till betalning.
-            </p>
-          </div>
-          {festival && <BookingFlow festival={festival} />}
-        </section>
 
 
         {/* FÖR VEM */}
