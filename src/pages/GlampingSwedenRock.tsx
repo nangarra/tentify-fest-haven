@@ -26,8 +26,9 @@ import interiorImg from "@/assets/sweden-rock-glamping-7.webp.asset.json";
 import bekvamtBoendeImg from "@/assets/sweden-rock-glamping-8-2.webp.asset.json";
 import sovplatsImg from "@/assets/sweden-rock-glamping-9-3.webp.asset.json";
 import hero2027Img from "@/assets/sweden-rock-2027-hero.png.asset.json";
-import { BookingFlow } from "@/pages/EventBookingPage";
 import { getFestival } from "@/config/festivals";
+import WaitlistForm from "@/components/WaitlistForm";
+import { Lock } from "lucide-react";
 
 const upgrades = [
   "Härlig hotellfrukost",
@@ -191,19 +192,25 @@ const GlampingSwedenRock = () => {
 
         {/* BOKNING */}
         <section id="booking" className="py-10 bg-background">
-          <div className="container mx-auto px-4 max-w-5xl">
+          <div className="container mx-auto px-4 max-w-3xl">
             <div className="text-center max-w-2xl mx-auto mb-8">
-              <p className="text-muted-foreground mb-3">
-                Nu är bokningen öppen för Sweden Rock 2027. Välj tält, antal gäster och tillval
-                direkt på sidan. Du ser hela tiden din bokning, dina tillval och totalsumman
-                innan du går vidare till betalning.
+              <div className="inline-flex items-center gap-2 bg-muted/60 text-foreground/80 border border-border rounded-full px-4 py-1.5 text-sm font-medium mb-4">
+                <Lock className="w-4 h-4" />
+                Bokningen är just nu stängd
+              </div>
+              <h2 className="text-2xl md:text-3xl font-bold mb-3">
+                Förhandsboka Sweden Rock 2027
+              </h2>
+              <p className="text-muted-foreground mb-2">
+                Bokningen är tillfälligt stängd. Skriv upp dig på förhandsbokningen så
+                kontaktar vi dig först när platserna släpps – innan de blir offentliga.
               </p>
               <p className="text-sm font-medium text-primary">
-                Endast ett begränsat antal tält finns tillgängliga. Först till kvarn gäller.
+                Endast ett begränsat antal tält kommer finnas tillgängliga.
               </p>
             </div>
+            <WaitlistForm />
           </div>
-          {festival && <BookingFlow festival={festival} />}
         </section>
 
 
