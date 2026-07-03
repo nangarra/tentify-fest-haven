@@ -125,6 +125,25 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingId, setBookingId] = useState<string | null>(null);
 
+  // Handle Stripe return URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const stripeStatus = params.get("stripe");
+    const returnedBooking = params.get("booking");
+    if (stripeStatus === "success" && returnedBooking) {
+      setBookingId(returnedBooking);
+      setStep("confirmation");
+      // Clean URL
+      window.history.replaceState({}, "", window.location.pathname);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else if (stripeStatus === "cancel") {
+      toast.error(
+        "Betalningen avbröts. Din bokning har inte sparats – försök igen.",
+      );
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  }, []);
+
   useEffect(() => {
     (async () => {
       const { data } = await supabase.rpc("get_tent_availability", {
@@ -141,6 +160,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
       }
     })();
   }, [festival.id, initialAvailability]);
+
 
   // Social-proof fake bookings: show 3 booked in the header, but never block real customers.
   const FAKE_BOOKED = 3;
@@ -253,9 +273,9 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
         `Nätter: ${festival.nights}\n` +
         `Tillval: ${addOnLines.map((l) => `${l.addOn.name.sv} (${l.total} kr)`).join(", ") || "Inga"}\n` +
         `Totalt: ${total} kr\n` +
-        `Förskott 20%: ${depositAmount} kr\n` +
+        `Förskott 20%: ${depositAmount} kr (via Stripe)\n` +
         `Resterande 80%: ${remainingAmount} kr\n` +
-        `Status: Väntar på bekräftelse (förskottsbetalning ej mottagen)`;
+        `Status: Väntar på Stripe-betalning`;
 
       const { data: inserted, error } = await supabase
         .from("bookings")
