@@ -102,7 +102,17 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   const [selectedTentId, setSelectedTentId] = useState<string | null>(null);
   const [guests, setGuests] = useState<number>(1);
   const [selectedAddOns, setSelectedAddOns] = useState<Set<string>>(new Set());
-  const [realAvailable, setRealAvailable] = useState<number>(festival.totalTents);
+
+  // Per-tent-type real availability from backend.
+  const initialAvailability = useMemo(() => {
+    const rec: Record<string, number> = {};
+    festival.tents.forEach((tt) => {
+      rec[tt.id] = tt.totalCount ?? 0;
+    });
+    return rec;
+  }, [festival]);
+  const [availabilityByType, setAvailabilityByType] =
+    useState<Record<string, number>>(initialAvailability);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -112,33 +122,40 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   const [address, setAddress] = useState("");
   const [postalCode, setPostalCode] = useState("");
   const [city, setCity] = useState("");
-  const [paymentOption, setPaymentOption] = useState<"deposit" | "full">("deposit");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [bookingId, setBookingId] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
       const { data } = await supabase.rpc("get_tent_availability", {
         p_festival: festival.id,
       });
-      const total = (data as any[])?.reduce(
-        (sum, r) => sum + (r.available_count ?? 0),
-        0,
-      );
-      if (typeof total === "number" && total >= 0 && (data as any[])?.length) {
-        setRealAvailable(Math.min(total, festival.totalTents));
+      if (Array.isArray(data) && data.length) {
+        const rec: Record<string, number> = { ...initialAvailability };
+        (data as any[]).forEach((r) => {
+          if (r.tent_type in rec) {
+            rec[r.tent_type] = Math.max(0, r.available_count ?? 0);
+          }
+        });
+        setAvailabilityByType(rec);
       }
     })();
-  }, [festival.id]);
+  }, [festival.id, initialAvailability]);
 
-  // Social-proof fake bookings: show 3 booked at start, but never block real customers.
+  // Social-proof fake bookings: show 3 booked in the header, but never block real customers.
   const FAKE_BOOKED = 3;
+  const realAvailable = Object.values(availabilityByType).reduce((s, n) => s + n, 0);
   const realBookings = festival.totalTents - realAvailable;
   const displayBooked =
     realBookings < festival.totalTents - FAKE_BOOKED
       ? realBookings + FAKE_BOOKED
       : realBookings;
   const available = festival.totalTents - displayBooked;
-  const soldOut = realBookings >= festival.totalTents;
+  const soldOut = realAvailable <= 0;
+  const soldOutByType: Record<string, boolean> = {};
+  festival.tents.forEach((tt) => {
+    soldOutByType[tt.id] = (availabilityByType[tt.id] ?? 0) <= 0;
+  });
 
   useEffect(() => {
     document.title = `${festival.displayTitle[lang]} | Tentify`;
