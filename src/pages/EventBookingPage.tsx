@@ -169,7 +169,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   const total = tentPrice + extraGuestsCost + addOnsTotal;
   const depositAmount = Math.round(total * 0.2);
 
-  const canCheckout = !!selectedTent && guests > 0;
+  const canCheckout = !!selectedTent && guests > 0 && !soldOut;
   const canConfirm =
     canCheckout &&
     firstName.trim() &&
