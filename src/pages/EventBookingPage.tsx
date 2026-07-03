@@ -207,8 +207,35 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
     });
   };
 
+  const remainingAmount = total - depositAmount;
+
   const handleConfirm = async () => {
     if (!canConfirm || !selectedTent) return;
+
+    // Re-check availability just before saving so we don't oversell.
+    try {
+      const { data: latest } = await supabase.rpc("get_tent_availability", {
+        p_festival: festival.id,
+      });
+      const row = Array.isArray(latest)
+        ? (latest as any[]).find((r) => r.tent_type === selectedTent.id)
+        : null;
+      if (row && (row.available_count ?? 0) <= 0) {
+        toast.error(t("soldOutTypeError", lang));
+        // Refresh local availability
+        if (Array.isArray(latest)) {
+          const rec = { ...availabilityByType };
+          (latest as any[]).forEach((r) => {
+            if (r.tent_type in rec) rec[r.tent_type] = Math.max(0, r.available_count ?? 0);
+          });
+          setAvailabilityByType(rec);
+        }
+        return;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+
     setIsSubmitting(true);
     try {
       const addOnMeta = addOnLines.map((l) => ({
@@ -223,36 +250,60 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
         `Tält: ${selectedTent.name.sv} (${selectedTent.size})\n` +
         `Gäster: ${guests}\n` +
         `Incheckning: ${festival.checkIn.sv}\nUtcheckning: ${festival.checkOut.sv}\n` +
+        `Nätter: ${festival.nights}\n` +
         `Tillval: ${addOnLines.map((l) => `${l.addOn.name.sv} (${l.total} kr)`).join(", ") || "Inga"}\n` +
-        `Totalt: ${total} kr\nBetalning: ${paymentOption === "deposit" ? `Handpenning ${depositAmount} kr` : "Hela beloppet"}`;
+        `Totalt: ${total} kr\n` +
+        `Förskott 20%: ${depositAmount} kr\n` +
+        `Resterande 80%: ${remainingAmount} kr\n` +
+        `Status: Väntar på bekräftelse (förskottsbetalning ej mottagen)`;
 
-      const { error } = await supabase.from("bookings").insert({
-        name: `${firstName} ${lastName}`.trim(),
-        email,
-        phone,
-        message,
-        meta: {
-          festival: festival.id,
-          event: festival.name,
-          tentType: selectedTent.id,
-          tentBatch: selectedTent.id,
-          tentName: selectedTent.name.sv,
-          guests,
-          addOns: addOnMeta,
-          totalPrice: total,
-          deposit: depositAmount,
-          paymentOption,
-          address: { country, address, postalCode, city },
-          eventDates: `${festival.checkIn.sv} – ${festival.checkOut.sv}`,
-          language: lang,
-        },
-      });
+      const { data: inserted, error } = await supabase
+        .from("bookings")
+        .insert({
+          name: `${firstName} ${lastName}`.trim(),
+          email,
+          phone,
+          message,
+          meta: {
+            festival: festival.id,
+            event: festival.name,
+            tentType: selectedTent.id,
+            tentBatch: selectedTent.id,
+            tentName: selectedTent.name.sv,
+            tentBasePrice: selectedTent.price,
+            guests,
+            extraGuestsCost,
+            addOns: addOnMeta,
+            addOnsTotal,
+            totalPrice: total,
+            deposit: depositAmount,
+            depositPercent: 20,
+            remainingAmount,
+            paymentOption: "deposit",
+            paymentStatus: "awaiting_deposit",
+            bookingStatus: "pending_confirmation",
+            checkIn: festival.checkIn.sv,
+            checkOut: festival.checkOut.sv,
+            nights: festival.nights,
+            address: { country, address, postalCode, city },
+            eventDates: `${festival.checkIn.sv} – ${festival.checkOut.sv}`,
+            language: lang,
+          },
+        })
+        .select("id")
+        .single();
       if (error) throw error;
+      setBookingId(inserted?.id ?? null);
 
       await supabase.rpc("decrease_tent_inventory", {
         p_festival: festival.id,
         p_tent_type: selectedTent.id,
       });
+      // Update local availability
+      setAvailabilityByType((prev) => ({
+        ...prev,
+        [selectedTent.id]: Math.max(0, (prev[selectedTent.id] ?? 0) - 1),
+      }));
       setStep("confirmation");
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (e: any) {
@@ -262,6 +313,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
       setIsSubmitting(false);
     }
   };
+
 
   const summary = (
     <BookingSummary
