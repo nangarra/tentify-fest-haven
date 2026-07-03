@@ -608,17 +608,41 @@ const AddOnCard = ({
 }: { addOn: AddOnType; lang: Lang; currency: string; guests: number; selected: boolean; onToggle: () => void }) => {
   const Icon = addOnIcons[addOn.id] ?? Sparkles;
   const totalPrice = addOn.perPerson ? addOn.price * guests : addOn.price;
+  const isPackage = addOn.category === "package";
   return (
-    <Card className={`p-5 transition-all ${selected ? "ring-2 ring-primary bg-primary/5" : ""}`}>
+    <Card className={`p-5 transition-all ${selected ? "ring-2 ring-primary bg-primary/5" : ""} ${isPackage ? "border-primary/30" : ""}`}>
       <div className="flex gap-4 mb-3">
-        <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-          <Icon className="w-6 h-6 text-primary" />
+        <div className={`w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 ${isPackage ? "bg-primary text-primary-foreground" : "bg-primary/10 text-primary"}`}>
+          <Icon className="w-6 h-6" />
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold">{addOn.name[lang]}</h3>
+          <div className="flex flex-wrap items-center gap-2">
+            <h3 className="font-semibold">{addOn.name[lang]}</h3>
+            {addOn.badge && (
+              <Badge variant="secondary" className="text-[10px] uppercase tracking-wide">
+                {addOn.badge[lang]}
+              </Badge>
+            )}
+          </div>
           <p className="text-sm text-muted-foreground mt-0.5">{addOn.description[lang]}</p>
         </div>
       </div>
+      {addOn.includedItems && addOn.includedItems.length > 0 && (
+        <div className="mb-3 rounded-md bg-muted/40 p-3">
+          <div className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground mb-1.5">
+            {t("packageIncludes", lang)}
+          </div>
+          <ul className="grid grid-cols-2 gap-x-3 gap-y-1 text-sm">
+            {addOn.includedItems.map((it, i) => (
+              <li key={i} className="flex items-center gap-1.5">
+                <Check className="w-3.5 h-3.5 text-primary flex-shrink-0" />
+                <span className="text-foreground/80">{it[lang]}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       <div className="flex items-end justify-between gap-3 mb-4">
         <div>
           <div className="text-lg font-bold text-primary">
