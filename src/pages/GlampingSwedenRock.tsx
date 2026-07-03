@@ -1,21 +1,15 @@
 import { Helmet } from "react-helmet";
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
 import {
-  CheckCircle2,
   Bed,
   Tent,
   Sparkles,
@@ -25,8 +19,6 @@ import {
   Moon,
   HeartHandshake,
 } from "lucide-react";
-import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 import heroImg from "@/assets/sweden-rock-glamping-4-2.webp.asset.json";
 import camplineImg from "@/assets/sweden-rock-glamping-5-2.webp.asset.json";
 import fardigtTaltImg from "@/assets/sweden-rock-glamping-6-2.webp.asset.json";
@@ -34,8 +26,8 @@ import interiorImg from "@/assets/sweden-rock-glamping-7.webp.asset.json";
 import bekvamtBoendeImg from "@/assets/sweden-rock-glamping-8-2.webp.asset.json";
 import sovplatsImg from "@/assets/sweden-rock-glamping-9-3.webp.asset.json";
 import hero2027Img from "@/assets/sweden-rock-2027-hero.png.asset.json";
-
-const WAITLIST_VIDEO_URL = "https://swedenrock-prod.storage.googleapis.com/wp-content/uploads/2026/06/SRF_Recap_Hemsida_16x9_.mp4#t=0.1";
+import { BookingFlow } from "@/pages/EventBookingPage";
+import { getFestival } from "@/config/festivals";
 
 const upgrades = [
   "Härlig hotellfrukost",
@@ -45,13 +37,10 @@ const upgrades = [
   "Extra komfort och praktiska tillval",
 ];
 
-const FESTIVAL_KEY = "sweden-rock-2027";
-const WAITLIST_CAP = 100;
-const WAITLIST_BASE = 18;
-
 const scrollTo = (id: string) => {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 };
+
 
 const included = [
   { icon: Bed, text: "Sovplats för två gäster (täcke, kudde, bäddmadrass)" },
