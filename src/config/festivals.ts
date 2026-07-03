@@ -52,7 +52,21 @@ export type FestivalConfig = {
   addOns: AddOnType[];
 };
 
+const STANDARD_INCLUDED: IncludedItem[] = [
+  { icon: "🪑", label: { sv: "2 stolar", en: "2 chairs" } },
+  { icon: "🪵", label: { sv: "Bord", en: "Table" } },
+  { icon: "🧺", label: { sv: "Filt", en: "Blanket" } },
+  { icon: "🟫", label: { sv: "Matta", en: "Rug" } },
+  { icon: "🎁", label: { sv: "Goodiebag med toarulle", en: "Goodie bag with toilet paper" } },
+  { icon: "🧻", label: { sv: "Våtservetter", en: "Wet wipes" } },
+  { icon: "💡", label: { sv: "USB-lampa", en: "USB lamp" } },
+  { icon: "🚪", label: { sv: "Dörrmatta", en: "Doormat" } },
+  { icon: "🔌", label: { sv: "El", en: "Electricity" } },
+  { icon: "🚗", label: { sv: "Parkering", en: "Parking" } },
+];
+
 export const SWEDEN_ROCK_2027: FestivalConfig = {
+
   slug: "sweden-rock-2027",
   id: "sweden-rock-2027",
   name: "Sweden Rock Festival 2027",
