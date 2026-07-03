@@ -737,54 +737,123 @@ const StepBlock = ({ number, title, children }: { number: number; title: string;
 );
 
 const TentCard = ({
-  tent, lang, currency, selected, onSelect,
-}: { tent: TentType; lang: Lang; currency: string; selected: boolean; onSelect: () => void }) => (
-  <Card
-    className={`overflow-hidden transition-all cursor-pointer ${selected ? "ring-2 ring-primary shadow-lg" : "hover:shadow-md"}`}
-    onClick={onSelect}
-  >
-    <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-      <img src={tent.image} alt={tent.name[lang]} className="w-full h-full object-cover" loading="lazy" />
-      {selected && (
-        <div className="absolute top-3 right-3 bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center shadow">
-          <Check className="w-4 h-4" />
-        </div>
-      )}
-    </div>
-    <div className="p-5">
-      <div className="flex items-start justify-between gap-3 mb-2">
-        <div>
-          <h3 className="font-bold text-lg">{tent.name[lang]}</h3>
-          <p className="text-sm text-muted-foreground">{tent.size} · {tent.bestFor[lang]}</p>
-        </div>
-        <div className="text-right">
-          <div className="text-lg font-bold text-primary">{tent.price.toLocaleString("sv-SE")} {currency}</div>
-          <div className="text-xs text-muted-foreground">{t("totalStay", lang)}</div>
-        </div>
-      </div>
-      <p className="text-sm text-muted-foreground mb-4">{tent.description[lang]}</p>
-
-      {tent.includedStandard && tent.includedStandard.length > 0 && (
-        <div className="mb-4 rounded-lg border bg-muted/30 p-3">
-          <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
-            {t("includedAsStandard", lang)}
+  tent, lang, currency, selected, soldOut, available, onSelect,
+}: {
+  tent: TentType;
+  lang: Lang;
+  currency: string;
+  selected: boolean;
+  soldOut: boolean;
+  available: number;
+  onSelect: () => void;
+}) => {
+  const totalT = tent.totalCount ?? 0;
+  return (
+    <Card
+      className={`overflow-hidden transition-all ${
+        soldOut
+          ? "opacity-60 cursor-not-allowed"
+          : selected
+          ? "ring-2 ring-primary shadow-lg cursor-pointer"
+          : "hover:shadow-md cursor-pointer"
+      }`}
+      onClick={soldOut ? undefined : onSelect}
+      aria-disabled={soldOut}
+    >
+      <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+        <img src={tent.image} alt={tent.name[lang]} className="w-full h-full object-cover" loading="lazy" />
+        {selected && !soldOut && (
+          <div className="absolute top-3 right-3 bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center shadow">
+            <Check className="w-4 h-4" />
           </div>
-          <ul className="grid grid-cols-2 gap-x-3 gap-y-2 text-sm">
-            {tent.includedStandard.map((item, i) => (
-              <li key={i} className="flex items-center gap-2">
-                <item.Icon aria-hidden className="w-4 h-4 text-primary flex-shrink-0" />
-                <span className="text-foreground/80">{item.label[lang]}</span>
-              </li>
-            ))}
-          </ul>
+        )}
+        {soldOut && (
+          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+            <Badge className="bg-background text-foreground text-sm px-3 py-1">
+              {tent.id === "medium"
+                ? t("mediumSoldOut", lang)
+                : tent.id === "deluxe"
+                ? t("deluxeSoldOut", lang)
+                : lang === "sv"
+                ? "Slutsålt"
+                : "Sold out"}
+            </Badge>
+          </div>
+        )}
+      </div>
+      <div className="p-5">
+        <div className="flex items-start justify-between gap-3 mb-2">
+          <div>
+            <h3 className="font-bold text-lg">{tent.name[lang]}</h3>
+            <p className="text-sm text-muted-foreground">{tent.size} · {tent.bestFor[lang]}</p>
+          </div>
+          <div className="text-right">
+            <div className="text-lg font-bold text-primary">{tent.price.toLocaleString("sv-SE")} {currency}</div>
+            <div className="text-xs text-muted-foreground">{t("totalStay", lang)}</div>
+          </div>
         </div>
-      )}
+        <p className="text-sm text-muted-foreground mb-3">{tent.description[lang]}</p>
 
-      <Button variant={selected ? "default" : "outline"} className="w-full" onClick={(e) => { e.stopPropagation(); onSelect(); }}>
-        {selected ? (<><Check className="w-4 h-4 mr-1" /> {t("selected", lang)}</>) : t("select", lang)}
-      </Button>
-    </div>
-  </Card>
+        {totalT > 0 && (
+          <p className="text-xs font-medium mb-4">
+            {soldOut ? (
+              <span className="text-muted-foreground">
+                {tent.id === "medium"
+                  ? t("mediumSoldOut", lang)
+                  : tent.id === "deluxe"
+                  ? t("deluxeSoldOut", lang)
+                  : lang === "sv"
+                  ? "Slutsålt"
+                  : "Sold out"}
+              </span>
+            ) : (
+              <span className="text-foreground/80">
+                {available} {t("ofLabel", lang)} {totalT} {t("availabilityLine", lang)}
+              </span>
+            )}
+          </p>
+        )}
+
+        {tent.includedStandard && tent.includedStandard.length > 0 && (
+          <div className="mb-4 rounded-lg border bg-muted/30 p-3">
+            <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
+              {t("includedAsStandard", lang)}
+            </div>
+            <ul className="grid grid-cols-2 gap-x-3 gap-y-2 text-sm">
+              {tent.includedStandard.map((item, i) => (
+                <li key={i} className="flex items-center gap-2">
+                  <item.Icon aria-hidden className="w-4 h-4 text-primary flex-shrink-0" />
+                  <span className="text-foreground/80">{item.label[lang]}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <Button
+          variant={selected ? "default" : "outline"}
+          className="w-full"
+          disabled={soldOut}
+          onClick={(e) => { e.stopPropagation(); if (!soldOut) onSelect(); }}
+        >
+          {soldOut
+            ? (lang === "sv" ? "Slutsålt" : "Sold out")
+            : selected
+            ? (<><Check className="w-4 h-4 mr-1" /> {t("selected", lang)}</>)
+            : t("select", lang)}
+        </Button>
+      </div>
+    </Card>
+  );
+};
+
+const SummaryRow = ({
+  label, value, strong,
+}: { label: string; value: string; strong?: boolean }) => (
+  <div className="flex justify-between gap-4">
+    <span className="text-muted-foreground">{label}</span>
+    <span className={strong ? "font-semibold text-foreground" : "text-foreground"}>{value}</span>
+  </div>
 );
 
 
