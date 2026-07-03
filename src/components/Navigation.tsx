@@ -132,18 +132,6 @@ const Navigation = () => {
                   Kontakt
                 </Link>
               )}
-              {isHomePage ? (
-                <Button
-                  onClick={() => scrollToSection("boka-talt")}
-                  className="btn-hero"
-                >
-                  Boka nu
-                </Button>
-              ) : (
-                <Button asChild className="btn-hero">
-                  <Link to="/#boka-talt">Boka nu</Link>
-                </Button>
-              )}
             </div>
           </div>
 
@@ -255,20 +243,6 @@ const Navigation = () => {
                   Kontakt
                 </Link>
               )}
-              <div className="px-3 py-2">
-                {isHomePage ? (
-                  <Button
-                    onClick={() => scrollToSection("boka-talt")}
-                    className="btn-hero w-full"
-                  >
-                    Boka nu
-                  </Button>
-                ) : (
-                  <Button asChild className="btn-hero w-full">
-                    <Link to="/#boka-talt" onClick={() => setIsOpen(false)}>Boka nu</Link>
-                  </Button>
-                )}
-              </div>
             </div>
           </div>
         )}
