@@ -205,7 +205,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   const addOnsTotal = addOnLines.reduce((s, l) => s + l.total, 0);
   const tentPrice = selectedTent?.price ?? 0;
   const total = tentPrice + extraGuestsCost + addOnsTotal;
-  const depositAmount = Math.round(total * 0.2);
+  const depositAmount = total; // Full amount charged upfront via Stripe
 
   const canCheckout = !!selectedTent && guests > 0 && !soldOut;
   const canConfirm =
@@ -272,9 +272,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
         `Incheckning: ${festival.checkIn.sv}\nUtcheckning: ${festival.checkOut.sv}\n` +
         `Nätter: ${festival.nights}\n` +
         `Tillval: ${addOnLines.map((l) => `${l.addOn.name.sv} (${l.total} kr)`).join(", ") || "Inga"}\n` +
-        `Totalt: ${total} kr\n` +
-        `Förskott 20%: ${depositAmount} kr (via Stripe)\n` +
-        `Resterande 80%: ${remainingAmount} kr\n` +
+        `Totalt: ${total} kr (betalt via Stripe)\n` +
         `Status: Väntar på Stripe-betalning`;
 
       const { data: inserted, error } = await supabase
@@ -296,11 +294,11 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
             addOns: addOnMeta,
             addOnsTotal,
             totalPrice: total,
-            deposit: depositAmount,
-            depositPercent: 20,
-            remainingAmount,
-            paymentOption: "deposit",
-            paymentStatus: "awaiting_deposit",
+            deposit: total,
+            depositPercent: 100,
+            remainingAmount: 0,
+            paymentOption: "full",
+            paymentStatus: "awaiting_stripe",
             bookingStatus: "pending_confirmation",
             checkIn: festival.checkIn.sv,
             checkOut: festival.checkOut.sv,
@@ -631,15 +629,6 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                     value={fmt(total, festival.currency)}
                     strong
                   />
-                  <SummaryRow
-                    label={t("depositLine", lang)}
-                    value={fmt(depositAmount, festival.currency)}
-                    strong
-                  />
-                  <SummaryRow
-                    label={t("remainingLine", lang)}
-                    value={fmt(remainingAmount, festival.currency)}
-                  />
                 </div>
                 <p className="text-xs text-muted-foreground mt-4 flex items-start gap-2">
                   <Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
@@ -684,40 +673,13 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                 <div className="text-xs uppercase tracking-wide text-muted-foreground mb-2">
                   {lang === "sv" ? "Betalning" : "Payment"}
                 </div>
-                <SummaryRow label={t("totalAmountLabel", lang)} value={fmt(total, festival.currency)} />
                 <SummaryRow
-                  label={lang === "sv" ? "Betalt förskott 20% (Stripe)" : "Deposit paid 20% (Stripe)"}
-                  value={fmt(depositAmount, festival.currency)}
+                  label={lang === "sv" ? "Betalt totalt (Stripe)" : "Total paid (Stripe)"}
+                  value={fmt(total, festival.currency)}
                   strong
                 />
-                <SummaryRow label={t("remainingLine", lang)} value={fmt(remainingAmount, festival.currency)} />
               </div>
 
-              <div className="rounded-lg border p-5 mb-6 text-sm">
-                <div className="text-xs uppercase tracking-wide text-muted-foreground mb-2">
-                  {lang === "sv" ? "Slutbetalning (80%)" : "Final payment (80%)"}
-                </div>
-                <p className="text-muted-foreground mb-3">
-                  {lang === "sv"
-                    ? "Resterande belopp betalas närmare festivalen via Swish eller Bankgiro:"
-                    : "The remaining amount is paid closer to the festival via Swish or bank transfer:"}
-                </p>
-                <div className="grid md:grid-cols-2 gap-3">
-                  <div>
-                    <div className="text-xs uppercase tracking-wide text-muted-foreground">
-                      {t("swishTitle", lang)}
-                    </div>
-                    <div className="text-base font-bold">{PAYMENT_INFO.swish}</div>
-                  </div>
-                  <div>
-                    <div className="text-xs uppercase tracking-wide text-muted-foreground">
-                      {t("bankgiroTitle", lang)}
-                    </div>
-                    <div className="text-base font-bold">{PAYMENT_INFO.bankgiro}</div>
-                    <div className="text-xs text-muted-foreground">{PAYMENT_INFO.bankgiroHolder}</div>
-                  </div>
-                </div>
-              </div>
 
               <div className="rounded-lg bg-accent/20 border border-accent/30 p-4 mb-6 text-sm">
                 <div className="font-semibold mb-1">{t("confirmationTitle", lang)}</div>

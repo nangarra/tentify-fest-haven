@@ -52,7 +52,7 @@ Deno.serve(async (req) => {
             currency,
             product_data: {
               name: description,
-              description: `Förskott 20% – Bokning ${String(bookingId).slice(0, 8).toUpperCase()}`,
+              description: `Bokning ${String(bookingId).slice(0, 8).toUpperCase()}`,
             },
             unit_amount: Math.round(amount * 100), // to öre
           },
