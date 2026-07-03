@@ -89,7 +89,7 @@ const EventBookingPage = () => {
   return <BookingFlow festival={festival} />;
 };
 
-const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
+export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   const [lang, setLang] = useState<Lang>("sv");
   const [step, setStep] = useState<Step>("booking");
   const [selectedTentId, setSelectedTentId] = useState<string | null>(null);
