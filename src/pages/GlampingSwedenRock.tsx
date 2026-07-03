@@ -101,7 +101,7 @@ const galleryImages = [
 ];
 
 const GlampingSwedenRock = () => {
-  const festival = getFestival("sweden-rock-2027");
+
 
 
 
