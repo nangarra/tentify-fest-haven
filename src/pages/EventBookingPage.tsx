@@ -256,8 +256,9 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
         `Incheckning: ${festival.checkIn.sv}\nUtcheckning: ${festival.checkOut.sv}\n` +
         `Nätter: ${festival.nights}\n` +
         `Tillval: ${addOnLines.map((l) => `${l.addOn.name.sv} (${l.total} kr)`).join(", ") || "Inga"}\n` +
-        `Totalt: ${total} kr (betalt via Stripe)\n` +
-        `Status: Väntar på Stripe-betalning`;
+        `Totalt: ${total} kr\n` +
+        `Förskott 20% via Swish: ${depositAmount} kr\n` +
+        `Status: Väntar på Swish-betalning (manuell bekräftelse)`;
 
       const { data: inserted, error } = await supabase
         .from("bookings")
@@ -278,11 +279,12 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
             addOns: addOnMeta,
             addOnsTotal,
             totalPrice: total,
-            deposit: total,
-            depositPercent: 100,
-            remainingAmount: 0,
-            paymentOption: "full",
-            paymentStatus: "awaiting_stripe",
+            deposit: depositAmount,
+            depositPercent: 20,
+            remainingAmount: total - depositAmount,
+            paymentOption: "swish_advance",
+            paymentMethod: "swish",
+            paymentStatus: "awaiting_swish",
             bookingStatus: "pending_confirmation",
             checkIn: festival.checkIn.sv,
             checkOut: festival.checkOut.sv,
@@ -308,26 +310,8 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
         [selectedTent.id]: Math.max(0, (prev[selectedTent.id] ?? 0) - 1),
       }));
 
-      // Create Stripe Checkout Session and redirect
-      const returnUrl = window.location.origin + window.location.pathname;
-      const { data: checkout, error: fnError } = await supabase.functions.invoke(
-        "create-stripe-checkout",
-        {
-          body: {
-            bookingId: newBookingId,
-            amount: depositAmount,
-            currency: "sek",
-            description: `${festival.name} – ${selectedTent.name.sv} (${guests} ${guests === 1 ? "gäst" : "gäster"})`,
-            customerEmail: email,
-            successUrl: returnUrl,
-            cancelUrl: returnUrl,
-          },
-        },
-      );
-      if (fnError || !checkout?.url) {
-        throw new Error(fnError?.message || "Kunde inte starta betalning");
-      }
-      window.location.href = checkout.url as string;
+      setStep("confirmation");
+      window.scrollTo({ top: 0, behavior: "smooth" });
 
     } catch (e: any) {
       console.error(e);
