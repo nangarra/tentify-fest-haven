@@ -260,9 +260,11 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
         `Förskott 20% via Swish: ${depositAmount} kr\n` +
         `Status: Väntar på Swish-betalning (manuell bekräftelse)`;
 
-      const { data: inserted, error } = await supabase
+      const newBookingId = crypto.randomUUID();
+      const { error } = await supabase
         .from("bookings")
         .insert({
+          id: newBookingId,
           name: `${firstName} ${lastName}`.trim(),
           email,
           phone,
@@ -293,12 +295,9 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
             eventDates: `${festival.checkIn.sv} – ${festival.checkOut.sv}`,
             language: lang,
           },
-        })
-        .select("id")
-        .single();
+        });
       if (error) throw error;
-      const newBookingId = inserted?.id as string;
-      setBookingId(newBookingId ?? null);
+      setBookingId(newBookingId);
 
       await supabase.rpc("decrease_tent_inventory", {
         p_festival: festival.id,
