@@ -125,24 +125,8 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingId, setBookingId] = useState<string | null>(null);
 
-  // Handle Stripe return URL
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const stripeStatus = params.get("stripe");
-    const returnedBooking = params.get("booking");
-    if (stripeStatus === "success" && returnedBooking) {
-      setBookingId(returnedBooking);
-      setStep("confirmation");
-      // Clean URL
-      window.history.replaceState({}, "", window.location.pathname);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } else if (stripeStatus === "cancel") {
-      toast.error(
-        "Betalningen avbröts. Din bokning har inte sparats – försök igen.",
-      );
-      window.history.replaceState({}, "", window.location.pathname);
-    }
-  }, []);
+  // (Stripe flow removed — nu manuell Swish-bekräftelse)
+
 
   useEffect(() => {
     (async () => {
@@ -205,7 +189,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   const addOnsTotal = addOnLines.reduce((s, l) => s + l.total, 0);
   const tentPrice = selectedTent?.price ?? 0;
   const total = tentPrice + extraGuestsCost + addOnsTotal;
-  const depositAmount = total; // Full amount charged upfront via Stripe
+  const depositAmount = Math.round(total * 0.2); // 20% förskott via Swish
 
   const canCheckout = !!selectedTent && guests > 0 && !soldOut;
   const canConfirm =
@@ -272,8 +256,9 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
         `Incheckning: ${festival.checkIn.sv}\nUtcheckning: ${festival.checkOut.sv}\n` +
         `Nätter: ${festival.nights}\n` +
         `Tillval: ${addOnLines.map((l) => `${l.addOn.name.sv} (${l.total} kr)`).join(", ") || "Inga"}\n` +
-        `Totalt: ${total} kr (betalt via Stripe)\n` +
-        `Status: Väntar på Stripe-betalning`;
+        `Totalt: ${total} kr\n` +
+        `Förskott 20% via Swish: ${depositAmount} kr\n` +
+        `Status: Väntar på Swish-betalning (manuell bekräftelse)`;
 
       const { data: inserted, error } = await supabase
         .from("bookings")
@@ -294,11 +279,12 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
             addOns: addOnMeta,
             addOnsTotal,
             totalPrice: total,
-            deposit: total,
-            depositPercent: 100,
-            remainingAmount: 0,
-            paymentOption: "full",
-            paymentStatus: "awaiting_stripe",
+            deposit: depositAmount,
+            depositPercent: 20,
+            remainingAmount: total - depositAmount,
+            paymentOption: "swish_advance",
+            paymentMethod: "swish",
+            paymentStatus: "awaiting_swish",
             bookingStatus: "pending_confirmation",
             checkIn: festival.checkIn.sv,
             checkOut: festival.checkOut.sv,
@@ -324,26 +310,8 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
         [selectedTent.id]: Math.max(0, (prev[selectedTent.id] ?? 0) - 1),
       }));
 
-      // Create Stripe Checkout Session and redirect
-      const returnUrl = window.location.origin + window.location.pathname;
-      const { data: checkout, error: fnError } = await supabase.functions.invoke(
-        "create-stripe-checkout",
-        {
-          body: {
-            bookingId: newBookingId,
-            amount: depositAmount,
-            currency: "sek",
-            description: `${festival.name} – ${selectedTent.name.sv} (${guests} ${guests === 1 ? "gäst" : "gäster"})`,
-            customerEmail: email,
-            successUrl: returnUrl,
-            cancelUrl: returnUrl,
-          },
-        },
-      );
-      if (fnError || !checkout?.url) {
-        throw new Error(fnError?.message || "Kunde inte starta betalning");
-      }
-      window.location.href = checkout.url as string;
+      setStep("confirmation");
+      window.scrollTo({ top: 0, behavior: "smooth" });
 
     } catch (e: any) {
       console.error(e);
@@ -669,22 +637,52 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                 </div>
               )}
 
-              <div className="rounded-lg border bg-muted/30 p-5 mb-6 text-sm space-y-2">
+              <div className="rounded-lg border bg-muted/30 p-5 mb-4 text-sm space-y-2">
                 <div className="text-xs uppercase tracking-wide text-muted-foreground mb-2">
-                  {lang === "sv" ? "Betalning" : "Payment"}
+                  {t("paymentInfo", lang)}
                 </div>
                 <SummaryRow
-                  label={lang === "sv" ? "Betalt totalt (Stripe)" : "Total paid (Stripe)"}
+                  label={t("totalAmountLabel", lang)}
                   value={fmt(total, festival.currency)}
+                />
+                <SummaryRow
+                  label={t("depositLine", lang)}
+                  value={fmt(depositAmount, festival.currency)}
                   strong
+                />
+                <SummaryRow
+                  label={t("remainingLine", lang)}
+                  value={fmt(total - depositAmount, festival.currency)}
                 />
               </div>
 
+              <div className="rounded-lg border-2 border-primary/30 bg-primary/5 p-5 mb-4 text-sm">
+                <div className="text-xs uppercase tracking-wide text-muted-foreground mb-2">
+                  {t("swishTitle", lang)}
+                </div>
+                <div className="mb-3">
+                  {lang === "sv"
+                    ? `Swisha ${fmt(depositAmount, festival.currency)} (20% förskott) till:`
+                    : `Swish ${fmt(depositAmount, festival.currency)} (20% deposit) to:`}
+                </div>
+                <div className="text-2xl font-bold font-mono text-primary mb-2">
+                  {PAYMENT_INFO.swish}
+                </div>
+                <div className="text-xs text-muted-foreground mb-2">
+                  Nangarra Invest AB
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {lang === "sv"
+                    ? `Märk betalningen med ditt namn${bookingId ? ` och bokningsnummer ${bookingId.slice(0, 8).toUpperCase()}` : ""}. Vi bekräftar din bokning manuellt inom 24 timmar.`
+                    : `Mark the payment with your name${bookingId ? ` and booking number ${bookingId.slice(0, 8).toUpperCase()}` : ""}. We will confirm your booking manually within 24 hours.`}
+                </p>
+              </div>
 
               <div className="rounded-lg bg-accent/20 border border-accent/30 p-4 mb-6 text-sm">
                 <div className="font-semibold mb-1">{t("confirmationTitle", lang)}</div>
                 <p className="text-muted-foreground">{t("confirmationBody", lang)}</p>
               </div>
+
 
 
               <div className="text-center">

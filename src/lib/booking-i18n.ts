@@ -69,7 +69,7 @@ export const BOOKING_STRINGS = {
   reviewBooking: { sv: "Kontrollera din bokning", en: "Review your booking" },
   depositLine: { sv: "Förskottsbetalning 20%", en: "Deposit 20%" },
   remainingLine: { sv: "Resterande belopp", en: "Remaining amount" },
-  sendBookingRequest: { sv: "Betala med Stripe", en: "Pay with Stripe" },
+  sendBookingRequest: { sv: "Skicka bokning", en: "Submit booking" },
   submitting: { sv: "Skickar...", en: "Submitting..." },
   continue: { sv: "Fortsätt", en: "Continue" },
   summary: { sv: "Sammanfattning", en: "Summary" },
