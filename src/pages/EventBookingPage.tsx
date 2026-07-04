@@ -124,8 +124,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   const [city, setCity] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingId, setBookingId] = useState<string | null>(null);
-
-  // (Stripe flow removed — nu manuell Swish-bekräftelse)
+  const [paymentMethod, setPaymentMethod] = useState<"swish" | "stripe">("swish");
 
 
   useEffect(() => {
