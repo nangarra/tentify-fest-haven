@@ -125,24 +125,8 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingId, setBookingId] = useState<string | null>(null);
 
-  // Handle Stripe return URL
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const stripeStatus = params.get("stripe");
-    const returnedBooking = params.get("booking");
-    if (stripeStatus === "success" && returnedBooking) {
-      setBookingId(returnedBooking);
-      setStep("confirmation");
-      // Clean URL
-      window.history.replaceState({}, "", window.location.pathname);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } else if (stripeStatus === "cancel") {
-      toast.error(
-        "Betalningen avbröts. Din bokning har inte sparats – försök igen.",
-      );
-      window.history.replaceState({}, "", window.location.pathname);
-    }
-  }, []);
+  // (Stripe flow removed — nu manuell Swish-bekräftelse)
+
 
   useEffect(() => {
     (async () => {
