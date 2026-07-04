@@ -627,8 +627,67 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                 </p>
               </Card>
 
+              <Card className="p-6 md:p-8">
+                <h2 className="text-2xl font-bold mb-1">
+                  {lang === "sv" ? "Välj betalsätt" : "Choose payment method"}
+                </h2>
+                <p className="text-sm text-muted-foreground mb-5">
+                  {lang === "sv"
+                    ? `Betala 20% förskott (${fmt(depositAmount, festival.currency)}) nu. Resterande betalas vid ankomst.`
+                    : `Pay 20% deposit (${fmt(depositAmount, festival.currency)}) now. The rest is paid on arrival.`}
+                </p>
+                <div className="grid md:grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod("swish")}
+                    className={`text-left rounded-lg border-2 p-4 transition ${
+                      paymentMethod === "swish"
+                        ? "border-primary bg-primary/5"
+                        : "border-border hover:border-primary/40"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-semibold">Swish</span>
+                      {paymentMethod === "swish" && <Check className="w-4 h-4 text-primary" />}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      {lang === "sv"
+                        ? "Manuell bekräftelse inom 24 timmar."
+                        : "Manual confirmation within 24 hours."}
+                    </p>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod("stripe")}
+                    className={`text-left rounded-lg border-2 p-4 transition ${
+                      paymentMethod === "stripe"
+                        ? "border-primary bg-primary/5"
+                        : "border-border hover:border-primary/40"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-semibold">
+                        {lang === "sv" ? "Kort (Stripe)" : "Card (Stripe)"}
+                      </span>
+                      {paymentMethod === "stripe" && <Check className="w-4 h-4 text-primary" />}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      {lang === "sv"
+                        ? "Betala direkt med kort. Bokning bekräftas automatiskt."
+                        : "Pay by card immediately. Booking confirmed automatically."}
+                    </p>
+                  </button>
+                </div>
+              </Card>
+
               <Button size="lg" className="w-full" onClick={handleConfirm} disabled={!canConfirm || isSubmitting}>
-                {isSubmitting ? t("submitting", lang) : t("sendBookingRequest", lang)}
+                {isSubmitting
+                  ? t("submitting", lang)
+                  : paymentMethod === "stripe"
+                  ? lang === "sv"
+                    ? `Betala ${fmt(depositAmount, festival.currency)} med kort`
+                    : `Pay ${fmt(depositAmount, festival.currency)} by card`
+                  : t("sendBookingRequest", lang)}
               </Button>
             </div>
 
