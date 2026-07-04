@@ -256,8 +256,9 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
         `Nätter: ${festival.nights}\n` +
         `Tillval: ${addOnLines.map((l) => `${l.addOn.name.sv} (${l.total} kr)`).join(", ") || "Inga"}\n` +
         `Totalt: ${total} kr\n` +
-        `Förskott 20% via Swish: ${depositAmount} kr\n` +
-        `Status: Väntar på Swish-betalning (manuell bekräftelse)`;
+        `Förskott 20%: ${depositAmount} kr\n` +
+        `Betalmetod: ${paymentMethod === "stripe" ? "Kort (Stripe)" : "Swish"}\n` +
+        `Status: ${paymentMethod === "stripe" ? "Väntar på kortbetalning" : "Väntar på Swish-betalning (manuell bekräftelse)"}`;
 
       const newBookingId = crypto.randomUUID();
       const { error } = await supabase
@@ -283,9 +284,9 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
             deposit: depositAmount,
             depositPercent: 20,
             remainingAmount: total - depositAmount,
-            paymentOption: "swish_advance",
-            paymentMethod: "swish",
-            paymentStatus: "awaiting_swish",
+            paymentOption: paymentMethod === "stripe" ? "stripe_advance" : "swish_advance",
+            paymentMethod,
+            paymentStatus: paymentMethod === "stripe" ? "awaiting_stripe" : "awaiting_swish",
             bookingStatus: "pending_confirmation",
             checkIn: festival.checkIn.sv,
             checkOut: festival.checkOut.sv,
@@ -302,11 +303,35 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
         p_festival: festival.id,
         p_tent_type: selectedTent.id,
       });
-      // Update local availability
       setAvailabilityByType((prev) => ({
         ...prev,
         [selectedTent.id]: Math.max(0, (prev[selectedTent.id] ?? 0) - 1),
       }));
+
+      if (paymentMethod === "stripe") {
+        const origin = window.location.origin;
+        const { data, error: fnError } = await supabase.functions.invoke(
+          "create-stripe-checkout",
+          {
+            body: {
+              bookingId: newBookingId,
+              amount: depositAmount,
+              currency: "sek",
+              description: `${festival.name} – ${selectedTent.name.sv} (20% förskott)`,
+              customerEmail: email,
+              successUrl: `${origin}/booking/${festival.id}`,
+              cancelUrl: `${origin}/booking/${festival.id}`,
+            },
+          },
+        );
+        if (fnError || !data?.url) {
+          console.error("stripe checkout error", fnError, data);
+          toast.error(lang === "sv" ? "Kunde inte starta kortbetalning" : "Could not start card payment");
+          return;
+        }
+        window.location.href = data.url as string;
+        return;
+      }
 
       setStep("confirmation");
       window.scrollTo({ top: 0, behavior: "smooth" });
