@@ -124,8 +124,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   const [city, setCity] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingId, setBookingId] = useState<string | null>(null);
-
-  // (Stripe flow removed — nu manuell Swish-bekräftelse)
+  const [paymentMethod, setPaymentMethod] = useState<"swish" | "stripe">("swish");
 
 
   useEffect(() => {
@@ -257,8 +256,9 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
         `Nätter: ${festival.nights}\n` +
         `Tillval: ${addOnLines.map((l) => `${l.addOn.name.sv} (${l.total} kr)`).join(", ") || "Inga"}\n` +
         `Totalt: ${total} kr\n` +
-        `Förskott 20% via Swish: ${depositAmount} kr\n` +
-        `Status: Väntar på Swish-betalning (manuell bekräftelse)`;
+        `Förskott 20%: ${depositAmount} kr\n` +
+        `Betalmetod: ${paymentMethod === "stripe" ? "Kort (Stripe)" : "Swish"}\n` +
+        `Status: ${paymentMethod === "stripe" ? "Väntar på kortbetalning" : "Väntar på Swish-betalning (manuell bekräftelse)"}`;
 
       const newBookingId = crypto.randomUUID();
       const { error } = await supabase
@@ -284,9 +284,9 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
             deposit: depositAmount,
             depositPercent: 20,
             remainingAmount: total - depositAmount,
-            paymentOption: "swish_advance",
-            paymentMethod: "swish",
-            paymentStatus: "awaiting_swish",
+            paymentOption: paymentMethod === "stripe" ? "stripe_advance" : "swish_advance",
+            paymentMethod,
+            paymentStatus: paymentMethod === "stripe" ? "awaiting_stripe" : "awaiting_swish",
             bookingStatus: "pending_confirmation",
             checkIn: festival.checkIn.sv,
             checkOut: festival.checkOut.sv,
@@ -303,11 +303,35 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
         p_festival: festival.id,
         p_tent_type: selectedTent.id,
       });
-      // Update local availability
       setAvailabilityByType((prev) => ({
         ...prev,
         [selectedTent.id]: Math.max(0, (prev[selectedTent.id] ?? 0) - 1),
       }));
+
+      if (paymentMethod === "stripe") {
+        const origin = window.location.origin;
+        const { data, error: fnError } = await supabase.functions.invoke(
+          "create-stripe-checkout",
+          {
+            body: {
+              bookingId: newBookingId,
+              amount: depositAmount,
+              currency: "sek",
+              description: `${festival.name} – ${selectedTent.name.sv} (20% förskott)`,
+              customerEmail: email,
+              successUrl: `${origin}/booking/${festival.id}`,
+              cancelUrl: `${origin}/booking/${festival.id}`,
+            },
+          },
+        );
+        if (fnError || !data?.url) {
+          console.error("stripe checkout error", fnError, data);
+          toast.error(lang === "sv" ? "Kunde inte starta kortbetalning" : "Could not start card payment");
+          return;
+        }
+        window.location.href = data.url as string;
+        return;
+      }
 
       setStep("confirmation");
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -603,8 +627,67 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                 </p>
               </Card>
 
+              <Card className="p-6 md:p-8">
+                <h2 className="text-2xl font-bold mb-1">
+                  {lang === "sv" ? "Välj betalsätt" : "Choose payment method"}
+                </h2>
+                <p className="text-sm text-muted-foreground mb-5">
+                  {lang === "sv"
+                    ? `Betala 20% förskott (${fmt(depositAmount, festival.currency)}) nu. Resterande betalas vid ankomst.`
+                    : `Pay 20% deposit (${fmt(depositAmount, festival.currency)}) now. The rest is paid on arrival.`}
+                </p>
+                <div className="grid md:grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod("swish")}
+                    className={`text-left rounded-lg border-2 p-4 transition ${
+                      paymentMethod === "swish"
+                        ? "border-primary bg-primary/5"
+                        : "border-border hover:border-primary/40"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-semibold">Swish</span>
+                      {paymentMethod === "swish" && <Check className="w-4 h-4 text-primary" />}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      {lang === "sv"
+                        ? "Manuell bekräftelse inom 24 timmar."
+                        : "Manual confirmation within 24 hours."}
+                    </p>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod("stripe")}
+                    className={`text-left rounded-lg border-2 p-4 transition ${
+                      paymentMethod === "stripe"
+                        ? "border-primary bg-primary/5"
+                        : "border-border hover:border-primary/40"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-semibold">
+                        {lang === "sv" ? "Kort (Stripe)" : "Card (Stripe)"}
+                      </span>
+                      {paymentMethod === "stripe" && <Check className="w-4 h-4 text-primary" />}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      {lang === "sv"
+                        ? "Betala direkt med kort. Bokning bekräftas automatiskt."
+                        : "Pay by card immediately. Booking confirmed automatically."}
+                    </p>
+                  </button>
+                </div>
+              </Card>
+
               <Button size="lg" className="w-full" onClick={handleConfirm} disabled={!canConfirm || isSubmitting}>
-                {isSubmitting ? t("submitting", lang) : t("sendBookingRequest", lang)}
+                {isSubmitting
+                  ? t("submitting", lang)
+                  : paymentMethod === "stripe"
+                  ? lang === "sv"
+                    ? `Betala ${fmt(depositAmount, festival.currency)} med kort`
+                    : `Pay ${fmt(depositAmount, festival.currency)} by card`
+                  : t("sendBookingRequest", lang)}
               </Button>
             </div>
 
