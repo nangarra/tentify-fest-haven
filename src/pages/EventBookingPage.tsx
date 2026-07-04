@@ -637,22 +637,52 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                 </div>
               )}
 
-              <div className="rounded-lg border bg-muted/30 p-5 mb-6 text-sm space-y-2">
+              <div className="rounded-lg border bg-muted/30 p-5 mb-4 text-sm space-y-2">
                 <div className="text-xs uppercase tracking-wide text-muted-foreground mb-2">
-                  {lang === "sv" ? "Betalning" : "Payment"}
+                  {t("paymentInfo", lang)}
                 </div>
                 <SummaryRow
-                  label={lang === "sv" ? "Betalt totalt (Stripe)" : "Total paid (Stripe)"}
+                  label={t("totalAmountLabel", lang)}
                   value={fmt(total, festival.currency)}
+                />
+                <SummaryRow
+                  label={t("depositLine", lang)}
+                  value={fmt(depositAmount, festival.currency)}
                   strong
+                />
+                <SummaryRow
+                  label={t("remainingLine", lang)}
+                  value={fmt(total - depositAmount, festival.currency)}
                 />
               </div>
 
+              <div className="rounded-lg border-2 border-primary/30 bg-primary/5 p-5 mb-4 text-sm">
+                <div className="text-xs uppercase tracking-wide text-muted-foreground mb-2">
+                  {t("swishTitle", lang)}
+                </div>
+                <div className="mb-3">
+                  {lang === "sv"
+                    ? `Swisha ${fmt(depositAmount, festival.currency)} (20% förskott) till:`
+                    : `Swish ${fmt(depositAmount, festival.currency)} (20% deposit) to:`}
+                </div>
+                <div className="text-2xl font-bold font-mono text-primary mb-2">
+                  {PAYMENT_INFO.swish}
+                </div>
+                <div className="text-xs text-muted-foreground mb-2">
+                  Nangarra Invest AB
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {lang === "sv"
+                    ? `Märk betalningen med ditt namn${bookingId ? ` och bokningsnummer ${bookingId.slice(0, 8).toUpperCase()}` : ""}. Vi bekräftar din bokning manuellt inom 24 timmar.`
+                    : `Mark the payment with your name${bookingId ? ` and booking number ${bookingId.slice(0, 8).toUpperCase()}` : ""}. We will confirm your booking manually within 24 hours.`}
+                </p>
+              </div>
 
               <div className="rounded-lg bg-accent/20 border border-accent/30 p-4 mb-6 text-sm">
                 <div className="font-semibold mb-1">{t("confirmationTitle", lang)}</div>
                 <p className="text-muted-foreground">{t("confirmationBody", lang)}</p>
               </div>
+
 
 
               <div className="text-center">
