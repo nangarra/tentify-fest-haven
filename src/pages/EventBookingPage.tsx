@@ -310,26 +310,36 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
 
       if (paymentMethod === "stripe") {
         const origin = window.location.origin;
-        const { data, error: fnError } = await supabase.functions.invoke(
-          "create-stripe-checkout",
-          {
-            body: {
-              bookingId: newBookingId,
-              amount: depositAmount,
-              currency: "sek",
-              description: `${festival.name} – ${selectedTent.name.sv} (20% förskott)`,
-              customerEmail: email,
-              successUrl: `${origin}/booking/${festival.id}`,
-              cancelUrl: `${origin}/booking/${festival.id}`,
+        console.log("[stripe] invoking edge function", { newBookingId, depositAmount });
+        try {
+          const { data, error: fnError } = await supabase.functions.invoke(
+            "create-stripe-checkout",
+            {
+              body: {
+                bookingId: newBookingId,
+                amount: depositAmount,
+                currency: "sek",
+                description: `${festival.name} – ${selectedTent.name.sv} (20% förskott)`,
+                customerEmail: email,
+                successUrl: `${origin}/booking/${festival.id}`,
+                cancelUrl: `${origin}/booking/${festival.id}`,
+              },
             },
-          },
-        );
-        if (fnError || !data?.url) {
-          console.error("stripe checkout error", fnError, data);
-          toast.error(lang === "sv" ? "Kunde inte starta kortbetalning" : "Could not start card payment");
-          return;
+          );
+          console.log("[stripe] response", { data, fnError });
+          if (fnError) {
+            toast.error(`Stripe-fel: ${fnError.message ?? "okänt fel"}`);
+            return;
+          }
+          if (!data?.url) {
+            toast.error(`Stripe returnerade ingen URL: ${JSON.stringify(data)}`);
+            return;
+          }
+          window.location.href = data.url as string;
+        } catch (err: any) {
+          console.error("[stripe] invoke threw", err);
+          toast.error(`Kunde inte nå Stripe: ${err?.message ?? err}`);
         }
-        window.location.href = data.url as string;
         return;
       }
 
@@ -338,7 +348,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
 
     } catch (e: any) {
       console.error(e);
-      toast.error(t("errorSubmit", lang));
+      toast.error(`${t("errorSubmit", lang)}: ${e?.message ?? e}`);
     } finally {
       setIsSubmitting(false);
     }
