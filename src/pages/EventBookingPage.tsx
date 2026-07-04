@@ -189,7 +189,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   const addOnsTotal = addOnLines.reduce((s, l) => s + l.total, 0);
   const tentPrice = selectedTent?.price ?? 0;
   const total = tentPrice + extraGuestsCost + addOnsTotal;
-  const depositAmount = total; // Full amount charged upfront via Stripe
+  const depositAmount = Math.round(total * 0.2); // 20% förskott via Swish
 
   const canCheckout = !!selectedTent && guests > 0 && !soldOut;
   const canConfirm =
