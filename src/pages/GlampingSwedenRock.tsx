@@ -167,8 +167,8 @@ const GlampingSwedenRock = () => {
               och mysig festivalkänsla nära Sweden Rock.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Button size="lg" className="btn-hero" onClick={() => scrollTo("booking")}>
-                Boka nu
+              <Button size="lg" className="btn-hero" asChild>
+                <Link to="/booking/sweden-rock-2027">Boka nu</Link>
               </Button>
 
               <Button
@@ -188,19 +188,25 @@ const GlampingSwedenRock = () => {
           </div>
         </section>
 
-        {/* FÖRHANDSBOKNING / VÄNTELISTA */}
+        {/* BOKA SWEDEN ROCK 2027 */}
         <section id="booking" className="py-10 bg-background">
           <div className="container mx-auto px-4 max-w-3xl">
             <div className="text-center max-w-2xl mx-auto mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold mb-3">
+                Boka glamping till Sweden Rock 2027
+              </h2>
               <p className="text-muted-foreground mb-3">
-                Bokningen för Sweden Rock 2027 är tillfälligt stängd. Anmäl dig till
-                förhandsbokningen nedan så kontaktar vi dig så snart platserna släpps.
+                Välj ditt tält, antal gäster och eventuella tillval direkt i bokningssidan. Du ser totalpriset innan betalning.
               </p>
               <p className="text-sm font-medium text-primary">
-                Endast ett begränsat antal tält kommer att finnas tillgängliga.
+                Endast ett begränsat antal tält finns tillgängliga.
               </p>
             </div>
-            <WaitlistForm variant="pre-booking" />
+            <Card className="p-8 text-center shadow-card">
+              <Button size="lg" className="btn-hero" asChild>
+                <Link to="/booking/sweden-rock-2027">Gå till bokningssidan</Link>
+              </Button>
+            </Card>
           </div>
         </section>
 
