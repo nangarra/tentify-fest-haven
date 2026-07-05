@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams, Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -125,6 +125,28 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingId, setBookingId] = useState<string | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<"swish" | "stripe">("swish");
+
+  const checkoutTopRef = useRef<HTMLDivElement | null>(null);
+  const confirmationTopRef = useRef<HTMLDivElement | null>(null);
+
+  const smoothScrollTo = (el: HTMLElement | null) => {
+    if (!el) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    requestAnimationFrame(() => {
+      const y = el.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+    });
+  };
+
+  const goToCheckout = () => {
+    setStep("checkout");
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => smoothScrollTo(checkoutTopRef.current));
+    });
+  };
+
 
 
   useEffect(() => {
@@ -344,7 +366,9 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
       }
 
       setStep("confirmation");
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => smoothScrollTo(confirmationTopRef.current));
+      });
 
     } catch (e: any) {
       console.error(e);
@@ -366,15 +390,12 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
       total={total}
       canCheckout={canCheckout}
       step={step}
-      onCheckout={() => {
-        setStep("checkout");
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }}
+      onCheckout={goToCheckout}
     />
   );
 
   return (
-    <div className="min-h-screen bg-muted/40">
+    <div className="theme-sweden-rock min-h-screen bg-muted/40">
       {/* Hero */}
       <section className="relative">
         <div className="relative h-[52vh] min-h-[380px] overflow-hidden">
@@ -383,7 +404,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
             alt={`${festival.name} glamping`}
             className="absolute inset-0 w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/70" />
+          <div className="absolute inset-0 sr-hero-overlay" />
           <div className="absolute top-4 right-4 z-20">
             <LanguageToggle lang={lang} onChange={setLang} />
           </div>
@@ -586,7 +607,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
         )}
 
         {step === "checkout" && selectedTent && (
-          <div className="grid lg:grid-cols-[1fr_380px] gap-8">
+          <div ref={checkoutTopRef} className="grid lg:grid-cols-[1fr_380px] gap-8 scroll-mt-24">
             <div className="space-y-6">
               <Button variant="ghost" onClick={() => setStep("booking")} className="-ml-3">
                 <ChevronLeft className="w-4 h-4 mr-1" /> {t("backToBooking", lang)}
@@ -708,7 +729,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
         )}
 
         {step === "confirmation" && selectedTent && (
-          <div className="max-w-2xl mx-auto">
+          <div ref={confirmationTopRef} className="max-w-2xl mx-auto scroll-mt-24">
             <Card className="p-8 md:p-10">
               <div className="text-center">
                 <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-5">
@@ -810,7 +831,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                 </SheetContent>
               </Sheet>
               {step === "booking" ? (
-                <Button size="sm" onClick={() => { setStep("checkout"); window.scrollTo({ top: 0, behavior: "smooth" }); }} disabled={!canCheckout}>
+                <Button size="sm" onClick={goToCheckout} disabled={!canCheckout}>
                   {t("continue", lang)} <ChevronRight className="w-4 h-4 ml-1" />
                 </Button>
               ) : (

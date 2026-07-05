@@ -12,11 +12,15 @@ import {
   Car,
 } from "lucide-react";
 import bekvamtImg from "@/assets/bekvamt-boende-sweden-rock-glamping.webp.asset.json";
-import interiorImg from "@/assets/glampingtalt-sweden-rock-interior.webp.asset.json";
+
 import bookingHeroImg from "@/assets/sweden-rock-glamping-5-2.webp.asset.json";
 import luxuryBedImg from "@/assets/dubbelbad-swedenrock.webp.asset.json";
 import extraBedImg from "@/assets/extra-sang-swedenrock.webp.asset.json";
 import beddingImg from "@/assets/baddset-swedenrock.webp.asset.json";
+import mediumTentImg from "@/assets/medium_tentify_sweden_rock_glamping.webp.asset.json";
+import breakfastImg from "@/assets/frukost_sweden_rock_glamping.webp.asset.json";
+import survivalPackImg from "@/assets/glamping_swedenrock_tillagg.webp.asset.json";
+import towelImg from "@/assets/handdukar_sweden_rock_glamping.webp.asset.json";
 
 export type Lang = "sv" | "en";
 export type Localized = Record<Lang, string>;
@@ -120,7 +124,7 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
       },
       price: 7900,
       maxGuests: 3,
-      image: bekvamtImg.url,
+      image: mediumTentImg.url,
       includedStandard: STANDARD_INCLUDED,
       totalCount: 10,
     },
@@ -135,7 +139,7 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
       },
       price: 11900,
       maxGuests: 4,
-      image: interiorImg.url,
+      image: bekvamtImg.url,
       includedStandard: STANDARD_INCLUDED,
       totalCount: 10,
     },
@@ -188,6 +192,7 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
       price: 599,
       perPerson: true,
       category: "food",
+      image: breakfastImg.url,
     },
     {
       id: "towel",
@@ -199,6 +204,7 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
       price: 50,
       perPerson: true,
       category: "extra",
+      image: towelImg.url,
     },
     {
       id: "fridge",
@@ -246,6 +252,7 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
         { sv: "Öronproppar", en: "Earplugs" },
         { sv: "Ögonbindel", en: "Sleep mask" },
       ],
+      image: survivalPackImg.url,
     },
   ],
 };

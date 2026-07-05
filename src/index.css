@@ -191,3 +191,67 @@ Animations for Tentify
     animation: emoji-bounce 3.5s ease-in-out infinite;
   }
 }
+
+/* ===================================================================
+   Sweden Rock theme — scoped to .theme-sweden-rock
+   Adds festival/rock energy (red, orange, dark steel) to the booking
+   page while keeping the surrounding glamping palette intact.
+   =================================================================== */
+.theme-sweden-rock {
+  /* Sweden Rock accent tokens */
+  --sr-red: 355 78% 42%;
+  --sr-red-glow: 355 85% 55%;
+  --sr-orange: 25 92% 52%;
+  --sr-amber: 40 95% 55%;
+  --sr-steel: 215 20% 14%;
+
+  /* Rewire primary + focus ring to Sweden Rock red so existing
+     UI (buttons, progress, selected rings) picks it up automatically. */
+  --primary: var(--sr-red);
+  --primary-foreground: 35 25% 96%;
+  --ring: var(--sr-orange);
+  --accent: 25 60% 88%;
+
+  /* Gradients & shadows tuned for rock energy */
+  --gradient-primary: linear-gradient(135deg, hsl(var(--sr-red)), hsl(var(--sr-orange)));
+  --gradient-sr-heat: linear-gradient(135deg, hsl(var(--sr-red)) 0%, hsl(var(--sr-orange)) 60%, hsl(var(--sr-amber)) 100%);
+  --gradient-sr-night: linear-gradient(180deg, hsl(var(--sr-steel) / 0.75) 0%, hsl(0 0% 0% / 0.55) 55%, hsl(var(--sr-red) / 0.35) 100%);
+  --shadow-elegant: 0 10px 30px -10px hsl(var(--sr-red) / 0.35);
+  --shadow-button: 0 6px 20px -6px hsl(var(--sr-red) / 0.5);
+}
+
+.theme-sweden-rock .btn-hero,
+.theme-sweden-rock .btn-sr {
+  background: var(--gradient-sr-heat);
+  color: hsl(35 25% 98%);
+  border: 0;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-weight: 700;
+  box-shadow: 0 8px 24px -8px hsl(var(--sr-red) / 0.6);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.theme-sweden-rock .btn-hero:hover,
+.theme-sweden-rock .btn-sr:hover {
+  transform: translateY(-1px) scale(1.02);
+  filter: brightness(1.05);
+  box-shadow: 0 14px 36px -10px hsl(var(--sr-red) / 0.7), 0 0 0 3px hsl(var(--sr-amber) / 0.35);
+}
+
+.theme-sweden-rock .sr-hero-overlay {
+  background: var(--gradient-sr-night);
+}
+
+.theme-sweden-rock h1,
+.theme-sweden-rock h2 {
+  letter-spacing: -0.01em;
+}
+
+.theme-sweden-rock .sr-headline {
+  background: linear-gradient(180deg, hsl(35 30% 96%) 0%, hsl(30 25% 82%) 55%, hsl(var(--sr-orange)) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.15);
+}
