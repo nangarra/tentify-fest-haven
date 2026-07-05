@@ -12,7 +12,7 @@ import {
   Car,
 } from "lucide-react";
 import bekvamtImg from "@/assets/bekvamt-boende-sweden-rock-glamping.webp.asset.json";
-import interiorImg from "@/assets/glampingtalt-sweden-rock-interior.webp.asset.json";
+
 import bookingHeroImg from "@/assets/sweden-rock-glamping-5-2.webp.asset.json";
 import luxuryBedImg from "@/assets/dubbelbad-swedenrock.webp.asset.json";
 import extraBedImg from "@/assets/extra-sang-swedenrock.webp.asset.json";
