@@ -65,12 +65,9 @@ const HeroSection = () => {
           preload="metadata"
           poster={heroImage1}
           className="w-full h-full object-cover"
-          title="Sweden Rock Festival hero video"
+          title="Tentify hero video"
         >
-          <source
-            src="https://swedenrock-prod.storage.googleapis.com/wp-content/uploads/2026/06/SRF_Recap_Hemsida_16x9_.mp4#t=0.1"
-            type="video/mp4"
-          />
+          <source src="/tentify_.mp4" type="video/mp4" />
           {/* Fallback for browsers that don't support video */}
           <img
             src={heroImage1}
@@ -79,7 +76,7 @@ const HeroSection = () => {
           />
         </video>
         {/* Video overlay for better text contrast */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/40 to-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/25 to-black/35" />
       </div>
 
       {/* Hero Content */}
