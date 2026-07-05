@@ -198,45 +198,67 @@ Animations for Tentify
    page while keeping the surrounding glamping palette intact.
    =================================================================== */
 .theme-sweden-rock {
-  /* Sweden Rock accent tokens */
-  --sr-red: 355 78% 42%;
-  --sr-red-glow: 355 85% 55%;
-  --sr-orange: 25 92% 52%;
-  --sr-amber: 40 95% 55%;
-  --sr-steel: 215 20% 14%;
+  /* 80s metallic rock palette — chrome, gunmetal, deep steel-blue, warm gold. */
+  --sr-gunmetal: 220 18% 16%;      /* deep blue-black metal */
+  --sr-steel: 215 18% 32%;         /* mid steel-blue */
+  --sr-chrome: 210 12% 78%;        /* polished chrome */
+  --sr-chrome-hi: 210 20% 92%;     /* chrome highlight */
+  --sr-gold: 42 65% 52%;           /* warm brushed gold */
+  --sr-gold-hi: 45 85% 65%;        /* gold highlight */
+  --sr-ember: 20 55% 40%;          /* rust ember underglow */
 
-  /* Rewire primary + focus ring to Sweden Rock red so existing
+  /* Rewire primary + focus ring to metallic steel so existing
      UI (buttons, progress, selected rings) picks it up automatically. */
-  --primary: var(--sr-red);
-  --primary-foreground: 35 25% 96%;
-  --ring: var(--sr-orange);
-  --accent: 25 60% 88%;
+  --primary: var(--sr-steel);
+  --primary-foreground: 210 25% 96%;
+  --ring: var(--sr-gold);
+  --accent: 42 40% 82%;
 
-  /* Gradients & shadows tuned for rock energy */
-  --gradient-primary: linear-gradient(135deg, hsl(var(--sr-red)), hsl(var(--sr-orange)));
-  --gradient-sr-heat: linear-gradient(135deg, hsl(var(--sr-red)) 0%, hsl(var(--sr-orange)) 60%, hsl(var(--sr-amber)) 100%);
-  --gradient-sr-night: linear-gradient(180deg, hsl(var(--sr-steel) / 0.75) 0%, hsl(0 0% 0% / 0.55) 55%, hsl(var(--sr-red) / 0.35) 100%);
-  --shadow-elegant: 0 10px 30px -10px hsl(var(--sr-red) / 0.35);
-  --shadow-button: 0 6px 20px -6px hsl(var(--sr-red) / 0.5);
+  /* Gradients & shadows tuned for 80s metal energy */
+  --gradient-primary: linear-gradient(135deg, hsl(var(--sr-gunmetal)), hsl(var(--sr-steel)));
+  --gradient-sr-chrome: linear-gradient(
+    180deg,
+    hsl(var(--sr-chrome-hi)) 0%,
+    hsl(var(--sr-chrome)) 45%,
+    hsl(var(--sr-steel)) 55%,
+    hsl(var(--sr-gunmetal)) 100%
+  );
+  --gradient-sr-gold: linear-gradient(180deg, hsl(var(--sr-gold-hi)) 0%, hsl(var(--sr-gold)) 100%);
+  --gradient-sr-night: linear-gradient(
+    180deg,
+    hsl(var(--sr-gunmetal) / 0.7) 0%,
+    hsl(0 0% 0% / 0.55) 55%,
+    hsl(var(--sr-ember) / 0.35) 100%
+  );
+  --shadow-elegant: 0 10px 30px -10px hsl(var(--sr-gunmetal) / 0.55);
+  --shadow-button: 0 6px 20px -6px hsl(var(--sr-gunmetal) / 0.6);
 }
 
 .theme-sweden-rock .btn-hero,
 .theme-sweden-rock .btn-sr {
-  background: var(--gradient-sr-heat);
-  color: hsl(35 25% 98%);
-  border: 0;
-  letter-spacing: 0.02em;
+  background: var(--gradient-sr-chrome);
+  color: hsl(var(--sr-gunmetal));
+  border: 1px solid hsl(var(--sr-steel));
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  font-weight: 700;
-  box-shadow: 0 8px 24px -8px hsl(var(--sr-red) / 0.6);
+  font-weight: 800;
+  text-shadow: 0 1px 0 hsl(var(--sr-chrome-hi));
+  box-shadow:
+    inset 0 1px 0 hsl(var(--sr-chrome-hi)),
+    inset 0 -1px 0 hsl(var(--sr-gunmetal) / 0.6),
+    0 8px 22px -10px hsl(var(--sr-gunmetal) / 0.7);
   transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 
 .theme-sweden-rock .btn-hero:hover,
 .theme-sweden-rock .btn-sr:hover {
   transform: translateY(-1px) scale(1.02);
-  filter: brightness(1.05);
-  box-shadow: 0 14px 36px -10px hsl(var(--sr-red) / 0.7), 0 0 0 3px hsl(var(--sr-amber) / 0.35);
+  filter: brightness(1.06) saturate(1.05);
+  box-shadow:
+    inset 0 1px 0 hsl(var(--sr-chrome-hi)),
+    inset 0 -1px 0 hsl(var(--sr-gunmetal) / 0.6),
+    0 14px 32px -10px hsl(var(--sr-gunmetal) / 0.75),
+    0 0 0 3px hsl(var(--sr-gold) / 0.35);
 }
 
 .theme-sweden-rock .sr-hero-overlay {
@@ -248,10 +270,19 @@ Animations for Tentify
   letter-spacing: -0.01em;
 }
 
+/* Chrome headline effect — polished silver with a warm ember base,
+   evoking the Sweden Rock logo. */
 .theme-sweden-rock .sr-headline {
-  background: linear-gradient(180deg, hsl(35 30% 96%) 0%, hsl(30 25% 82%) 55%, hsl(var(--sr-orange)) 100%);
+  background: linear-gradient(
+    180deg,
+    hsl(var(--sr-chrome-hi)) 0%,
+    hsl(var(--sr-chrome)) 40%,
+    hsl(var(--sr-steel)) 55%,
+    hsl(var(--sr-ember)) 100%
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  text-shadow: 0 1px 0 rgba(0,0,0,0.15);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
 }
+
