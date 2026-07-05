@@ -1,41 +1,60 @@
-## Plan: Switch from Sweden Rock to CLSR Butikfestival
+## Sammanfattning
+Vi uppdaterar Sweden Rock 2027-bokningssidan med nya bilder på tälten och tilläggen, ger sidan en mer festival/rock-känsla med accentfärger från Sweden Rock-loggan, byter hero-videon på startsidan och åtgärdar scroll-problemet i bokningsflödet. Priser, tältkapacitet och backend-logik lämnas orörda.
 
-### 1. Database (migration)
-- Insert 1 row in `tent_inventory`: `festival='clsr-boutique-2026'`, `tent_type='deluxe'`, `total_count=9`, `available_count=9`.
-- Sweden Rock rows stay untouched (still sold out). All historical Sweden Rock bookings remain in `bookings` (their `meta.festival = 'sweden-rock'`).
+## 1. Nya bilder på tält och tillägg
+- Ladda upp de fyra nya bilderna som Lovable Assets:
+  - `medium_tentify_sweden_rock_glamping.webp` → ny bild för **Medium tält**
+  - `frukost_sweden_rock_glamping.webp` → bild för tillägget **Lyxig festivalfrukost**
+  - `glamping_swedenrock_tillagg.webp` → bild för tillägget **Festival Survival Pack**
+  - `handdukar_sweden_rock_glamping.webp` → bild för tillägget **Handduk**
+- I `src/config/festivals.ts`:
+  - Medium tält: byt `image` till nya Medium-bilden.
+  - Deluxe tält: byt `image` till den gamla Medium-bilden (`bekvamt-boende-sweden-rock-glamping.webp`), så alla får konsekvent look.
+  - Lägg till `image` på `breakfast`, `festival-survival-pack` och `towel`.
+  - För `fridge` och `comfort-pack` (som saknar egen bild): behåll utan bild men rendera en enhetlig ikon-placeholder i kortet, så layouten känns enhetlig.
+- I `AddOnCard` i `src/pages/EventBookingPage.tsx`: rendera en bildyta överst (`aspect-[4/3]`, `object-cover`) när `addOn.image` finns; annars visa nuvarande ikonbaserad header med samma höjd så alla kort blir lika höga.
+- I `TentCard`: behåll `aspect-[4/3]` + `object-cover` (finns redan) så Medium och Deluxe blir samma höjd.
 
-### 2. Homepage (`src/pages/Index.tsx`)
-- Remove `<NewBookingSection />` (the Sweden Rock booking block) from the homepage.
-- Add a new `<ClsrBookingSection />` in its place (above `IncludedSection`).
+## 2. Sweden Rock-tema (färg och känsla)
+Målet är premium glamping med festival/rock-energi — inte "rockig hemsida", utan accentfärger, kraftfullare rubriker och energiskt hover-beteende.
 
-### 3. New component `src/components/ClsrBookingSection.tsx`
-- Hero-style section using uploaded CLSR photo as background (uploaded via lovable-assets).
-- Copy: "Private VIP Glamping Stay at CLSR Butikfestival", subtitle about 9 exclusive tents, 5 min walk to stage, Stora Sundby Slott 26–27 juni 2026.
-- Bullet list of included items + venue benefits.
-- Live countdown to 2026-06-26 00:00 Europe/Stockholm.
-- Availability badge ("X av 9 kvar") from `get_tent_availability('clsr-boutique-2026')`.
-- Step 1: event card with "Boka din privata vistelse" button + price 1608 SEK / 2 dagar.
-- Step 2: inline form (name, email, phone, antal gäster 1–4, villkor checkbox), shows total 1608 kr + 20 % deposit (322 kr) + 1500 kr deposition, inline Swish/Bankgiro instructions on submit (same UX as today, per project memory). Writes to `bookings` with `meta = { festival: 'clsr-boutique-2026', event: 'CLSR Butikfestival', tentType: 'deluxe', guests, totalPrice: 1608, advance: 322 }`, then calls `decrease_tent_inventory`.
-- Sold-out fallback message if `available_count === 0`.
+- Lägg till nya semantiska tokens i `src/index.css` (endast för bokningssidan, scopat via en wrapper-klass `.theme-sweden-rock`):
+  - `--sr-red` (djup Sweden Rock-röd), `--sr-orange` (varm orange/gul), `--sr-steel` (mörk stålblå/grå).
+  - Nya gradients: `--gradient-sr-heat` (röd → orange), `--gradient-sr-night` (mörk stål → svart).
+- I `EventBookingPage.tsx` wrappa root i `<div className="theme-sweden-rock">` och använd de nya tokensen för:
+  - Hero-overlay: byt från platt svart till `--gradient-sr-night` med lite värme underifrån.
+  - Rubriker (`h1/h2`): tyngre vikt, lätt "chrome"-textshadow inspirerat av loggan (subtil, inte kitschig).
+  - Badges och stegnummer: accent i `--sr-red` / `--sr-orange` istället för brun primary.
+  - CTA-knapp (`Fortsätt` / `Betala`): ny variant `sr-hero` med `--gradient-sr-heat`, vitt textfärg, hover ger scale + glödande ring.
+  - Tent-kort hover: ram lyser upp i `--sr-orange` istället för brun primary-ring.
+  - Progress-bar: fill i `--gradient-sr-heat`.
+- Behåll bakgrund, kort och muted-toner i befintlig chino/beige så helheten fortfarande känns glamping och premium.
 
-### 4. Gallery — "Previous Events" (`src/components/GallerySection.tsx`)
-- Append a "Tidigare event" block below the gallery grid with a single placeholder card for "Sweden Rock 2026" (subtle styling, no images yet, ready to populate later).
+## 3. Ny hero-video på startsidan
+- I `src/components/HeroSection.tsx`:
+  - Byt `<source src="/tentify_.mp4" ...>` till Sweden Rocks video-URL:  
+    `https://swedenrock-prod.storage.googleapis.com/wp-content/uploads/2026/06/SRF_Recap_Hemsida_16x9_.mp4#t=0.1`
+  - Behåll `autoPlay`, `muted`, `loop`, `playsInline`, `preload="metadata"`, `poster={heroImage1}` och `<img>`-fallback.
+  - Gör overlayn något mörkare (`from-black/40 to-black/55`) så vit text står ut mot en mer färgstark video.
 
-### 5. Navigation
-- Keep existing nav links. The booking anchor `#boka-talt` now scrolls to the CLSR section (re-use the same id).
+## 4. Scroll-fix i bokningsflödet
+- I `src/App.tsx`: lägg till en `ScrollToTop`-komponent som lyssnar på `useLocation()` och kör `window.scrollTo({ top: 0, behavior: "instant" })` vid varje route-byte. Löser att man landar mitt på sidan när man går till `/booking/...`.
+- I `EventBookingPage.tsx`:
+  - Behåll `scrollTo` som redan finns vid steg-byten men gör dem robusta: använd `requestAnimationFrame` + scrolla till ett `ref` istället för `top: 0`.
+  - Lägg till `checkoutTopRef` överst i checkout-vyn; vid `setStep("checkout")` scrolla smooth till `checkoutTopRef` så användaren hamnar vid "Kunduppgifter"-formuläret direkt (både desktop och mobil).
+  - Lägg till `confirmationTopRef` överst i bekräftelsevyn; vid `setStep("confirmation")` scrolla smooth dit.
+  - Använd samma teknik i mobilens sticky "Fortsätt"-knapp.
 
-### 6. Admin (`src/pages/ZenAdmin.tsx`)
-- Add an event selector (Select) at the top: "Sweden Rock 2026" (default) | "CLSR Butikfestival".
-- Filter the bookings list by `meta->>festival` matching the selected event (`sweden-rock` or `clsr-boutique-2026`).
-- Existing booking detail view, status changes, deposit confirmation, CSV export all keep working — they just operate on the filtered list.
-- No deletions or data migration of existing Sweden Rock bookings.
+## 5. Sidor och komponenter som inte rörs
+- Priser, tältkapacitet, `get_tent_availability`, `decrease_tent_inventory`, Stripe-flöde, Supabase-scheman och `NewBookingSection` (gamla widgeten på startsidan) rörs inte.
+- Bokningssammanställningen visar fortfarande Medium/Deluxe med rätt namn och pris.
 
-### 7. Out of scope (confirmed)
-- No Stripe / online deposit charging (manual Swish, per your answer).
-- No changes to halvpall, weddings, extras, contact, or other sections.
-- Sweden Rock page/route (if any) is left as-is; only homepage promotion is removed.
+## Tekniska detaljer
+- Nya assets skapas via `lovable-assets create --file /mnt/user-uploads/<fil> --filename <fil> > src/assets/<fil>.asset.json`.
+- Nya CSS-tokens går i `:root` men aktiveras endast under `.theme-sweden-rock { … }` så resten av sajten inte ändrar färg.
+- `sr-hero`-knappen implementeras som en ny variant i `src/components/ui/button.tsx` eller som en Tailwind class-composition direkt i `EventBookingPage.tsx` för att undvika bred påverkan.
+- `ScrollToTop` använder `behavior: "instant"` för att undvika visuell "hopp"-animering vid navigation.
 
-### Technical notes
-- Upload the attached CLSR image via `lovable-assets create` → `src/assets/clsr-hero.jpg.asset.json`; reference via `import asset from "@/assets/clsr-hero.jpg.asset.json"`.
-- Reuse existing form patterns (inline confirmation, disabled fields after submit) from `NewBookingSection.tsx` to stay consistent with project UX memory.
-- `NewBookingSection.tsx` file stays in repo (unused) in case Sweden Rock content is needed later; it's just unlinked from `Index.tsx`. Say so if you'd prefer it deleted.
+## Verifiering efter implementation
+- Öppna `/booking/sweden-rock-2027` och bekräfta: rätt bilder på Medium/Deluxe, alla tilläggskort har enhetlig höjd, accentfärger syns på knappar/badges/progress, hero-video på startsidan spelar upp Sweden Rock-videon med mörk overlay.
+- Klicka igenom flödet: landning → välj tält → Fortsätt (hamna vid Kunduppgifter) → Skicka bokning (hamna vid bekräftelsen). Testa både desktop och mobil.
