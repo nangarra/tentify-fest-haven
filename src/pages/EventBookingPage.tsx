@@ -399,11 +399,26 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
       {/* Hero */}
       <section className="relative">
         <div className="relative h-[52vh] min-h-[380px] overflow-hidden">
-          <img
-            src={festival.heroImage}
-            alt={`${festival.name} glamping`}
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            poster={festival.heroImage}
             className="absolute inset-0 w-full h-full object-cover"
-          />
+            title="Sweden Rock Festival recap"
+          >
+            <source
+              src="https://swedenrock-prod.storage.googleapis.com/wp-content/uploads/2026/06/SRF_Recap_Hemsida_16x9_.mp4#t=0.1"
+              type="video/mp4"
+            />
+            <img
+              src={festival.heroImage}
+              alt={`${festival.name} glamping`}
+              className="w-full h-full object-cover"
+            />
+          </video>
           <div className="absolute inset-0 sr-hero-overlay" />
           <div className="absolute top-4 right-4 z-20">
             <LanguageToggle lang={lang} onChange={setLang} />
