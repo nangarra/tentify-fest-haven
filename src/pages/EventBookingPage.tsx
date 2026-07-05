@@ -404,7 +404,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
             alt={`${festival.name} glamping`}
             className="absolute inset-0 w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/70" />
+          <div className="absolute inset-0 sr-hero-overlay" />
           <div className="absolute top-4 right-4 z-20">
             <LanguageToggle lang={lang} onChange={setLang} />
           </div>
@@ -607,7 +607,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
         )}
 
         {step === "checkout" && selectedTent && (
-          <div className="grid lg:grid-cols-[1fr_380px] gap-8">
+          <div ref={checkoutTopRef} className="grid lg:grid-cols-[1fr_380px] gap-8 scroll-mt-24">
             <div className="space-y-6">
               <Button variant="ghost" onClick={() => setStep("booking")} className="-ml-3">
                 <ChevronLeft className="w-4 h-4 mr-1" /> {t("backToBooking", lang)}
@@ -729,7 +729,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
         )}
 
         {step === "confirmation" && selectedTent && (
-          <div className="max-w-2xl mx-auto">
+          <div ref={confirmationTopRef} className="max-w-2xl mx-auto scroll-mt-24">
             <Card className="p-8 md:p-10">
               <div className="text-center">
                 <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-5">
