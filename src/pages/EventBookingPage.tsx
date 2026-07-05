@@ -126,6 +126,28 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   const [bookingId, setBookingId] = useState<string | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<"swish" | "stripe">("swish");
 
+  const checkoutTopRef = useRef<HTMLDivElement | null>(null);
+  const confirmationTopRef = useRef<HTMLDivElement | null>(null);
+
+  const smoothScrollTo = (el: HTMLElement | null) => {
+    if (!el) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    requestAnimationFrame(() => {
+      const y = el.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+    });
+  };
+
+  const goToCheckout = () => {
+    setStep("checkout");
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => smoothScrollTo(checkoutTopRef.current));
+    });
+  };
+
+
 
   useEffect(() => {
     (async () => {
