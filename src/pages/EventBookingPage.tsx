@@ -366,7 +366,9 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
       }
 
       setStep("confirmation");
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => smoothScrollTo(confirmationTopRef.current));
+      });
 
     } catch (e: any) {
       console.error(e);
@@ -388,15 +390,12 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
       total={total}
       canCheckout={canCheckout}
       step={step}
-      onCheckout={() => {
-        setStep("checkout");
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }}
+      onCheckout={goToCheckout}
     />
   );
 
   return (
-    <div className="min-h-screen bg-muted/40">
+    <div className="theme-sweden-rock min-h-screen bg-muted/40">
       {/* Hero */}
       <section className="relative">
         <div className="relative h-[52vh] min-h-[380px] overflow-hidden">
@@ -832,7 +831,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                 </SheetContent>
               </Sheet>
               {step === "booking" ? (
-                <Button size="sm" onClick={() => { setStep("checkout"); window.scrollTo({ top: 0, behavior: "smooth" }); }} disabled={!canCheckout}>
+                <Button size="sm" onClick={goToCheckout} disabled={!canCheckout}>
                   {t("continue", lang)} <ChevronRight className="w-4 h-4 ml-1" />
                 </Button>
               ) : (
