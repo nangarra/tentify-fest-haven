@@ -19,6 +19,8 @@ import {
   Tent,
   CalendarDays,
   Sparkles,
+  FileText,
+
 } from "lucide-react";
 import {
   Accordion,
@@ -51,11 +53,8 @@ const caseImages = [
     src: brollopInteriör.url,
     alt: "Inuti ett glampingtält med bekväm uppblåsbar Deluxe-säng för bröllopsgäster",
   },
-  {
-    src: brollopPerson.url,
-    alt: "Tentify på plats framför färdigställda glampingtält inför bröllopshelgen",
-  },
 ];
+
 
 const galleriBilder = [
   { src: glampingNatur, alt: "Glampingtält till bröllop i Skåne i naturmiljö" },
@@ -263,7 +262,7 @@ const TaltBrollop = () => {
             <div className="container mx-auto px-4 max-w-6xl grid md:grid-cols-2 gap-10 md:gap-16 items-center">
               <img
                 src={brollopPerson.url}
-                alt="Person från Tentify framför färdigställda glampingtält inför ett bröllop"
+                alt="Nicklas Nangarra, grundare av Tentify, framför färdigställda glampingtält inför ett bröllop"
                 loading="lazy"
                 decoding="async"
                 width={1200}
@@ -272,23 +271,28 @@ const TaltBrollop = () => {
               />
               <div>
                 <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-                  Personlig hjälp hela vägen
+                  Personlig hjälp från första kontakt till färdiga tält
                 </h2>
                 <p className="text-lg text-muted-foreground leading-relaxed mb-4">
-                  Hej, det är jag som hjälper er med bokningen och ser till att allt fungerar inför den
-                  stora dagen. Från den första planeringen till uppsättningen av tälten finns jag här för
-                  att hjälpa er att hitta rätt lösning för platsen, antalet gäster och den känsla ni vill
-                  skapa.
+                  Hej! Jag heter Nicklas Nangarra och det är jag som hjälper er med bokningen, planeringen
+                  och alla praktiska detaljer kring ert bröllop.
+                </p>
+                <p className="text-lg text-muted-foreground leading-relaxed mb-4">
+                  Jag hjälper er att ta fram rätt antal tält, planera placeringen och anpassa lösningen
+                  efter platsen, antalet gäster och era önskemål. Jag finns med från den första kontakten
+                  tills tälten är uppställda och redo för era gäster.
                 </p>
                 <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                  Vi levererar tälten, ställer upp dem och gör dem redo för era gäster. Ni ska inte behöva
-                  fundera på logistiken – vi tar hand om detaljerna.
+                  Ni ska kunna fokusera på bröllopet och era gäster – vi tar hand om tälten, leveransen och
+                  logistiken.
                 </p>
-                <p className="text-foreground font-medium">Din kontaktperson på Tentify</p>
+                <p className="text-foreground font-semibold">Nicklas Nangarra</p>
+                <p className="text-muted-foreground">Grundare av Tentify</p>
                 <Button className="btn-hero mt-6" onClick={() => scrollTo("offert")}>
-                  Få prisförslag
+                  Få en personlig offert
                 </Button>
               </div>
+
             </div>
           </section>
 
@@ -317,23 +321,22 @@ const TaltBrollop = () => {
                 className="w-full aspect-[16/9] object-cover rounded-3xl shadow-card mb-4"
               />
 
-              {/* Swipebart galleri */}
-              <div className="-mx-4 px-4 md:mx-0 md:px-0 overflow-x-auto snap-x snap-mandatory scrollbar-hide">
-                <div className="flex gap-4 pb-2">
-                  {caseImages.slice(1).map((img) => (
-                    <img
-                      key={img.src}
-                      src={img.src}
-                      alt={img.alt}
-                      loading="lazy"
-                      decoding="async"
-                      width={1200}
-                      height={900}
-                      className="snap-center shrink-0 w-[80%] sm:w-[48%] md:w-[32%] aspect-[4/3] object-cover rounded-2xl shadow-card"
-                    />
-                  ))}
-                </div>
+              {/* Galleri */}
+              <div className="grid sm:grid-cols-2 gap-4">
+                {caseImages.slice(1).map((img) => (
+                  <img
+                    key={img.src}
+                    src={img.src}
+                    alt={img.alt}
+                    loading="lazy"
+                    decoding="async"
+                    width={1200}
+                    height={900}
+                    className="w-full aspect-[4/3] object-cover rounded-2xl shadow-card"
+                  />
+                ))}
               </div>
+
 
               {/* Faktaruta */}
               <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mt-10">
@@ -568,6 +571,70 @@ const TaltBrollop = () => {
               </div>
             </div>
           </section>
+
+          {/* Prisindikation */}
+          <section className="py-16 md:py-24 bg-background">
+            <div className="container mx-auto px-4 max-w-4xl">
+              <Card className="p-8 md:p-12 shadow-elegant border-primary/20">
+                <div className="flex items-center gap-2 mb-6">
+                  <FileText className="w-5 h-5 text-primary" aria-hidden="true" />
+                  <span className="text-xs uppercase tracking-[0.2em] text-primary font-medium">
+                    Prisindikation
+                  </span>
+                </div>
+
+                <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-8">
+                  Vad kostar glampingtält till bröllopet?
+                </h2>
+
+                <div className="mb-8">
+                  <p className="text-4xl md:text-5xl font-bold text-foreground leading-none">
+                    Från 1 200 kr
+                  </p>
+                  <p className="text-base text-muted-foreground mt-2">per tält och natt</p>
+                </div>
+
+                <p className="text-lg text-muted-foreground leading-relaxed mb-6">
+                  Priset är en startnivå och ger en ungefärlig bild av vad det kan kosta att hyra
+                  glampingtält till ett bröllop. Varje bröllop och event planeras individuellt och får
+                  därför en personlig offert.
+                </p>
+
+                <p className="text-foreground font-medium mb-4">Det slutliga priset påverkas bland annat av:</p>
+                <ul className="grid sm:grid-cols-2 gap-3 text-muted-foreground mb-8">
+                  {[
+                    "Antal tält",
+                    "Antal nätter",
+                    "Bröllopets eller eventets plats",
+                    "Avstånd och framkörning",
+                    "Antal bäddar per tält",
+                    "Val av inredning och utrustning",
+                    "Önskemål om uppsättning och nedmontering",
+                    "Eventuella tillval och speciallösningar",
+                  ].map((item) => (
+                    <li key={item} className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" aria-hidden="true" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="flex gap-3 items-start bg-primary/5 border border-primary/20 rounded-xl p-5 mb-8">
+                  <Info className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" aria-hidden="true" />
+                  <p className="text-muted-foreground leading-relaxed">
+                    Varje bröllop är unikt. Slutligt pris tas fram genom en personlig offert baserad på
+                    plats, antal tält, antal nätter och valda tillval. Kontakta oss med datum, plats och
+                    antal gäster så tar vi fram ett tydligt prisförslag för just ert bröllop.
+                  </p>
+                </div>
+
+                <Button size="lg" className="btn-hero text-lg px-8" onClick={() => scrollTo("offert")}>
+                  Få en personlig offert
+                </Button>
+              </Card>
+            </div>
+          </section>
+
 
           {/* Offert */}
           <section id="offert" className="py-16 md:py-24 bg-background scroll-mt-24">
