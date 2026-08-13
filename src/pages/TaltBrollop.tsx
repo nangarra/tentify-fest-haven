@@ -53,11 +53,8 @@ const caseImages = [
     src: brollopInteriör.url,
     alt: "Inuti ett glampingtält med bekväm uppblåsbar Deluxe-säng för bröllopsgäster",
   },
-  {
-    src: brollopPerson.url,
-    alt: "Tentify på plats framför färdigställda glampingtält inför bröllopshelgen",
-  },
 ];
+
 
 const galleriBilder = [
   { src: glampingNatur, alt: "Glampingtält till bröllop i Skåne i naturmiljö" },
