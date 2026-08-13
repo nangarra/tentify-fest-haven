@@ -316,23 +316,22 @@ const TaltBrollop = () => {
                 className="w-full aspect-[16/9] object-cover rounded-3xl shadow-card mb-4"
               />
 
-              {/* Swipebart galleri */}
-              <div className="-mx-4 px-4 md:mx-0 md:px-0 overflow-x-auto snap-x snap-mandatory scrollbar-hide">
-                <div className="flex gap-4 pb-2">
-                  {caseImages.slice(1).map((img) => (
-                    <img
-                      key={img.src}
-                      src={img.src}
-                      alt={img.alt}
-                      loading="lazy"
-                      decoding="async"
-                      width={1200}
-                      height={900}
-                      className="snap-center shrink-0 w-[80%] sm:w-[48%] md:w-[32%] aspect-[4/3] object-cover rounded-2xl shadow-card"
-                    />
-                  ))}
-                </div>
+              {/* Galleri */}
+              <div className="grid sm:grid-cols-2 gap-4">
+                {caseImages.slice(1).map((img) => (
+                  <img
+                    key={img.src}
+                    src={img.src}
+                    alt={img.alt}
+                    loading="lazy"
+                    decoding="async"
+                    width={1200}
+                    height={900}
+                    className="w-full aspect-[4/3] object-cover rounded-2xl shadow-card"
+                  />
+                ))}
               </div>
+
 
               {/* Faktaruta */}
               <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mt-10">
