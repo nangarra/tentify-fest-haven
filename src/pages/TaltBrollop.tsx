@@ -262,7 +262,7 @@ const TaltBrollop = () => {
             <div className="container mx-auto px-4 max-w-6xl grid md:grid-cols-2 gap-10 md:gap-16 items-center">
               <img
                 src={brollopPerson.url}
-                alt="Person från Tentify framför färdigställda glampingtält inför ett bröllop"
+                alt="Nicklas Nangarra, grundare av Tentify, framför färdigställda glampingtält inför ett bröllop"
                 loading="lazy"
                 decoding="async"
                 width={1200}
@@ -271,23 +271,28 @@ const TaltBrollop = () => {
               />
               <div>
                 <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-                  Personlig hjälp hela vägen
+                  Personlig hjälp från första kontakt till färdiga tält
                 </h2>
                 <p className="text-lg text-muted-foreground leading-relaxed mb-4">
-                  Hej, det är jag som hjälper er med bokningen och ser till att allt fungerar inför den
-                  stora dagen. Från den första planeringen till uppsättningen av tälten finns jag här för
-                  att hjälpa er att hitta rätt lösning för platsen, antalet gäster och den känsla ni vill
-                  skapa.
+                  Hej! Jag heter Nicklas Nangarra och det är jag som hjälper er med bokningen, planeringen
+                  och alla praktiska detaljer kring ert bröllop.
+                </p>
+                <p className="text-lg text-muted-foreground leading-relaxed mb-4">
+                  Jag hjälper er att ta fram rätt antal tält, planera placeringen och anpassa lösningen
+                  efter platsen, antalet gäster och era önskemål. Jag finns med från den första kontakten
+                  tills tälten är uppställda och redo för era gäster.
                 </p>
                 <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                  Vi levererar tälten, ställer upp dem och gör dem redo för era gäster. Ni ska inte behöva
-                  fundera på logistiken – vi tar hand om detaljerna.
+                  Ni ska kunna fokusera på bröllopet och era gäster – vi tar hand om tälten, leveransen och
+                  logistiken.
                 </p>
-                <p className="text-foreground font-medium">Din kontaktperson på Tentify</p>
+                <p className="text-foreground font-semibold">Nicklas Nangarra</p>
+                <p className="text-muted-foreground">Grundare av Tentify</p>
                 <Button className="btn-hero mt-6" onClick={() => scrollTo("offert")}>
-                  Få prisförslag
+                  Få en personlig offert
                 </Button>
               </div>
+
             </div>
           </section>
 
