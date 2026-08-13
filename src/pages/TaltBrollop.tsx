@@ -19,6 +19,8 @@ import {
   Tent,
   CalendarDays,
   Sparkles,
+  FileText,
+
 } from "lucide-react";
 import {
   Accordion,
