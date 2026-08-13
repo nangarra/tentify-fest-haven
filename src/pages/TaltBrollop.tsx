@@ -569,6 +569,70 @@ const TaltBrollop = () => {
             </div>
           </section>
 
+          {/* Prisindikation */}
+          <section className="py-16 md:py-24 bg-background">
+            <div className="container mx-auto px-4 max-w-4xl">
+              <Card className="p-8 md:p-12 shadow-elegant border-primary/20">
+                <div className="flex items-center gap-2 mb-6">
+                  <FileText className="w-5 h-5 text-primary" aria-hidden="true" />
+                  <span className="text-xs uppercase tracking-[0.2em] text-primary font-medium">
+                    Prisindikation
+                  </span>
+                </div>
+
+                <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-8">
+                  Vad kostar glampingtält till bröllopet?
+                </h2>
+
+                <div className="mb-8">
+                  <p className="text-4xl md:text-5xl font-bold text-foreground leading-none">
+                    Från 1 200 kr
+                  </p>
+                  <p className="text-base text-muted-foreground mt-2">per tält och natt</p>
+                </div>
+
+                <p className="text-lg text-muted-foreground leading-relaxed mb-6">
+                  Priset är en startnivå och ger en ungefärlig bild av vad det kan kosta att hyra
+                  glampingtält till ett bröllop. Varje bröllop och event planeras individuellt och får
+                  därför en personlig offert.
+                </p>
+
+                <p className="text-foreground font-medium mb-4">Det slutliga priset påverkas bland annat av:</p>
+                <ul className="grid sm:grid-cols-2 gap-3 text-muted-foreground mb-8">
+                  {[
+                    "Antal tält",
+                    "Antal nätter",
+                    "Bröllopets eller eventets plats",
+                    "Avstånd och framkörning",
+                    "Antal bäddar per tält",
+                    "Val av inredning och utrustning",
+                    "Önskemål om uppsättning och nedmontering",
+                    "Eventuella tillval och speciallösningar",
+                  ].map((item) => (
+                    <li key={item} className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" aria-hidden="true" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="flex gap-3 items-start bg-primary/5 border border-primary/20 rounded-xl p-5 mb-8">
+                  <Info className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" aria-hidden="true" />
+                  <p className="text-muted-foreground leading-relaxed">
+                    Varje bröllop är unikt. Slutligt pris tas fram genom en personlig offert baserad på
+                    plats, antal tält, antal nätter och valda tillval. Kontakta oss med datum, plats och
+                    antal gäster så tar vi fram ett tydligt prisförslag för just ert bröllop.
+                  </p>
+                </div>
+
+                <Button size="lg" className="btn-hero text-lg px-8" onClick={() => scrollTo("offert")}>
+                  Få en personlig offert
+                </Button>
+              </Card>
+            </div>
+          </section>
+
+
           {/* Offert */}
           <section id="offert" className="py-16 md:py-24 bg-background scroll-mt-24">
             <div className="container mx-auto px-4 max-w-3xl">
