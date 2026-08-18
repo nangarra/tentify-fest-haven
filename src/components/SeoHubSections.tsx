@@ -36,24 +36,34 @@ export const SeoIntroSection = () => (
   </section>
 );
 
+import imgHyr from "@/assets/4-3.webp.asset.json";
+import imgBrollop from "@/assets/natt_tentify.webp.asset.json";
+import imgFestival from "@/assets/1-2.webp.asset.json";
+
 const popularSolutions = [
   {
     title: "Hyr glampingtält",
     text: "Färdiga glampingtält med inredning, sovplatser och mysig känsla för event och privata arrangemang.",
     cta: "Läs mer om att hyra glampingtält",
     href: "/hyr-glamping",
+    img: imgHyr.url,
+    alt: "Glampingtält med solnedgång och ljusslingor på grön äng",
   },
   {
     title: "Glamping till bröllop",
     text: "Skapa ett unikt boende för bröllopsgästerna med vackra inredda tält nära bröllopsplatsen.",
     cta: "Glamping för bröllop",
     href: "/talt-brollop",
+    img: imgBrollop.url,
+    alt: "Rad av upplysta glampingtält vid gods under kvällshimmel",
   },
   {
     title: "Glamping Sweden Rock",
     text: "Bekvämt festivalboende med färdiga tält, sovplats, täcke, kudde och inredning under Sweden Rock.",
     cta: "Sweden Rock 2027 väntelista",
     href: "/glamping-sweden-rock",
+    img: imgFestival.url,
+    alt: "Glampingtält i rad med ljusslingor i skymningen på festivalområde",
   },
 ];
 
@@ -65,7 +75,20 @@ export const PopularSolutionsSection = () => (
       </h2>
       <div className="grid md:grid-cols-3 gap-6">
         {popularSolutions.map((s) => (
-          <Card key={s.href} className="flex flex-col">
+          <Card
+            key={s.href}
+            className="group flex flex-col overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-elegant"
+          >
+            <div className="relative aspect-[4/3] overflow-hidden">
+              <img
+                src={s.img}
+                alt={s.alt}
+                loading="lazy"
+                decoding="async"
+                className="w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-60" />
+            </div>
             <CardHeader>
               <CardTitle className="text-xl">{s.title}</CardTitle>
             </CardHeader>
@@ -81,6 +104,7 @@ export const PopularSolutionsSection = () => (
     </div>
   </section>
 );
+
 
 const internalLinks = [
   { label: "hyra glampingtält", href: "/hyra-glampingtalt" },
