@@ -2,25 +2,35 @@ import { Helmet } from "react-helmet";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { 
-  Phone, 
-  MapPin, 
-  Heart, 
-  Users, 
-  Bed, 
-  Building, 
+import GlampingQuoteForm from "@/components/GlampingQuoteForm";
+import {
+  MapPin,
+  Heart,
+  Users,
+  Bed,
+  Building,
   ShoppingCart,
   CheckCircle,
   Star,
-  Clock,
-  Shield,
-  Truck
+  Sparkles,
+  Truck,
+  Mail
 } from "lucide-react";
 import glampingNatur from "@/assets/glamping-talt-naturmiljo-skane.webp";
 import glampingUtemoebler from "@/assets/glamping-talt-utemoebler-komfort.webp";
 import glampingInuti from "@/assets/glamping-talt-inuti-sovplats.webp";
+import glampingBoho from "@/assets/gallery/tentify-glamping-boho.webp";
+import glampingBoho2 from "@/assets/gallery/tentify-glamping-boho-2.webp";
+import glampingSlott from "@/assets/gallery/tentify-glamping-slott.webp";
+import glampingDetta from "@/assets/gallery/tentify-detta-ingar.webp";
+import glampingDubbel from "@/assets/glampingtalt-dubbelsang.webp";
+import glampingEnkel from "@/assets/glampingtalt-enkelsang.webp";
+import glampingFamilj from "@/assets/glampingtalt-familj-festival-upplevelse.webp";
+import glampingUtomhus from "@/assets/tentify-festivaltalt-utomhus-setup.webp";
+
 
 const HyrGlamping = () => {
   const services = [
