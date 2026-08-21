@@ -2,25 +2,35 @@ import { Helmet } from "react-helmet";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { 
-  Phone, 
-  MapPin, 
-  Heart, 
-  Users, 
-  Bed, 
-  Building, 
+import GlampingQuoteForm from "@/components/GlampingQuoteForm";
+import {
+  MapPin,
+  Heart,
+  Users,
+  Bed,
+  Building,
   ShoppingCart,
   CheckCircle,
   Star,
-  Clock,
-  Shield,
-  Truck
+  Sparkles,
+  Truck,
+  Mail
 } from "lucide-react";
 import glampingNatur from "@/assets/glamping-talt-naturmiljo-skane.webp";
 import glampingUtemoebler from "@/assets/glamping-talt-utemoebler-komfort.webp";
 import glampingInuti from "@/assets/glamping-talt-inuti-sovplats.webp";
+import glampingBoho from "@/assets/gallery/tentify-glamping-boho.webp";
+import glampingBoho2 from "@/assets/gallery/tentify-glamping-boho-2.webp";
+import glampingSlott from "@/assets/gallery/tentify-glamping-slott.webp";
+import glampingDetta from "@/assets/gallery/tentify-detta-ingar.webp";
+import glampingDubbel from "@/assets/glampingtalt-dubbelsang.webp";
+import glampingEnkel from "@/assets/glampingtalt-enkelsang.webp";
+import glampingFamilj from "@/assets/glampingtalt-familj-festival-upplevelse.webp";
+import glampingUtomhus from "@/assets/tentify-festivaltalt-utomhus-setup.webp";
+
 
 const HyrGlamping = () => {
   const services = [
@@ -138,7 +148,7 @@ const HyrGlamping = () => {
     },
     {
       question: "Hur bokar man ett tält?",
-      answer: "Du kontaktar oss via telefon, så går vi igenom behov, datum och plats."
+      answer: "Du skickar en förfrågan via formuläret på sidan, så går vi igenom behov, datum och plats."
     },
     {
       question: "Vilken avbokningspolicy gäller?",
@@ -221,38 +231,51 @@ const HyrGlamping = () => {
         
         <main>
           {/* Hero Section */}
-          <section className="relative py-20 bg-gradient-primary text-white overflow-hidden">
-            <div className="absolute inset-0 bg-black/20"></div>
-            <div className="container mx-auto px-4 relative z-10">
+          <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden text-white">
+            <div className="absolute inset-0">
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                poster={glampingNatur}
+                className="w-full h-full object-cover object-center"
+                title="Glampingtält från Tentify"
+              >
+                <source src="/tentify_.mp4" type="video/mp4" />
+              </video>
+              <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/40 to-black/65" />
+            </div>
+            <div className="container mx-auto px-4 relative z-10 py-24">
               <div className="max-w-4xl mx-auto text-center">
-                <h1 className="text-4xl md:text-6xl font-bold mb-6">
+                <h1 className="text-4xl md:text-6xl font-bold mb-6" style={{ textShadow: "0 2px 10px rgba(0,0,0,0.5)" }}>
                   Hyr glampingtält till festival, bröllop och event
                 </h1>
-                <p className="text-xl md:text-2xl mb-8 text-white/90">
-                  Planerar du bröllop, fest eller event och vill skapa en unik och minnesvärd atmosfär? 
-                  Våra glamping-tält är den perfekta lösningen när du behöver exklusiva sovplatser, 
+                <p className="text-xl md:text-2xl mb-6 text-white/90">
+                  Planerar du bröllop, fest eller event och vill skapa en unik och minnesvärd atmosfär?
+                  Våra glampingtält är den perfekta lösningen när du behöver exklusiva sovplatser,
                   en vacker lounge eller ett unikt bröllopstält.
                 </p>
                 <p className="text-lg mb-8 text-white/80">
-                  Vi erbjuder uthyrning i hela Skåne – från Malmö och Lund till Eslöv och omnejd. 
                   Vi levererar, monterar och hämtar efteråt – så att du kan fokusera helt på ditt evenemang.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <a href="tel:073-513 37 09" className="inline-flex items-center justify-center px-8 py-3 bg-white text-primary font-semibold rounded-lg hover:bg-white/90 transition-smooth">
-                    <Phone className="w-5 h-5 mr-2" />
-                    Ring för offert: 073-513 37 09
-                  </a>
+                  <Button asChild size="lg" className="btn-hero text-lg px-10 py-6">
+                    <a href="#glampingforfragan">Skicka en glampingförfrågan</a>
+                  </Button>
                 </div>
               </div>
             </div>
           </section>
+
 
           {/* Benefits Section */}
           <section className="py-16 bg-gradient-subtle">
             <div className="container mx-auto px-4">
               <div className="max-w-6xl mx-auto">
                 <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-4">
-                  ✨ Varför hyra glamping-tält hos oss?
+                  Varför hyra glampingtält hos oss?
                 </h2>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
                   {benefits.map((benefit, index) => (
@@ -277,49 +300,170 @@ const HyrGlamping = () => {
             </div>
           </section>
 
-          {/* Images Gallery */}
+          {/* Stämningsbild */}
+          <section className="relative h-[45vh] md:h-[60vh] overflow-hidden">
+            <img
+              src={glampingSlott}
+              alt="Glampingtält uppställda i kvällsljus vid gods i Skåne"
+              className="w-full h-full object-cover"
+              loading="lazy"
+              decoding="async"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 p-8 md:p-14">
+              <p className="container mx-auto text-white text-2xl md:text-4xl font-bold max-w-3xl">
+                En färdig glampingby – uppbyggd, inredd och redo när gästerna kommer.
+              </p>
+            </div>
+          </section>
+
+          {/* Bild bredvid text */}
           <section className="py-16 bg-background">
-            <div className="container mx-auto px-4">
-              <div className="max-w-6xl mx-auto">
-                <div className="grid md:grid-cols-3 gap-8">
-                  <div className="space-y-4">
-                    <img 
-                      src={glampingNatur} 
-                      alt="Glamping-tält i naturmiljö Skåne - perfekt för bröllop och events"
-                      className="w-full h-64 object-cover rounded-lg shadow-card"
-                      loading="lazy"
-                    />
-                    <h3 className="text-lg font-semibold text-center">Perfekt för naturmiljöer</h3>
-                  </div>
-                  <div className="space-y-4">
-                    <img 
-                      src={glampingUtemoebler} 
-                      alt="Glamping-tält med utemöbler - hyra glamping set Malmö"
-                      className="w-full h-64 object-cover rounded-lg shadow-card"
-                      loading="lazy"
-                    />
-                    <h3 className="text-lg font-semibold text-center">Komplett med möbler</h3>
-                  </div>
-                  <div className="space-y-4">
-                    <img 
-                      src={glampingInuti} 
-                      alt="Glamping-tält interiör sovplats - lyxtält uthyrning Skåne"
-                      className="w-full h-64 object-cover rounded-lg shadow-card"
-                      loading="lazy"
-                    />
-                    <h3 className="text-lg font-semibold text-center">Bekväm sovplats</h3>
-                  </div>
-                </div>
+            <div className="container mx-auto px-4 max-w-6xl grid md:grid-cols-2 gap-10 items-center">
+              <img
+                src={glampingInuti}
+                alt="Interiör i glampingtält med bäddad säng och mjuk belysning"
+                className="w-full h-80 object-cover rounded-lg shadow-elegant"
+                loading="lazy"
+              />
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                  Bekväma sovplatser med känsla
+                </h2>
+                <p className="text-lg text-muted-foreground mb-4">
+                  Vi inreder tälten med riktiga sängar, mjuka textilier, mattor och varm
+                  belysning. Resultatet är ett boende som känns personligt och exklusivt –
+                  långt ifrån vanlig camping.
+                </p>
+                <p className="text-lg text-muted-foreground">
+                  Vi anpassar antal bäddar, inredning och tillval efter evenemanget och
+                  era gäster.
+                </p>
               </div>
             </div>
           </section>
+
+          {/* Bildgalleri */}
+          <section className="py-16 bg-gradient-subtle">
+            <div className="container mx-auto px-4 max-w-6xl">
+              <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-10">
+                Glamping i bilder
+              </h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {[
+                  { src: glampingNatur, alt: "Glampingtält i naturmiljö i Skåne", span: "md:row-span-2 md:h-full h-56" },
+                  { src: glampingDubbel, alt: "Glampingtält med dubbelsäng och inredning", span: "h-56" },
+                  { src: glampingBoho, alt: "Glampingtält med boho-inredning och mattor", span: "h-56" },
+                  { src: glampingUtemoebler, alt: "Glampingtält med utemöbler och loungeyta", span: "h-56" },
+                  { src: glampingBoho2, alt: "Detaljbild från glampingtältets inredning", span: "h-56" },
+                  { src: glampingFamilj, alt: "Gäster utanför glampingtält under evenemang", span: "h-56" },
+                  { src: glampingUtomhus, alt: "Uppställda festivaltält från Tentify", span: "md:col-span-2 h-56" },
+                  { src: glampingEnkel, alt: "Glampingtält med enkelsängar för gäster", span: "h-56" },
+                ].map((img) => (
+                  <div key={img.src} className={`group overflow-hidden rounded-lg shadow-card ${img.span}`}>
+                    <img
+                      src={img.src}
+                      alt={img.alt}
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-110"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Verksamhetsområde */}
+          <section className="py-16 bg-background">
+            <div className="container mx-auto px-4 max-w-6xl grid md:grid-cols-2 gap-10 items-center">
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                  Glamping där du behöver det
+                </h2>
+                <p className="text-lg text-muted-foreground mb-4">
+                  Vi erbjuder glampingtält för uthyrning i hela Skåne. Vid större bröllop,
+                  festivaler, företagsevent och andra evenemang kan vi även leverera och
+                  bygga upp glampingområden på andra platser runt om i Sverige.
+                </p>
+                <p className="text-lg text-muted-foreground">
+                  Hos oss kan ni skapa en komplett glampingupplevelse för era gäster – från
+                  enklare övernattning till fullt inredda premiumtält.
+                </p>
+              </div>
+              <img
+                src={glampingDetta}
+                alt="Glampingtält med komplett inredning från Tentify"
+                className="w-full h-80 object-cover rounded-lg shadow-elegant"
+                loading="lazy"
+              />
+            </div>
+          </section>
+
+          {/* Utrustningsnivåer */}
+          <section className="py-16 bg-gradient-subtle">
+            <div className="container mx-auto px-4 max-w-6xl">
+              <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-4">
+                Två utrustningsnivåer
+              </h2>
+              <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-10">
+                Innehållet anpassas alltid efter evenemanget, antalet gäster och era önskemål.
+              </p>
+              <div className="grid md:grid-cols-2 gap-6">
+                <Card className="shadow-card overflow-hidden">
+                  <img src={glampingEnkel} alt="Enklare glampingtält med sovplatser" className="w-full h-56 object-cover" loading="lazy" />
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-3 mb-3">
+                      <Bed className="w-6 h-6 text-primary" />
+                      <h3 className="text-2xl font-semibold">Enkel utrustning</h3>
+                    </div>
+                    <p className="text-muted-foreground">
+                      En enklare och mer prisvärd lösning för övernattning. Exakt innehåll
+                      anpassas efter bokningen och antalet gäster.
+                    </p>
+                  </CardContent>
+                </Card>
+                <Card className="shadow-elegant overflow-hidden border-primary/30">
+                  <img src={glampingDubbel} alt="Premium glampingtält med dubbelsäng och inredning" className="w-full h-56 object-cover" loading="lazy" />
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-3 mb-3">
+                      <Sparkles className="w-6 h-6 text-primary" />
+                      <h3 className="text-2xl font-semibold">Premiumutrustning</h3>
+                    </div>
+                    <p className="text-muted-foreground mb-4">
+                      En komplett glampingupplevelse med bekväma sängar och en mer exklusiv
+                      inredning. Kan exempelvis innehålla:
+                    </p>
+                    <ul className="grid sm:grid-cols-2 gap-2">
+                      {[
+                        "Uppblåsbara sängar",
+                        "Lakan, kuddar och täcken",
+                        "Mattor",
+                        "Belysning",
+                        "Nattduksbord",
+                        "Stolar och bord",
+                        "Dörrmatta",
+                        "Goodiebag till gästerna",
+                      ].map((i) => (
+                        <li key={i} className="flex items-start gap-2 text-sm text-foreground">
+                          <CheckCircle className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                          {i}
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </section>
+
 
           {/* Services Section */}
           <section className="py-16 bg-gradient-subtle">
             <div className="container mx-auto px-4">
               <div className="max-w-6xl mx-auto">
                 <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-12">
-                  🎪 Våra tjänster
+                  Våra tjänster
                 </h2>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {services.map((service, index) => (
@@ -349,7 +493,7 @@ const HyrGlamping = () => {
             <div className="container mx-auto px-4">
               <div className="max-w-4xl mx-auto text-center">
                 <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-8">
-                  📍 Hyr glamping i Skåne – vi levererar till:
+                  Hyr glamping i Skåne – vi levererar till:
                 </h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                   {locations.map((location, index) => (
@@ -362,12 +506,26 @@ const HyrGlamping = () => {
             </div>
           </section>
 
+          {/* Glampingförfrågan */}
+          <section id="glampingforfragan" className="py-16 bg-gradient-subtle">
+            <div className="container mx-auto px-4 max-w-3xl">
+              <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-4">
+                Skicka en glampingförfrågan
+              </h2>
+              <p className="text-center text-muted-foreground mb-10">
+                Fyll i informationen nedan så återkommer vi med ett förslag och en
+                preliminär offert utifrån era behov.
+              </p>
+              <GlampingQuoteForm />
+            </div>
+          </section>
+
           {/* Contact Section */}
           <section className="py-16 bg-primary text-white">
             <div className="container mx-auto px-4">
               <div className="max-w-4xl mx-auto text-center">
                 <h2 className="text-3xl md:text-4xl font-bold mb-8">
-                  📞 Kontakta oss
+                  Kontakta oss
                 </h2>
                 <div className="grid md:grid-cols-2 gap-8 text-center">
                   <div className="flex items-center justify-center space-x-4">
@@ -378,17 +536,17 @@ const HyrGlamping = () => {
                     </div>
                   </div>
                   <div className="flex items-center justify-center space-x-4">
-                    <Phone className="w-8 h-8" />
+                    <Mail className="w-8 h-8" />
                     <div>
-                      <h3 className="text-xl font-semibold mb-2">Telefon</h3>
-                      <a href="tel:073-513 37 09" className="text-white/90 hover:text-white transition-smooth">
-                        073-513 37 09
+                      <h3 className="text-xl font-semibold mb-2">E-post</h3>
+                      <a href="mailto:info@tentify.se" className="text-white/90 hover:text-white transition-smooth">
+                        info@tentify.se
                       </a>
                     </div>
                   </div>
                 </div>
                 <p className="mt-8 text-white/80 text-lg">
-                  Ring oss för offert eller för att boka ditt tält idag.
+                  Skicka en förfrågan ovan så återkommer vi med ett förslag och en offert.
                 </p>
                 <p className="mt-4 text-white/80 flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm">
                   <Link to="/talt-brollop" className="underline hover:text-white font-medium">Glamping bröllop i Skåne</Link>
@@ -401,12 +559,13 @@ const HyrGlamping = () => {
             </div>
           </section>
 
+
           {/* FAQ Section */}
           <section className="py-16 bg-gradient-subtle">
             <div className="container mx-auto px-4">
               <div className="max-w-4xl mx-auto">
                 <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-12">
-                  ❓ Vanliga frågor & svar (FAQ)
+                  Vanliga frågor &amp; svar (FAQ)
                 </h2>
                 <div className="grid md:grid-cols-2 gap-6">
                   {faqItems.map((faq, index) => (
