@@ -221,31 +221,44 @@ const HyrGlamping = () => {
         
         <main>
           {/* Hero Section */}
-          <section className="relative py-20 bg-gradient-primary text-white overflow-hidden">
-            <div className="absolute inset-0 bg-black/20"></div>
-            <div className="container mx-auto px-4 relative z-10">
+          <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden text-white">
+            <div className="absolute inset-0">
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                poster={glampingNatur}
+                className="w-full h-full object-cover object-center"
+                title="Glampingtält från Tentify"
+              >
+                <source src="/tentify_.mp4" type="video/mp4" />
+              </video>
+              <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/40 to-black/65" />
+            </div>
+            <div className="container mx-auto px-4 relative z-10 py-24">
               <div className="max-w-4xl mx-auto text-center">
-                <h1 className="text-4xl md:text-6xl font-bold mb-6">
+                <h1 className="text-4xl md:text-6xl font-bold mb-6" style={{ textShadow: "0 2px 10px rgba(0,0,0,0.5)" }}>
                   Hyr glampingtält till festival, bröllop och event
                 </h1>
-                <p className="text-xl md:text-2xl mb-8 text-white/90">
-                  Planerar du bröllop, fest eller event och vill skapa en unik och minnesvärd atmosfär? 
-                  Våra glamping-tält är den perfekta lösningen när du behöver exklusiva sovplatser, 
+                <p className="text-xl md:text-2xl mb-6 text-white/90">
+                  Planerar du bröllop, fest eller event och vill skapa en unik och minnesvärd atmosfär?
+                  Våra glampingtält är den perfekta lösningen när du behöver exklusiva sovplatser,
                   en vacker lounge eller ett unikt bröllopstält.
                 </p>
                 <p className="text-lg mb-8 text-white/80">
-                  Vi erbjuder uthyrning i hela Skåne – från Malmö och Lund till Eslöv och omnejd. 
                   Vi levererar, monterar och hämtar efteråt – så att du kan fokusera helt på ditt evenemang.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <a href="tel:073-513 37 09" className="inline-flex items-center justify-center px-8 py-3 bg-white text-primary font-semibold rounded-lg hover:bg-white/90 transition-smooth">
-                    <Phone className="w-5 h-5 mr-2" />
-                    Ring för offert: 073-513 37 09
-                  </a>
+                  <Button asChild size="lg" className="btn-hero text-lg px-10 py-6">
+                    <a href="#glampingforfragan">Skicka en glampingförfrågan</a>
+                  </Button>
                 </div>
               </div>
             </div>
           </section>
+
 
           {/* Benefits Section */}
           <section className="py-16 bg-gradient-subtle">
