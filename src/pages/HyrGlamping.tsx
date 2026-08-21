@@ -148,7 +148,7 @@ const HyrGlamping = () => {
     },
     {
       question: "Hur bokar man ett tält?",
-      answer: "Du kontaktar oss via telefon, så går vi igenom behov, datum och plats."
+      answer: "Du skickar en förfrågan via formuläret på sidan, så går vi igenom behov, datum och plats."
     },
     {
       question: "Vilken avbokningspolicy gäller?",
