@@ -275,7 +275,7 @@ const HyrGlamping = () => {
             <div className="container mx-auto px-4">
               <div className="max-w-6xl mx-auto">
                 <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-4">
-                  ✨ Varför hyra glamping-tält hos oss?
+                  Varför hyra glampingtält hos oss?
                 </h2>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
                   {benefits.map((benefit, index) => (
