@@ -565,7 +565,7 @@ const HyrGlamping = () => {
             <div className="container mx-auto px-4">
               <div className="max-w-4xl mx-auto">
                 <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-12">
-                  ❓ Vanliga frågor & svar (FAQ)
+                  Vanliga frågor &amp; svar (FAQ)
                 </h2>
                 <div className="grid md:grid-cols-2 gap-6">
                   {faqItems.map((faq, index) => (
