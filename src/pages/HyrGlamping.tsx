@@ -506,12 +506,26 @@ const HyrGlamping = () => {
             </div>
           </section>
 
+          {/* Glampingförfrågan */}
+          <section id="glampingforfragan" className="py-16 bg-gradient-subtle">
+            <div className="container mx-auto px-4 max-w-3xl">
+              <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-4">
+                Skicka en glampingförfrågan
+              </h2>
+              <p className="text-center text-muted-foreground mb-10">
+                Fyll i informationen nedan så återkommer vi med ett förslag och en
+                preliminär offert utifrån era behov.
+              </p>
+              <GlampingQuoteForm />
+            </div>
+          </section>
+
           {/* Contact Section */}
           <section className="py-16 bg-primary text-white">
             <div className="container mx-auto px-4">
               <div className="max-w-4xl mx-auto text-center">
                 <h2 className="text-3xl md:text-4xl font-bold mb-8">
-                  📞 Kontakta oss
+                  Kontakta oss
                 </h2>
                 <div className="grid md:grid-cols-2 gap-8 text-center">
                   <div className="flex items-center justify-center space-x-4">
@@ -522,17 +536,17 @@ const HyrGlamping = () => {
                     </div>
                   </div>
                   <div className="flex items-center justify-center space-x-4">
-                    <Phone className="w-8 h-8" />
+                    <Mail className="w-8 h-8" />
                     <div>
-                      <h3 className="text-xl font-semibold mb-2">Telefon</h3>
-                      <a href="tel:073-513 37 09" className="text-white/90 hover:text-white transition-smooth">
-                        073-513 37 09
+                      <h3 className="text-xl font-semibold mb-2">E-post</h3>
+                      <a href="mailto:info@tentify.se" className="text-white/90 hover:text-white transition-smooth">
+                        info@tentify.se
                       </a>
                     </div>
                   </div>
                 </div>
                 <p className="mt-8 text-white/80 text-lg">
-                  Ring oss för offert eller för att boka ditt tält idag.
+                  Skicka en förfrågan ovan så återkommer vi med ett förslag och en offert.
                 </p>
                 <p className="mt-4 text-white/80 flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm">
                   <Link to="/talt-brollop" className="underline hover:text-white font-medium">Glamping bröllop i Skåne</Link>
@@ -544,6 +558,7 @@ const HyrGlamping = () => {
               </div>
             </div>
           </section>
+
 
           {/* FAQ Section */}
           <section className="py-16 bg-gradient-subtle">
