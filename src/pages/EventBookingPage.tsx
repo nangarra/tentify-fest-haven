@@ -702,7 +702,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
               </Button>
             </div>
 
-            <aside className="hidden lg-block theme-sweden-rock bg-background text-foreground rounded-xl">
+            <aside className="hidden lg:block theme-sweden-rock bg-background text-foreground rounded-xl">
               <div className="sticky top-24">{summary}</div>
             </aside>
           </div>
