@@ -974,8 +974,9 @@ const TentCard = ({
           {soldOut
             ? (lang === "sv" ? "Slutsålt" : "Sold out")
             : selected
-            ? (<><Check className="w-4 h-4 mr-1" /> {t("selected", lang)}{available > 0 ? ` · ${available} ${lang === "sv" ? "tält kvar att boka" : "tents left"}` : ""}</>)
-            : t("select", lang)}
+            ? (<><Check className="w-4 h-4 mr-1" /> {t("selected", lang)}{available > 0 ? ` (${available} ${lang === "sv" ? "tält kvar att boka" : "tents left"})` : ""}</>)
+            : (<>{t("select", lang)}{available > 0 ? ` (${available} ${lang === "sv" ? "tält kvar att boka" : "tents left"})` : ""}</>)}
+
         </Button>
       </div>
     </Card>
