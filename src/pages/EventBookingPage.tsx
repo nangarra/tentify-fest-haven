@@ -38,7 +38,6 @@ import {
   Clock,
   Wrench,
   Car,
-  BedDouble,
 
 
 } from "lucide-react";
