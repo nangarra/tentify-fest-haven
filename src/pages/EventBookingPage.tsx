@@ -402,9 +402,9 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   );
 
   return (
-    <div className="theme-sweden-rock min-h-screen bg-background">
+    <div className="min-h-screen bg-background">
       {/* Hero */}
-      <section className="relative bg-background">
+      <section className="theme-sweden-rock relative bg-background text-foreground">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_10%,hsl(220_6%_16%)_0%,hsl(0_0%_5%)_55%,hsl(0_0%_0%)_100%)]" />
 
         <div className="absolute top-4 right-4 z-20">
@@ -472,7 +472,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
 
 
       {/* Body */}
-      <section className="container mx-auto px-4 py-10 md:py-14">
+      <section className="theme-sweden-rock bg-background text-foreground container mx-auto px-4 py-10 md:py-14">
         {step === "booking" && (
           <div className="grid lg:grid-cols-[1fr_380px] gap-8">
             <div className="space-y-10">
@@ -790,7 +790,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
 
       {/* Mobile sticky */}
       {step !== "confirmation" && (
-        <div className="lg:hidden sticky bottom-0 z-40 bg-background border-t shadow-lg">
+        <div className="theme-sweden-rock lg:hidden sticky bottom-0 z-40 bg-background border-t shadow-lg">
           <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-3">
             <div>
               <div className="text-xs text-muted-foreground">{t("total", lang)}</div>
