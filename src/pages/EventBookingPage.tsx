@@ -402,9 +402,9 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   );
 
   return (
-    <div className="theme-sweden-rock min-h-screen bg-background">
+    <div className="min-h-screen bg-background">
       {/* Hero */}
-      <section className="relative bg-background">
+      <section className="theme-sweden-rock relative bg-background text-foreground">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_10%,hsl(220_6%_16%)_0%,hsl(0_0%_5%)_55%,hsl(0_0%_0%)_100%)]" />
 
         <div className="absolute top-4 right-4 z-20">
