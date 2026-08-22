@@ -34,6 +34,12 @@ import {
   Info,
   Package,
   Backpack,
+  Moon,
+  Clock,
+  Wrench,
+  Car,
+  BedDouble,
+
 
 } from "lucide-react";
 import { toast } from "sonner";
