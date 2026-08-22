@@ -405,8 +405,8 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   return (
     <div className="theme-sweden-rock min-h-screen bg-muted/40">
       {/* Hero */}
-      <section className="relative bg-[hsl(0_0%_10%)]">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_10%,hsl(0_0%_26%)_0%,hsl(0_0%_13%)_55%,hsl(0_0%_8%)_100%)]" />
+      <section className="relative bg-[hsl(220_6%_18%)]">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_15%,hsl(220_6%_30%)_0%,hsl(220_7%_20%)_55%,hsl(220_8%_13%)_100%)]" />
         <div className="absolute top-4 right-4 z-20">
           <LanguageToggle lang={lang} onChange={setLang} />
         </div>
@@ -414,19 +414,20 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
           <img
             src={srLogo.url}
             alt="Tentify Glamping – Sweden Rock Festival Sölvesborg 2027"
-            className="mx-auto w-full max-w-[520px] md:max-w-[720px] h-auto object-contain"
+            className="mx-auto w-full max-w-[440px] md:max-w-[680px] h-auto object-contain"
             loading="eager"
           />
-          <h1 className="mt-8 text-4xl md:text-6xl font-bold text-[hsl(40_20%_94%)] leading-tight tracking-tight">
+          <h1 className="mt-8 text-3xl sm:text-4xl md:text-5xl font-bold text-[hsl(40_18%_92%)] leading-[1.2] tracking-tight text-balance">
             {lang === "sv" ? "Glamping till Sweden Rock" : "Glamping at Sweden Rock"}
           </h1>
-          <p className="mt-4 text-lg md:text-2xl text-[hsl(40_15%_88%)]/85 max-w-3xl mx-auto leading-relaxed">
+          <p className="mt-5 text-lg md:text-xl text-[hsl(40_12%_84%)] max-w-2xl mx-auto leading-relaxed text-balance">
             {lang === "sv"
               ? "Boka ditt färdiga boende till Sweden Rock Festival 2027"
+
               : "Book your ready-made stay for Sweden Rock Festival 2027"}
           </p>
 
-          <div className="mt-7 flex flex-wrap justify-center gap-x-8 gap-y-3 text-lg md:text-xl text-[hsl(40_15%_90%)]/90">
+          <div className="mt-7 flex flex-wrap justify-center gap-x-8 gap-y-3 text-lg md:text-xl text-[hsl(40_14%_88%)]">
             <span className="flex items-center gap-2.5">
               <Calendar className="w-5 h-5 md:w-6 md:h-6 opacity-80" /> 8–12 juni 2027
             </span>
@@ -452,7 +453,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                   { Icon: Car, label: "Parking included" },
                 ]
             ).map(({ Icon, label }) => (
-              <li key={label} className="flex items-center gap-4 text-lg md:text-xl text-[hsl(40_15%_92%)]/85 leading-relaxed">
+              <li key={label} className="flex items-center gap-4 text-lg md:text-xl text-[hsl(40_14%_88%)] leading-relaxed">
                 <span className="flex-shrink-0 w-10 h-10 rounded-full bg-white/[0.07] border border-white/15 flex items-center justify-center">
                   <Icon className="w-5 h-5 opacity-90" aria-hidden />
                 </span>
@@ -862,11 +863,11 @@ const TentCard = ({
       onClick={soldOut ? undefined : onSelect}
       aria-disabled={soldOut}
     >
-      <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+      <div className="relative aspect-[4/3] overflow-hidden bg-muted/50">
         <img
           src={images[activeIdx] ?? tent.image}
           alt={tent.name[lang]}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-contain"
           loading="lazy"
           onTouchStart={(e) => { touchX.current = e.touches[0].clientX; }}
           onTouchEnd={(e) => {

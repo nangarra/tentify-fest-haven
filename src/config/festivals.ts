@@ -130,11 +130,8 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
       },
       price: 7900,
       maxGuests: 3,
-      image: mediumStudioImg.url,
-      gallery: [
-        mediumStudioImg.url,
-        mediumTentImg.url,
-      ],
+      image: mediumTentImg.url,
+      gallery: [mediumTentImg.url, mediumStudioImg.url],
 
       includedStandard: STANDARD_INCLUDED,
       totalCount: 10,
@@ -150,8 +147,8 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
       },
       price: 11900,
       maxGuests: 4,
-      image: bekvamtImg.url,
-      gallery: [bekvamtImg.url, mediumStudioLargeImg.url],
+      image: mediumStudioLargeImg.url,
+      gallery: [mediumStudioLargeImg.url, bekvamtImg.url],
 
       includedStandard: STANDARD_INCLUDED,
       totalCount: 10,
