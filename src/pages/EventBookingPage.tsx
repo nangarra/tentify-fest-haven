@@ -420,14 +420,14 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
           <h1 className="mt-8 text-3xl sm:text-4xl md:text-5xl font-bold text-[hsl(40_18%_92%)] leading-[1.2] tracking-tight text-balance">
             {lang === "sv" ? "Glamping till Sweden Rock" : "Glamping at Sweden Rock"}
           </h1>
-          <p className="mt-5 text-lg md:text-xl text-[hsl(40_12%_86%)]/85 max-w-2xl mx-auto leading-relaxed text-balance">
+          <p className="mt-5 text-lg md:text-xl text-[hsl(40_12%_84%)] max-w-2xl mx-auto leading-relaxed text-balance">
             {lang === "sv"
               ? "Boka ditt färdiga boende till Sweden Rock Festival 2027"
 
               : "Book your ready-made stay for Sweden Rock Festival 2027"}
           </p>
 
-          <div className="mt-7 flex flex-wrap justify-center gap-x-8 gap-y-3 text-lg md:text-xl text-[hsl(40_15%_90%)]/90">
+          <div className="mt-7 flex flex-wrap justify-center gap-x-8 gap-y-3 text-lg md:text-xl text-[hsl(40_14%_88%)]">
             <span className="flex items-center gap-2.5">
               <Calendar className="w-5 h-5 md:w-6 md:h-6 opacity-80" /> 8–12 juni 2027
             </span>
@@ -453,7 +453,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                   { Icon: Car, label: "Parking included" },
                 ]
             ).map(({ Icon, label }) => (
-              <li key={label} className="flex items-center gap-4 text-lg md:text-xl text-[hsl(40_15%_92%)]/85 leading-relaxed">
+              <li key={label} className="flex items-center gap-4 text-lg md:text-xl text-[hsl(40_14%_88%)] leading-relaxed">
                 <span className="flex-shrink-0 w-10 h-10 rounded-full bg-white/[0.07] border border-white/15 flex items-center justify-center">
                   <Icon className="w-5 h-5 opacity-90" aria-hidden />
                 </span>
