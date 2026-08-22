@@ -207,12 +207,28 @@ Animations for Tentify
   --sr-gold-hi: 45 85% 65%;        /* gold highlight */
   --sr-ember: 20 55% 40%;          /* rust ember underglow */
 
-  /* Rewire primary + focus ring to metallic steel so existing
+  /* Full black surface scheme for the Sweden Rock booking page */
+  --background: 0 0% 0%;
+  --foreground: 40 15% 92%;
+  --card: 0 0% 4%;
+  --card-foreground: 40 15% 92%;
+  --popover: 0 0% 5%;
+  --popover-foreground: 40 15% 92%;
+  --secondary: 0 0% 10%;
+  --secondary-foreground: 40 15% 92%;
+  --muted: 0 0% 9%;
+  --muted-foreground: 40 8% 72%;
+  --border: 210 8% 22%;
+  --input: 0 0% 10%;
+
+  /* Rewire primary + focus ring to metallic chrome so existing
      UI (buttons, progress, selected rings) picks it up automatically. */
-  --primary: var(--sr-steel);
-  --primary-foreground: 210 25% 96%;
+  --primary: 210 12% 72%;
+  --primary-foreground: 220 18% 12%;
   --ring: var(--sr-gold);
-  --accent: 42 40% 82%;
+  --accent: 0 0% 12%;
+  --accent-foreground: 40 15% 92%;
+
 
   /* Gradients & shadows tuned for 80s metal energy */
   --gradient-primary: linear-gradient(135deg, hsl(var(--sr-gunmetal)), hsl(var(--sr-steel)));
