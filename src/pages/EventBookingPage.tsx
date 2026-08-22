@@ -439,31 +439,34 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
             </span>
           </div>
 
-          <ul className="mt-9 mx-auto max-w-xl flex flex-col items-center gap-4">
-            {(lang === "sv"
-              ? [
-                  { Icon: Moon, label: "4 nätter" },
-                  { Icon: Clock, label: "Incheckning från kl. 15.00" },
-                  { Icon: BedDouble, label: "Fullt möblerat tält" },
-                  { Icon: Wrench, label: "Uppställning och nedmontering ingår" },
-                  { Icon: Car, label: "Parkering ingår" },
-                ]
-              : [
-                  { Icon: Moon, label: "4 nights" },
-                  { Icon: Clock, label: "Check-in from 3 pm" },
-                  { Icon: BedDouble, label: "Fully furnished tent" },
-                  { Icon: Wrench, label: "Setup and takedown included" },
-                  { Icon: Car, label: "Parking included" },
-                ]
-            ).map(({ Icon, label }) => (
-              <li key={label} className="flex items-center justify-center gap-4 text-lg md:text-xl text-[hsl(40_14%_88%)] leading-relaxed text-center">
-                <span className="flex-shrink-0 w-10 h-10 rounded-full bg-white/[0.07] border border-white/15 flex items-center justify-center">
-                  <Icon className="w-5 h-5 opacity-90" aria-hidden />
-                </span>
-                <span>{label}</span>
-              </li>
-            ))}
-          </ul>
+          <div className="mt-9 mx-auto w-fit max-w-full sr-info-box rounded-2xl px-6 py-6 md:px-10 md:py-8">
+            <ul className="flex flex-col gap-4 md:gap-5">
+              {(lang === "sv"
+                ? [
+                    { Icon: Moon, label: "4 nätter" },
+                    { Icon: Clock, label: "Incheckning från kl. 15.00" },
+                    { Icon: BedDouble, label: "Fullt möblerat tält" },
+                    { Icon: MapPin, label: "10 minuter från festivalen" },
+                    { Icon: Car, label: "Parkering ingår" },
+                  ]
+                : [
+                    { Icon: Moon, label: "4 nights" },
+                    { Icon: Clock, label: "Check-in from 3 pm" },
+                    { Icon: BedDouble, label: "Fully furnished tent" },
+                    { Icon: MapPin, label: "10 minutes from the festival" },
+                    { Icon: Car, label: "Parking included" },
+                  ]
+              ).map(({ Icon, label }) => (
+                <li key={label} className="grid grid-cols-[2.5rem_1fr] items-center gap-4 text-left text-lg md:text-xl text-[hsl(40_14%_88%)] leading-relaxed">
+                  <span className="w-10 h-10 rounded-full bg-white/[0.07] border border-white/15 flex items-center justify-center">
+                    <Icon className="w-5 h-5 opacity-90" aria-hidden />
+                  </span>
+                  <span>{label}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
         </div>
       </section>
 
