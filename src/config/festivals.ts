@@ -133,11 +133,9 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
       image: mediumStudioImg.url,
       gallery: [
         mediumStudioImg.url,
-        mediumStudioLargeImg.url,
         mediumTentImg.url,
-        interiorImg.url,
-        fardigtTaltImg.url,
       ],
+
       includedStandard: STANDARD_INCLUDED,
       totalCount: 10,
     },
