@@ -423,8 +423,10 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
           <p className="mt-5 text-lg md:text-xl text-[hsl(40_12%_84%)] max-w-2xl mx-auto leading-relaxed text-balance">
             {lang === "sv"
               ? "Boka ditt färdiga boende till Sweden Rock Festival 2027"
-
               : "Book your ready-made stay for Sweden Rock Festival 2027"}
+          </p>
+          <p className="mt-2 text-base md:text-lg text-[hsl(40_14%_88%)] max-w-2xl mx-auto leading-relaxed text-balance">
+            {lang === "sv" ? "Plats: Ingemars Camping" : "Location: Ingemars Camping"}
           </p>
 
           <div className="mt-7 flex flex-wrap justify-center gap-x-8 gap-y-3 text-lg md:text-xl text-[hsl(40_14%_88%)]">
