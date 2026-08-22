@@ -47,6 +47,7 @@ import {
 } from "@/config/festivals";
 import { t } from "@/lib/booking-i18n";
 import { PAYMENT_INFO } from "@/config/payment-info";
+import srLogo from "@/assets/glamping_Swedenrock_tentify_2027.webp.asset.json";
 
 const addOnIcons: Record<string, React.ComponentType<{ className?: string }>> = {
   "luxury-bed": BedDouble,
@@ -99,7 +100,9 @@ const EventBookingPage = () => {
 export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   const [lang, setLang] = useState<Lang>("sv");
   const [step, setStep] = useState<Step>("booking");
-  const [selectedTentId, setSelectedTentId] = useState<string | null>(null);
+  const [selectedTentId, setSelectedTentId] = useState<string | null>(
+    festival.tents.find((tt) => tt.id === "medium")?.id ?? festival.tents[0]?.id ?? null,
+  );
   const [guests, setGuests] = useState<number>(1);
   const [selectedAddOns, setSelectedAddOns] = useState<Set<string>>(new Set());
 
