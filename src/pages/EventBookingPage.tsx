@@ -790,7 +790,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
 
       {/* Mobile sticky */}
       {step !== "confirmation" && (
-        <div className="theme-sweden-rock lg:hidden sticky bottom-0 z-40 bg-background border-t shadow-lg">
+        <div className="lg:hidden sticky bottom-0 z-40 bg-background border-t shadow-lg">
           <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-3">
             <div>
               <div className="text-xs text-muted-foreground">{t("total", lang)}</div>
@@ -803,7 +803,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                     <ShoppingBag className="w-4 h-4 mr-1" /> {t("summary", lang)}
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="bottom" className="theme-sweden-rock max-h-[85vh] overflow-y-auto">
+                <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto">
                   <SheetHeader>
                     <SheetTitle>{t("yourBooking", lang)}</SheetTitle>
                   </SheetHeader>
