@@ -897,24 +897,25 @@ const TentCard = ({
           </div>
         )}
       </div>
-      {selected && !soldOut && images.length > 1 && (
-        <div className="grid grid-cols-3 gap-2 px-3 pt-3">
-          {images.slice(0, 4).filter((_, i) => i !== activeIdx).slice(0, 3).map((src) => {
-            const idx = images.indexOf(src);
-            return (
-              <button
-                key={src}
-                type="button"
-                onClick={(e) => { e.stopPropagation(); setActiveIdx(idx); }}
-                className="relative aspect-[4/3] rounded-md overflow-hidden border border-border/60 bg-muted/40 transition hover:border-primary/60"
-                aria-label={`${tent.name[lang]} bild ${idx + 1}`}
-              >
-                <img src={src} alt="" className="w-full h-full object-contain" loading="lazy" />
-              </button>
-            );
-          })}
+      {!soldOut && images.length > 1 && (
+        <div className="flex gap-2 px-3 pt-3">
+          {images.map((src, idx) => (
+            <button
+              key={src}
+              type="button"
+              onClick={(e) => { e.stopPropagation(); setActiveIdx(idx); }}
+              className={`relative w-20 aspect-[4/3] rounded-md overflow-hidden border-2 bg-muted/40 transition ${
+                idx === activeIdx ? "border-primary" : "border-border/50 hover:border-primary/50"
+              }`}
+              aria-label={`${tent.name[lang]} bild ${idx + 1}`}
+              aria-current={idx === activeIdx}
+            >
+              <img src={src} alt="" className="w-full h-full object-cover" loading="lazy" />
+            </button>
+          ))}
         </div>
       )}
+
       <div className="p-5">
         <div className="flex items-start justify-between gap-3 mb-2">
           <div>
