@@ -405,8 +405,8 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   return (
     <div className="theme-sweden-rock min-h-screen bg-muted/40">
       {/* Hero */}
-      <section className="relative bg-[hsl(0_0%_10%)]">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_10%,hsl(0_0%_26%)_0%,hsl(0_0%_13%)_55%,hsl(0_0%_8%)_100%)]" />
+      <section className="relative bg-[hsl(220_6%_18%)]">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_15%,hsl(220_6%_30%)_0%,hsl(220_7%_20%)_55%,hsl(220_8%_13%)_100%)]" />
         <div className="absolute top-4 right-4 z-20">
           <LanguageToggle lang={lang} onChange={setLang} />
         </div>
@@ -414,15 +414,16 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
           <img
             src={srLogo.url}
             alt="Tentify Glamping – Sweden Rock Festival Sölvesborg 2027"
-            className="mx-auto w-full max-w-[520px] md:max-w-[720px] h-auto object-contain"
+            className="mx-auto w-full max-w-[440px] md:max-w-[680px] h-auto object-contain"
             loading="eager"
           />
-          <h1 className="mt-8 text-4xl md:text-6xl font-bold text-[hsl(40_20%_94%)] leading-tight tracking-tight">
+          <h1 className="mt-8 text-3xl sm:text-4xl md:text-5xl font-bold text-[hsl(40_18%_92%)] leading-[1.2] tracking-tight text-balance">
             {lang === "sv" ? "Glamping till Sweden Rock" : "Glamping at Sweden Rock"}
           </h1>
-          <p className="mt-4 text-lg md:text-2xl text-[hsl(40_15%_88%)]/85 max-w-3xl mx-auto leading-relaxed">
+          <p className="mt-5 text-lg md:text-xl text-[hsl(40_12%_86%)]/85 max-w-2xl mx-auto leading-relaxed text-balance">
             {lang === "sv"
               ? "Boka ditt färdiga boende till Sweden Rock Festival 2027"
+
               : "Book your ready-made stay for Sweden Rock Festival 2027"}
           </p>
 
