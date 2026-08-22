@@ -47,6 +47,7 @@ import {
 } from "@/config/festivals";
 import { t } from "@/lib/booking-i18n";
 import { PAYMENT_INFO } from "@/config/payment-info";
+import srLogo from "@/assets/glamping_Swedenrock_tentify_2027.webp.asset.json";
 
 const addOnIcons: Record<string, React.ComponentType<{ className?: string }>> = {
   "luxury-bed": BedDouble,
@@ -99,7 +100,9 @@ const EventBookingPage = () => {
 export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   const [lang, setLang] = useState<Lang>("sv");
   const [step, setStep] = useState<Step>("booking");
-  const [selectedTentId, setSelectedTentId] = useState<string | null>(null);
+  const [selectedTentId, setSelectedTentId] = useState<string | null>(
+    festival.tents.find((tt) => tt.id === "medium")?.id ?? festival.tents[0]?.id ?? null,
+  );
   const [guests, setGuests] = useState<number>(1);
   const [selectedAddOns, setSelectedAddOns] = useState<Set<string>>(new Set());
 
@@ -397,114 +400,47 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   return (
     <div className="theme-sweden-rock min-h-screen bg-muted/40">
       {/* Hero */}
-      <section className="relative">
-        <div className="relative h-[52vh] min-h-[380px] overflow-hidden">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            poster={festival.heroImage}
-            className="absolute inset-0 w-full h-full object-cover"
-            title="Sweden Rock Festival recap"
-          >
-            <source
-              src="https://swedenrock-prod.storage.googleapis.com/wp-content/uploads/2026/06/SRF_Recap_Hemsida_16x9_.mp4#t=0.1"
-              type="video/mp4"
-            />
-            <img
-              src={festival.heroImage}
-              alt={`${festival.name} glamping`}
-              className="w-full h-full object-cover"
-            />
-          </video>
-          <div className="absolute inset-0 sr-hero-overlay" />
-          <div className="absolute top-4 right-4 z-20">
-            <LanguageToggle lang={lang} onChange={setLang} />
-          </div>
-          <div className="relative z-10 h-full container mx-auto px-4 flex items-end pb-10 md:pb-14">
-            <div className="text-white max-w-3xl">
-              <Badge className="mb-4 bg-white/15 border-white/30 backdrop-blur-sm text-white">
-                {t("bookingOpen", lang)}
-              </Badge>
-              <h1 className="text-3xl md:text-5xl font-bold leading-tight mb-3">
-                {festival.displayTitle[lang]}
-              </h1>
-              <p className="text-base md:text-lg text-white/90 max-w-2xl">
-                {festival.subtitle[lang]}
-              </p>
-              <div className="flex flex-wrap gap-4 md:gap-6 mt-5 text-sm text-white/90">
-                <span className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4" /> {festival.location[lang]}
-                </span>
-                <span className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4" /> {festival.checkIn[lang]} → {festival.checkOut[lang]}
-                </span>
-              </div>
-            </div>
-          </div>
+      <section className="relative bg-[hsl(0_0%_6%)]">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,hsl(0_0%_18%)_0%,hsl(0_0%_6%)_65%)]" />
+        <div className="absolute top-4 right-4 z-20">
+          <LanguageToggle lang={lang} onChange={setLang} />
         </div>
+        <div className="relative z-10 container mx-auto px-4 pt-14 pb-10 md:pt-20 md:pb-16 text-center">
+          <img
+            src={srLogo.url}
+            alt="Tentify Glamping – Sweden Rock Festival Sölvesborg 2027"
+            className="mx-auto w-full max-w-[520px] md:max-w-[720px] h-auto object-contain"
+            loading="eager"
+          />
+          <h1 className="mt-8 text-3xl md:text-5xl font-bold text-white leading-tight">
+            {lang === "sv" ? "Glamping till Sweden Rock" : "Glamping at Sweden Rock"}
+          </h1>
+          <p className="mt-3 text-base md:text-lg text-white/70 max-w-2xl mx-auto">
+            {lang === "sv"
+              ? "Boka ditt färdiga boende till Sweden Rock Festival 2027"
+              : "Book your ready-made stay for Sweden Rock Festival 2027"}
+          </p>
 
-        <div className="container mx-auto px-4 -mt-6 relative z-20">
-          <Card className="p-4 md:p-5 flex flex-col gap-4">
-            <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6">
-              <div className="flex-1">
-                <div className="flex justify-between mb-2 text-sm">
-                  <span className="font-semibold">
-                    {soldOut
-                      ? t("allSoldOut", lang)
-                      : lang === "sv"
-                      ? `Endast ${available} av ${festival.totalTents} tält kvar`
-                      : `${available} of ${festival.totalTents} tents left`}
-                  </span>
-                  <span className="text-muted-foreground">
-                    {displayBooked} {t("alreadyBookedTag", lang)}
-                  </span>
-                </div>
-                <Progress
-                  value={((festival.totalTents - available) / festival.totalTents) * 100}
-                />
-              </div>
-              <div className="text-sm text-muted-foreground md:border-l md:pl-6">
-                <span className="font-medium text-foreground">
-                  {festival.nights} {t("nights", lang)}
-                </span>{" "}
-                · {t("checkinTime", lang)}
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-2 pt-1">
-              {festival.tents.map((tt) => {
-                const left = availabilityByType[tt.id] ?? 0;
-                const totalT = tt.totalCount ?? 0;
-                const isSold = left <= 0;
-                return (
-                  <span
-                    key={tt.id}
-                    className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium ${
-                      isSold
-                        ? "bg-muted text-muted-foreground border-border"
-                        : "bg-primary/5 text-foreground border-primary/20"
-                    }`}
-                  >
-                    <span
-                      className={`w-2 h-2 rounded-full ${
-                        isSold ? "bg-muted-foreground/50" : "bg-primary"
-                      }`}
-                    />
-                    {tt.name[lang]}:{" "}
-                    {isSold
-                      ? lang === "sv"
-                        ? "slutsålt"
-                        : "sold out"
-                      : `${left} ${t("ofLabel", lang)} ${totalT} ${t("availabilityLine", lang)}`}
-                  </span>
-                );
-              })}
-            </div>
-          </Card>
+          <div className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-white/80">
+            <span className="flex items-center gap-2">
+              <Calendar className="w-4 h-4 opacity-70" /> 8–12 juni 2027
+            </span>
+            <span className="flex items-center gap-2">
+              <MapPin className="w-4 h-4 opacity-70" /> Sölvesborg, Sweden
+            </span>
+          </div>
+
+          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-1.5 text-xs text-white/50">
+            {(lang === "sv"
+              ? ["Fyra nätter", "Incheckning från kl. 15.00", "Färdigmöblerat tält", "Uppställning och nedmontering ingår"]
+              : ["Four nights", "Check-in from 3 pm", "Fully furnished tent", "Setup and takedown included"]
+            ).map((item) => (
+              <span key={item}>{item}</span>
+            ))}
+          </div>
         </div>
       </section>
+
 
       {/* Body */}
       <section className="container mx-auto px-4 py-10 md:py-14">
@@ -888,6 +824,9 @@ const TentCard = ({
   onSelect: () => void;
 }) => {
   const totalT = tent.totalCount ?? 0;
+  const images = tent.gallery && tent.gallery.length > 0 ? tent.gallery : [tent.image];
+  const [activeIdx, setActiveIdx] = useState(0);
+  const touchX = useRef<number | null>(null);
   return (
     <Card
       className={`overflow-hidden transition-all ${
@@ -901,7 +840,21 @@ const TentCard = ({
       aria-disabled={soldOut}
     >
       <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-        <img src={tent.image} alt={tent.name[lang]} className="w-full h-full object-cover" loading="lazy" />
+        <img
+          src={images[activeIdx] ?? tent.image}
+          alt={tent.name[lang]}
+          className="w-full h-full object-cover"
+          loading="lazy"
+          onTouchStart={(e) => { touchX.current = e.touches[0].clientX; }}
+          onTouchEnd={(e) => {
+            if (touchX.current === null || images.length < 2) return;
+            const dx = e.changedTouches[0].clientX - touchX.current;
+            if (Math.abs(dx) > 40) {
+              setActiveIdx((i) => (i + (dx < 0 ? 1 : -1) + images.length) % images.length);
+            }
+            touchX.current = null;
+          }}
+        />
         {selected && !soldOut && (
           <div className="absolute top-3 right-3 bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center shadow">
             <Check className="w-4 h-4" />
@@ -921,6 +874,24 @@ const TentCard = ({
           </div>
         )}
       </div>
+      {selected && !soldOut && images.length > 1 && (
+        <div className="grid grid-cols-3 gap-2 px-3 pt-3">
+          {images.slice(0, 4).filter((_, i) => i !== activeIdx).slice(0, 3).map((src) => {
+            const idx = images.indexOf(src);
+            return (
+              <button
+                key={src}
+                type="button"
+                onClick={(e) => { e.stopPropagation(); setActiveIdx(idx); }}
+                className="relative aspect-[4/3] rounded-md overflow-hidden border border-border/60 bg-muted/40 transition hover:border-primary/60"
+                aria-label={`${tent.name[lang]} bild ${idx + 1}`}
+              >
+                <img src={src} alt="" className="w-full h-full object-contain" loading="lazy" />
+              </button>
+            );
+          })}
+        </div>
+      )}
       <div className="p-5">
         <div className="flex items-start justify-between gap-3 mb-2">
           <div>
@@ -934,7 +905,7 @@ const TentCard = ({
         </div>
         <p className="text-sm text-muted-foreground mb-3">{tent.description[lang]}</p>
 
-        {totalT > 0 && (
+        {totalT > 0 && !selected && (
           <p className="text-xs font-medium mb-4">
             {soldOut ? (
               <span className="text-muted-foreground">
@@ -979,7 +950,7 @@ const TentCard = ({
           {soldOut
             ? (lang === "sv" ? "Slutsålt" : "Sold out")
             : selected
-            ? (<><Check className="w-4 h-4 mr-1" /> {t("selected", lang)}</>)
+            ? (<><Check className="w-4 h-4 mr-1" /> {t("selected", lang)}{available > 0 ? ` · ${available} ${lang === "sv" ? "tält kvar att boka" : "tents left"}` : ""}</>)
             : t("select", lang)}
         </Button>
       </div>

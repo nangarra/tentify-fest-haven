@@ -21,6 +21,10 @@ import mediumTentImg from "@/assets/medium_tentify_sweden_rock_glamping.webp.ass
 import breakfastImg from "@/assets/frukost_sweden_rock_glamping.webp.asset.json";
 import survivalPackImg from "@/assets/glamping_swedenrock_tillagg.webp.asset.json";
 import towelImg from "@/assets/handdukar_sweden_rock_glamping.webp.asset.json";
+import mediumStudioImg from "@/assets/Swedenrock_glamping_medium_taltet_tentify.webp.asset.json";
+import mediumStudioLargeImg from "@/assets/Swedenrock_glamping_stora_taltet_tentify.webp.asset.json";
+import fardigtTaltImg from "@/assets/fardigt-talt-sweden-rock.webp.asset.json";
+import interiorImg from "@/assets/glampingtalt-sweden-rock-interior.webp.asset.json";
 
 export type Lang = "sv" | "en";
 export type Localized = Record<Lang, string>;
@@ -39,6 +43,8 @@ export type TentType = {
   price: number;
   maxGuests: number;
   image: string;
+  /** Optional image gallery shown in the tent card. First image is the main image. */
+  gallery?: string[];
   includedStandard?: IncludedItem[];
   /** Number of physical tents of this type in inventory. */
   totalCount?: number;
@@ -124,7 +130,14 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
       },
       price: 7900,
       maxGuests: 3,
-      image: mediumTentImg.url,
+      image: mediumStudioImg.url,
+      gallery: [
+        mediumStudioImg.url,
+        mediumStudioLargeImg.url,
+        mediumTentImg.url,
+        interiorImg.url,
+        fardigtTaltImg.url,
+      ],
       includedStandard: STANDARD_INCLUDED,
       totalCount: 10,
     },
