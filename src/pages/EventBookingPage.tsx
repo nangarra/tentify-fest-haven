@@ -36,7 +36,6 @@ import {
   Backpack,
   Moon,
   Clock,
-  Wrench,
   Car,
 
 
@@ -403,10 +402,11 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   );
 
   return (
-    <div className="theme-sweden-rock min-h-screen bg-muted/40">
+    <div className="theme-sweden-rock min-h-screen bg-background">
       {/* Hero */}
-      <section className="relative bg-[hsl(220_6%_18%)]">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_15%,hsl(220_6%_30%)_0%,hsl(220_7%_20%)_55%,hsl(220_8%_13%)_100%)]" />
+      <section className="relative bg-background">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_10%,hsl(220_6%_16%)_0%,hsl(0_0%_5%)_55%,hsl(0_0%_0%)_100%)]" />
+
         <div className="absolute top-4 right-4 z-20">
           <LanguageToggle lang={lang} onChange={setLang} />
         </div>
@@ -438,31 +438,34 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
             </span>
           </div>
 
-          <ul className="mt-9 mx-auto max-w-xl flex flex-col items-center gap-4">
-            {(lang === "sv"
-              ? [
-                  { Icon: Moon, label: "4 nätter" },
-                  { Icon: Clock, label: "Incheckning från kl. 15.00" },
-                  { Icon: BedDouble, label: "Fullt möblerat tält" },
-                  { Icon: Wrench, label: "Uppställning och nedmontering ingår" },
-                  { Icon: Car, label: "Parkering ingår" },
-                ]
-              : [
-                  { Icon: Moon, label: "4 nights" },
-                  { Icon: Clock, label: "Check-in from 3 pm" },
-                  { Icon: BedDouble, label: "Fully furnished tent" },
-                  { Icon: Wrench, label: "Setup and takedown included" },
-                  { Icon: Car, label: "Parking included" },
-                ]
-            ).map(({ Icon, label }) => (
-              <li key={label} className="flex items-center justify-center gap-4 text-lg md:text-xl text-[hsl(40_14%_88%)] leading-relaxed text-center">
-                <span className="flex-shrink-0 w-10 h-10 rounded-full bg-white/[0.07] border border-white/15 flex items-center justify-center">
-                  <Icon className="w-5 h-5 opacity-90" aria-hidden />
-                </span>
-                <span>{label}</span>
-              </li>
-            ))}
-          </ul>
+          <div className="mt-9 mx-auto w-fit max-w-full sr-info-box rounded-2xl px-6 py-6 md:px-10 md:py-8">
+            <ul className="flex flex-col gap-4 md:gap-5">
+              {(lang === "sv"
+                ? [
+                    { Icon: Moon, label: "4 nätter" },
+                    { Icon: Clock, label: "Incheckning från kl. 15.00" },
+                    { Icon: BedDouble, label: "Fullt möblerat tält" },
+                    { Icon: MapPin, label: "10 minuter från festivalen" },
+                    { Icon: Car, label: "Parkering ingår" },
+                  ]
+                : [
+                    { Icon: Moon, label: "4 nights" },
+                    { Icon: Clock, label: "Check-in from 3 pm" },
+                    { Icon: BedDouble, label: "Fully furnished tent" },
+                    { Icon: MapPin, label: "10 minutes from the festival" },
+                    { Icon: Car, label: "Parking included" },
+                  ]
+              ).map(({ Icon, label }) => (
+                <li key={label} className="grid grid-cols-[2.5rem_1fr] items-center gap-4 text-left text-lg md:text-xl text-[hsl(40_14%_88%)] leading-relaxed">
+                  <span className="w-10 h-10 rounded-full bg-white/[0.07] border border-white/15 flex items-center justify-center">
+                    <Icon className="w-5 h-5 opacity-90" aria-hidden />
+                  </span>
+                  <span>{label}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
         </div>
       </section>
 
@@ -856,6 +859,8 @@ const TentCard = ({
   return (
     <Card
       className={`overflow-hidden transition-all ${
+        tent.id === "deluxe" ? "sr-card-lux" : "sr-card-silver"
+      } ${
         soldOut
           ? "opacity-60 cursor-not-allowed"
           : selected
@@ -865,12 +870,13 @@ const TentCard = ({
       onClick={soldOut ? undefined : onSelect}
       aria-disabled={soldOut}
     >
-      <div className="relative aspect-[4/3] overflow-hidden bg-muted/50">
+      <div className="relative aspect-[5/4] md:aspect-[16/11] overflow-hidden bg-black">
         <img
           src={images[activeIdx] ?? tent.image}
           alt={tent.name[lang]}
-          className="w-full h-full object-contain"
+          className="w-full h-full object-cover"
           loading="lazy"
+
           onTouchStart={(e) => { touchX.current = e.touches[0].clientX; }}
           onTouchEnd={(e) => {
             if (touchX.current === null || images.length < 2) return;
