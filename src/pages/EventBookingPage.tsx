@@ -860,6 +860,8 @@ const TentCard = ({
   return (
     <Card
       className={`overflow-hidden transition-all ${
+        tent.id === "deluxe" ? "sr-card-lux" : "sr-card-silver"
+      } ${
         soldOut
           ? "opacity-60 cursor-not-allowed"
           : selected
@@ -869,12 +871,13 @@ const TentCard = ({
       onClick={soldOut ? undefined : onSelect}
       aria-disabled={soldOut}
     >
-      <div className="relative aspect-[4/3] overflow-hidden bg-muted/50">
+      <div className="relative aspect-[5/4] md:aspect-[16/11] overflow-hidden bg-black">
         <img
           src={images[activeIdx] ?? tent.image}
           alt={tent.name[lang]}
-          className="w-full h-full object-contain"
+          className="w-full h-full object-cover"
           loading="lazy"
+
           onTouchStart={(e) => { touchX.current = e.touches[0].clientX; }}
           onTouchEnd={(e) => {
             if (touchX.current === null || images.length < 2) return;
