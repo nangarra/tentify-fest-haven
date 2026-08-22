@@ -863,11 +863,11 @@ const TentCard = ({
       onClick={soldOut ? undefined : onSelect}
       aria-disabled={soldOut}
     >
-      <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+      <div className="relative aspect-[4/3] overflow-hidden bg-muted/50">
         <img
           src={images[activeIdx] ?? tent.image}
           alt={tent.name[lang]}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-contain"
           loading="lazy"
           onTouchStart={(e) => { touchX.current = e.touches[0].clientX; }}
           onTouchEnd={(e) => {
