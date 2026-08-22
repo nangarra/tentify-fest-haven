@@ -472,7 +472,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
 
 
       {/* Body */}
-      <section className="theme-sweden-rock bg-background text-foreground container mx-auto px-4 py-10 md:py-14">
+      <section className="container mx-auto px-4 py-10 md:py-14">
         {step === "booking" && (
           <div className="grid lg:grid-cols-[1fr_380px] gap-8">
             <div className="space-y-10">
@@ -580,7 +580,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
               </StepBlock>
             </div>
 
-            <aside className="hidden lg:block">
+            <aside className="hidden lg:block theme-sweden-rock bg-background text-foreground rounded-xl">
               <div className="sticky top-24">{summary}</div>
             </aside>
           </div>
@@ -702,7 +702,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
               </Button>
             </div>
 
-            <aside className="hidden lg:block">
+            <aside className="hidden lg:block theme-sweden-rock bg-background text-foreground rounded-xl">
               <div className="sticky top-24">{summary}</div>
             </aside>
           </div>
@@ -803,7 +803,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                     <ShoppingBag className="w-4 h-4 mr-1" /> {t("summary", lang)}
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto">
+                <SheetContent side="bottom" className="theme-sweden-rock max-h-[85vh] overflow-y-auto">
                   <SheetHeader>
                     <SheetTitle>{t("yourBooking", lang)}</SheetTitle>
                   </SheetHeader>
