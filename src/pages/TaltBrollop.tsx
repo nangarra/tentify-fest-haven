@@ -29,10 +29,11 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-import brollopVideo from "@/assets/tentify_brolopp.mp4.asset.json";
+import brollopVideo from "@/assets/tentify_brolopp-2.mp4.asset.json";
 import brollopInteriör from "@/assets/tentify_brollopstalt_hyra.webp.asset.json";
 import brollopTaltrad from "@/assets/tentify_brollopstalt_hyra_talt.webp.asset.json";
-import brollopPerson from "@/assets/tentify_brollop_talt.webp.asset.json";
+import brollopPerson from "@/assets/tentify_brollop_talt-2.webp.asset.json";
+import brollopLagerVy from "@/assets/brollop-camp-3-2.webp.asset.json";
 import brollopCamp from "@/assets/tentify_brollopstalt.webp.asset.json";
 
 import glampingNatur from "@/assets/glamping-talt-naturmiljo-skane.webp";
@@ -52,6 +53,10 @@ const caseImages = [
   {
     src: brollopInteriör.url,
     alt: "Inuti ett glampingtält med bekväm uppblåsbar Deluxe-säng för bröllopsgäster",
+  },
+  {
+    src: brollopLagerVy.url,
+    alt: "Glampingby med tält vid vattnet i kvällsljus inför bröllopshelgen",
   },
 ];
 
