@@ -400,46 +400,64 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   return (
     <div className="theme-sweden-rock min-h-screen bg-muted/40">
       {/* Hero */}
-      <section className="relative bg-[hsl(0_0%_6%)]">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,hsl(0_0%_18%)_0%,hsl(0_0%_6%)_65%)]" />
+      <section className="relative bg-[hsl(0_0%_10%)]">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_10%,hsl(0_0%_26%)_0%,hsl(0_0%_13%)_55%,hsl(0_0%_8%)_100%)]" />
         <div className="absolute top-4 right-4 z-20">
           <LanguageToggle lang={lang} onChange={setLang} />
         </div>
-        <div className="relative z-10 container mx-auto px-4 pt-14 pb-10 md:pt-20 md:pb-16 text-center">
+        <div className="relative z-10 container mx-auto px-4 pt-14 pb-12 md:pt-20 md:pb-16 text-center">
           <img
             src={srLogo.url}
             alt="Tentify Glamping – Sweden Rock Festival Sölvesborg 2027"
             className="mx-auto w-full max-w-[520px] md:max-w-[720px] h-auto object-contain"
             loading="eager"
           />
-          <h1 className="mt-8 text-3xl md:text-5xl font-bold text-white leading-tight">
+          <h1 className="mt-8 text-4xl md:text-6xl font-bold text-[hsl(40_20%_94%)] leading-tight tracking-tight">
             {lang === "sv" ? "Glamping till Sweden Rock" : "Glamping at Sweden Rock"}
           </h1>
-          <p className="mt-3 text-base md:text-lg text-white/70 max-w-2xl mx-auto">
+          <p className="mt-4 text-lg md:text-2xl text-[hsl(40_15%_88%)]/85 max-w-3xl mx-auto leading-relaxed">
             {lang === "sv"
               ? "Boka ditt färdiga boende till Sweden Rock Festival 2027"
               : "Book your ready-made stay for Sweden Rock Festival 2027"}
           </p>
 
-          <div className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-white/80">
-            <span className="flex items-center gap-2">
-              <Calendar className="w-4 h-4 opacity-70" /> 8–12 juni 2027
+          <div className="mt-7 flex flex-wrap justify-center gap-x-8 gap-y-3 text-lg md:text-xl text-[hsl(40_15%_90%)]/90">
+            <span className="flex items-center gap-2.5">
+              <Calendar className="w-5 h-5 md:w-6 md:h-6 opacity-80" /> 8–12 juni 2027
             </span>
-            <span className="flex items-center gap-2">
-              <MapPin className="w-4 h-4 opacity-70" /> Sölvesborg, Sweden
+            <span className="flex items-center gap-2.5">
+              <MapPin className="w-5 h-5 md:w-6 md:h-6 opacity-80" /> Sölvesborg
             </span>
           </div>
 
-          <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-1.5 text-xs text-white/50">
+          <ul className="mt-9 mx-auto max-w-xl grid gap-4 text-left">
             {(lang === "sv"
-              ? ["Fyra nätter", "Incheckning från kl. 15.00", "Färdigmöblerat tält", "Uppställning och nedmontering ingår"]
-              : ["Four nights", "Check-in from 3 pm", "Fully furnished tent", "Setup and takedown included"]
-            ).map((item) => (
-              <span key={item}>{item}</span>
+              ? [
+                  { Icon: Moon, label: "4 nätter" },
+                  { Icon: Clock, label: "Incheckning från kl. 15.00" },
+                  { Icon: BedDouble, label: "Fullt möblerat tält" },
+                  { Icon: Wrench, label: "Uppställning och nedmontering ingår" },
+                  { Icon: Car, label: "Parkering ingår" },
+                ]
+              : [
+                  { Icon: Moon, label: "4 nights" },
+                  { Icon: Clock, label: "Check-in from 3 pm" },
+                  { Icon: BedDouble, label: "Fully furnished tent" },
+                  { Icon: Wrench, label: "Setup and takedown included" },
+                  { Icon: Car, label: "Parking included" },
+                ]
+            ).map(({ Icon, label }) => (
+              <li key={label} className="flex items-center gap-4 text-lg md:text-xl text-[hsl(40_15%_92%)]/85 leading-relaxed">
+                <span className="flex-shrink-0 w-10 h-10 rounded-full bg-white/[0.07] border border-white/15 flex items-center justify-center">
+                  <Icon className="w-5 h-5 opacity-90" aria-hidden />
+                </span>
+                <span>{label}</span>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </section>
+
 
 
       {/* Body */}
