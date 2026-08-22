@@ -438,7 +438,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
             </span>
           </div>
 
-          <ul className="mt-9 mx-auto max-w-xl grid gap-4 text-left">
+          <ul className="mt-9 mx-auto max-w-xl flex flex-col items-center gap-4">
             {(lang === "sv"
               ? [
                   { Icon: Moon, label: "4 nätter" },
@@ -455,7 +455,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                   { Icon: Car, label: "Parking included" },
                 ]
             ).map(({ Icon, label }) => (
-              <li key={label} className="flex items-center gap-4 text-lg md:text-xl text-[hsl(40_14%_88%)] leading-relaxed">
+              <li key={label} className="flex items-center justify-center gap-4 text-lg md:text-xl text-[hsl(40_14%_88%)] leading-relaxed text-center">
                 <span className="flex-shrink-0 w-10 h-10 rounded-full bg-white/[0.07] border border-white/15 flex items-center justify-center">
                   <Icon className="w-5 h-5 opacity-90" aria-hidden />
                 </span>
