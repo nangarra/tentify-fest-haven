@@ -472,7 +472,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
 
 
       {/* Body */}
-      <section className="container mx-auto px-4 py-10 md:py-14">
+      <section className="theme-sweden-rock bg-background text-foreground container mx-auto px-4 py-10 md:py-14">
         {step === "booking" && (
           <div className="grid lg:grid-cols-[1fr_380px] gap-8">
             <div className="space-y-10">
