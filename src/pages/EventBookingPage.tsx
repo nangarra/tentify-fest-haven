@@ -790,7 +790,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
 
       {/* Mobile sticky */}
       {step !== "confirmation" && (
-        <div className="lg:hidden sticky bottom-0 z-40 bg-background border-t shadow-lg">
+        <div className="theme-sweden-rock lg:hidden sticky bottom-0 z-40 bg-background border-t shadow-lg">
           <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-3">
             <div>
               <div className="text-xs text-muted-foreground">{t("total", lang)}</div>
