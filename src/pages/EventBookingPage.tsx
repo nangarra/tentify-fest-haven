@@ -824,6 +824,9 @@ const TentCard = ({
   onSelect: () => void;
 }) => {
   const totalT = tent.totalCount ?? 0;
+  const images = tent.gallery && tent.gallery.length > 0 ? tent.gallery : [tent.image];
+  const [activeIdx, setActiveIdx] = useState(0);
+  const touchX = useRef<number | null>(null);
   return (
     <Card
       className={`overflow-hidden transition-all ${
@@ -837,7 +840,21 @@ const TentCard = ({
       aria-disabled={soldOut}
     >
       <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-        <img src={tent.image} alt={tent.name[lang]} className="w-full h-full object-cover" loading="lazy" />
+        <img
+          src={images[activeIdx] ?? tent.image}
+          alt={tent.name[lang]}
+          className="w-full h-full object-cover"
+          loading="lazy"
+          onTouchStart={(e) => { touchX.current = e.touches[0].clientX; }}
+          onTouchEnd={(e) => {
+            if (touchX.current === null || images.length < 2) return;
+            const dx = e.changedTouches[0].clientX - touchX.current;
+            if (Math.abs(dx) > 40) {
+              setActiveIdx((i) => (i + (dx < 0 ? 1 : -1) + images.length) % images.length);
+            }
+            touchX.current = null;
+          }}
+        />
         {selected && !soldOut && (
           <div className="absolute top-3 right-3 bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center shadow">
             <Check className="w-4 h-4" />
@@ -857,6 +874,24 @@ const TentCard = ({
           </div>
         )}
       </div>
+      {selected && !soldOut && images.length > 1 && (
+        <div className="grid grid-cols-3 gap-2 px-3 pt-3">
+          {images.slice(0, 4).filter((_, i) => i !== activeIdx).slice(0, 3).map((src) => {
+            const idx = images.indexOf(src);
+            return (
+              <button
+                key={src}
+                type="button"
+                onClick={(e) => { e.stopPropagation(); setActiveIdx(idx); }}
+                className="relative aspect-[4/3] rounded-md overflow-hidden border border-border/60 bg-muted/40 transition hover:border-primary/60"
+                aria-label={`${tent.name[lang]} bild ${idx + 1}`}
+              >
+                <img src={src} alt="" className="w-full h-full object-contain" loading="lazy" />
+              </button>
+            );
+          })}
+        </div>
+      )}
       <div className="p-5">
         <div className="flex items-start justify-between gap-3 mb-2">
           <div>
@@ -870,7 +905,7 @@ const TentCard = ({
         </div>
         <p className="text-sm text-muted-foreground mb-3">{tent.description[lang]}</p>
 
-        {totalT > 0 && (
+        {totalT > 0 && !selected && (
           <p className="text-xs font-medium mb-4">
             {soldOut ? (
               <span className="text-muted-foreground">
@@ -915,7 +950,7 @@ const TentCard = ({
           {soldOut
             ? (lang === "sv" ? "Slutsålt" : "Sold out")
             : selected
-            ? (<><Check className="w-4 h-4 mr-1" /> {t("selected", lang)}</>)
+            ? (<><Check className="w-4 h-4 mr-1" /> {t("selected", lang)}{available > 0 ? ` · ${available} ${lang === "sv" ? "tält kvar att boka" : "tents left"}` : ""}</>)
             : t("select", lang)}
         </Button>
       </div>
