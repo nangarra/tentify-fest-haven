@@ -124,7 +124,7 @@ export function generateBookingReceiptPdf(booking: AnyBooking) {
   };
 
   const sellerEnd = colBlock(M, "Säljare", [
-    ["Företag", "Nangarra Games AB"],
+    ["Företag", "Nangarra Invest AB"],
     ["Org.nr", "559374-7298"],
     ["Adress", "Eslöv, Sverige"],
     ["E-post", "nicklas@nangarra.com"],
@@ -215,7 +215,7 @@ export function generateBookingReceiptPdf(booking: AnyBooking) {
   doc.setFontSize(8);
   doc.setTextColor(140, 133, 124);
   doc.text(
-    "Nangarra Games AB · Org.nr 559374-7298 · Eslöv, Sverige · nicklas@nangarra.com",
+    "Nangarra Invest AB · Org.nr 559374-7298 · Eslöv, Sverige · nicklas@nangarra.com",
     pageW / 2,
     pageH - 40,
     { align: "center" },
