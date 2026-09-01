@@ -95,24 +95,53 @@ export function generateBookingReceiptPdf(booking: AnyBooking) {
     y += 15 * lines.length;
   };
 
-  // Seller
-  sectionTitle("Säljare");
-  row("Företag", "Nangarra Games AB");
-  row("Org.nr", "559374-7298");
-  row("Adress", "Eslöv, Sverige");
-  row("E-post", "nicklas@nangarra.com");
-  y += 10;
+  // Seller + customer side by side
+  const colW = (pageW - M * 2 - 24) / 2;
+  const colRight = M + colW + 24;
 
-  // Customer
-  sectionTitle("Kunduppgifter");
-  row("Namn", clean(booking.name));
-  row("E-post", clean(booking.email));
-  row("Telefon", clean(booking.phone));
-  row("Adress", clean(address.address));
-  row("Postnummer", clean(address.postalCode));
-  row("Ort", clean(address.city));
-  row("Land", clean(address.country));
-  y += 10;
+  const colBlock = (x: number, title: string, entries: [string, string][], startY: number) => {
+    let cy = startY;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    doc.setTextColor(30, 28, 26);
+    doc.text(title, x, cy);
+    cy += 7;
+    doc.setDrawColor(206, 198, 185);
+    doc.line(x, cy, x + colW, cy);
+    cy += 16;
+    entries.forEach(([label, value]) => {
+      if (!clean(value)) return;
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10);
+      doc.setTextColor(110, 104, 96);
+      doc.text(label, x, cy);
+      doc.setTextColor(30, 28, 26);
+      const lines = doc.splitTextToSize(String(value), colW - 100);
+      doc.text(lines, x + 100, cy);
+      cy += 15 * lines.length;
+    });
+    return cy;
+  };
+
+  const sellerEnd = colBlock(M, "Säljare", [
+    ["Företag", "Nangarra Games AB"],
+    ["Org.nr", "559374-7298"],
+    ["Adress", "Eslöv, Sverige"],
+    ["E-post", "nicklas@nangarra.com"],
+  ], y);
+
+  const customerEnd = colBlock(colRight, "Kunduppgifter", [
+    ["Namn", clean(booking.name)],
+    ["E-post", clean(booking.email)],
+    ["Telefon", clean(booking.phone)],
+    ["Adress", clean(address.address)],
+    ["Postnr", clean(address.postalCode)],
+    ["Ort", clean(address.city)],
+    ["Land", clean(address.country)],
+  ], y);
+
+  y = Math.max(sellerEnd, customerEnd) + 16;
+
 
   // Booking
   sectionTitle("Bokningsuppgifter");
