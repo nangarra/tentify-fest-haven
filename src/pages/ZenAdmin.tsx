@@ -20,7 +20,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { ArrowLeft, Search, Trash2, LogOut, Download, Check } from "lucide-react";
+import { ArrowLeft, Search, Trash2, LogOut, Download, Check, FileText } from "lucide-react";
+import { generateBookingReceiptPdf } from "@/lib/booking-receipt";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -527,6 +528,16 @@ const ZenAdmin = () => {
     setDeleteDialogOpen(true);
   };
 
+  const handleGenerateReceipt = (booking: Booking) => {
+    try {
+      const fileName = generateBookingReceiptPdf(booking);
+      toast({ title: "Kvitto skapat", description: fileName });
+    } catch (error) {
+      console.error("Error generating receipt:", error);
+      toast({ title: "Fel", description: "Kunde inte skapa kvitto", variant: "destructive" });
+    }
+  };
+
   const openDetailView = (booking: Booking) => {
     setSelectedBooking(booking);
     setAdminNote(booking.admin_note || "");
@@ -666,8 +677,15 @@ const ZenAdmin = () => {
               </div>
             </div>
 
-            {/* Delete Button */}
-            <div className="pt-4">
+            {/* Receipt + Delete */}
+            <div className="pt-4 flex flex-wrap gap-3">
+              <Button
+                variant="outline"
+                onClick={() => handleGenerateReceipt(selectedBooking)}
+              >
+                <FileText className="mr-2 h-4 w-4" />
+                Generera kvitto
+              </Button>
               <Button
                 variant="destructive"
                 onClick={() => openDeleteDialog(selectedBooking.id)}
@@ -834,6 +852,18 @@ const ZenAdmin = () => {
                             />
                           </div>
                           
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleGenerateReceipt(booking);
+                            }}
+                          >
+                            <FileText className="mr-2 h-4 w-4" />
+                            Generera kvitto
+                          </Button>
+
                           <Button
                             variant="ghost"
                             size="sm"
