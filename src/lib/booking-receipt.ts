@@ -62,7 +62,7 @@ export function generateBookingReceiptPdf(booking: AnyBooking) {
   );
   doc.text(`Kvittonr: ${bookingNumber}`, pageW - M, 62, { align: "right" });
 
-  y = 140;
+  y = 128;
   doc.setTextColor(30, 28, 26);
 
   const sectionTitle = (title: string) => {
@@ -73,10 +73,10 @@ export function generateBookingReceiptPdf(booking: AnyBooking) {
     doc.setFont("helvetica", "bold");
     doc.setFontSize(12);
     doc.text(title, M, y);
-    y += 8;
+    y += 7;
     doc.setDrawColor(206, 198, 185);
     doc.line(M, y, pageW - M, y);
-    y += 18;
+    y += 16;
   };
 
   const row = (label: string, value: string) => {
@@ -92,7 +92,7 @@ export function generateBookingReceiptPdf(booking: AnyBooking) {
     doc.setTextColor(30, 28, 26);
     const lines = doc.splitTextToSize(String(value), pageW - M - (M + 170));
     doc.text(lines, M + 170, y);
-    y += 16 * lines.length;
+    y += 15 * lines.length;
   };
 
   // Seller
@@ -101,7 +101,7 @@ export function generateBookingReceiptPdf(booking: AnyBooking) {
   row("Org.nr", "559374-7298");
   row("Adress", "Eslöv, Sverige");
   row("E-post", "nicklas@nangarra.com");
-  y += 14;
+  y += 10;
 
   // Customer
   sectionTitle("Kunduppgifter");
@@ -112,7 +112,7 @@ export function generateBookingReceiptPdf(booking: AnyBooking) {
   row("Postnummer", clean(address.postalCode));
   row("Ort", clean(address.city));
   row("Land", clean(address.country));
-  y += 14;
+  y += 10;
 
   // Booking
   sectionTitle("Bokningsuppgifter");
@@ -124,8 +124,9 @@ export function generateBookingReceiptPdf(booking: AnyBooking) {
   row("Antal nätter", clean(meta.nights));
   row("Tälttyp", clean(meta.tentName) || clean(meta.tentType));
   row("Antal gäster", clean(meta.guests));
-  row("Betalsätt", clean(meta.paymentMethod));
-  y += 14;
+  const pm = clean(meta.paymentMethod);
+  row("Betalsätt", pm ? pm.charAt(0).toUpperCase() + pm.slice(1) : "");
+  y += 10;
 
   // Add-ons
   const addOns: any[] = Array.isArray(meta.addOns) ? meta.addOns : [];
@@ -136,7 +137,7 @@ export function generateBookingReceiptPdf(booking: AnyBooking) {
       const label = `${clean(a.name)}${qty > 1 ? ` × ${qty}` : ""}`;
       row(label, a.total !== undefined ? SEK(Number(a.total) || 0) : "");
     });
-    y += 14;
+    y += 10;
   }
 
   // Payment
@@ -167,7 +168,7 @@ export function generateBookingReceiptPdf(booking: AnyBooking) {
   doc.setTextColor(30, 28, 26);
   doc.text("Återstående att betala", boxX, boxY);
   doc.text(SEK(remaining), pageW - M - 16, boxY, { align: "right" });
-  y += 86 + 34;
+  y += 86 + 30;
 
   if (y > pageH - 110) {
     doc.addPage();
