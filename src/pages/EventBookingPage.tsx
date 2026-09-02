@@ -431,7 +431,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
 
           <div className="mt-7 flex flex-wrap justify-center gap-x-8 gap-y-3 text-lg md:text-xl text-[hsl(40_14%_88%)]">
             <span className="flex items-center gap-2.5">
-              <Calendar className="w-5 h-5 md:w-6 md:h-6 opacity-80" /> 8–12 juni 2027
+              <Calendar className="w-5 h-5 md:w-6 md:h-6 opacity-80" /> 9–13 juni 2027
             </span>
             <span className="flex items-center gap-2.5">
               <MapPin className="w-5 h-5 md:w-6 md:h-6 opacity-80" /> Sölvesborg
