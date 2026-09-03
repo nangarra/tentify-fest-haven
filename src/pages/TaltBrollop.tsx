@@ -400,7 +400,7 @@ const TaltBrollop = () => {
           <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
             <div className="order-2 lg:order-1">
               <img
-                src={personImage.url}
+                src={personImage}
                 alt="Bröllopsgäst utanför ett möblerat glampingtält på bröllopsgård"
                 loading="lazy"
                 className="w-full h-[440px] object-cover rounded-lg shadow-elegant"
