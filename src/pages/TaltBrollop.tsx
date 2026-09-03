@@ -66,17 +66,17 @@ const erbjudande = [
 ];
 
 const galleri = [
-  { src: heroImage.url, alt: "Flera glampingtält uppställda som glampingområde vid bröllopsgård" },
+  { src: heroImage, alt: "Flera glampingtält uppställda som glampingområde vid bröllopsgård" },
   { src: dubbelsang, alt: "Färdigbäddad dubbelsäng i glampingtält för bröllopsgäster" },
-  { src: interiorImage.url, alt: "Inredning i glampingtält med säng, matta och sängbord" },
-  { src: campImage.url, alt: "Glampingtält med bord, stolar och mysig belysning i kvällsljus" },
+  { src: interiorImage, alt: "Inredning i glampingtält med säng, matta och sängbord" },
+  { src: campImage, alt: "Glampingtält med bord, stolar och mysig belysning i kvällsljus" },
   { src: glampingUtemoebler, alt: "Utemöbler framför glampingtält på bröllopsgård" },
   { src: inutiSovplats, alt: "Mysig sovplats inuti ett glampingtält" },
   { src: bohoStyling, alt: "Bohemisk styling och dekoration i Tentifys glampingtält" },
   { src: slottMiljo, alt: "Glampingtält i herrgårdsmiljö inför bröllopshelg" },
   { src: glampingNatur, alt: "Glampingtält i naturnära miljö i Skåne" },
   { src: enkelsang, alt: "Enkelsäng med sängkläder i glampingtält" },
-  { src: lagerVy.url, alt: "Samlat glampingområde med flera tält vid vattnet" },
+  { src: lagerVy, alt: "Samlat glampingområde med flera tält vid vattnet" },
   { src: dettaIngar, alt: "Detaljbild på inredning och utrustning i Tentifys glampingtält" },
 ];
 
