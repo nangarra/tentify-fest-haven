@@ -234,7 +234,7 @@ const TaltBrollop = () => {
       {/* HERO */}
       <section className="relative min-h-[85vh] flex items-center">
         <img
-          src={heroImage.url}
+          src={heroImage}
           alt="Glampingtält uppställda i naturnära bröllopsmiljö på en bröllopsgård i Skåne"
           className="absolute inset-0 w-full h-full object-cover"
         />
