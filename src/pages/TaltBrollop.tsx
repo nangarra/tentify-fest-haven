@@ -5,67 +5,122 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import {
-  CheckCircle,
-  Info,
-  Quote,
-  Users,
-  Car,
-  Clock,
-  Truck,
-  MapPin,
   Tent,
-  CalendarDays,
+  BedDouble,
+  BedSingle,
+  Layers,
   Sparkles,
-  FileText,
-
+  Lamp,
+  Rug,
+  Table2,
+  Armchair,
+  Gift,
+  Droplets,
+  PlusCircle,
+  Wrench,
+  Truck,
+  Map,
+  CheckCircle,
+  MessageSquare,
+  ClipboardList,
+  PackageOpen,
+  Handshake,
 } from "lucide-react";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 
-import brollopVideo from "@/assets/tentify_brolopp-2.mp4.asset.json";
-import brollopInteriör from "@/assets/tentify_brollopstalt_hyra.webp.asset.json";
-import brollopTaltrad from "@/assets/tentify_brollopstalt_hyra_talt.webp.asset.json";
-import brollopPerson from "@/assets/tentify_brollop_talt-2.webp.asset.json";
-import brollopLagerVy from "@/assets/brollop-camp-3-2.webp.asset.json";
-import brollopCamp from "@/assets/tentify_brollopstalt.webp.asset.json";
+import heroImage from "@/assets/tentify_brollopstalt_hyra_talt.webp.asset.json";
+import campImage from "@/assets/tentify_brollopstalt.webp.asset.json";
+import interiorImage from "@/assets/tentify_brollopstalt_hyra.webp.asset.json";
+import personImage from "@/assets/tentify_brollop_talt-2.webp.asset.json";
+import lagerVy from "@/assets/brollop-camp-3-2.webp.asset.json";
 
 import glampingNatur from "@/assets/glamping-talt-naturmiljo-skane.webp";
 import glampingUtemoebler from "@/assets/glamping-talt-utemoebler-komfort.webp";
 import inutiSovplats from "@/assets/glamping-talt-inuti-sovplats.webp";
 import dubbelsang from "@/assets/glampingtalt-dubbelsang.webp";
+import enkelsang from "@/assets/glampingtalt-enkelsang.webp";
+import bohoStyling from "@/assets/gallery/tentify-glamping-boho.webp";
+import slottMiljo from "@/assets/gallery/tentify-glamping-slott.webp";
+import dettaIngar from "@/assets/gallery/tentify-detta-ingar.webp";
 
-const caseImages = [
+const erbjudande = [
+  { icon: Tent, title: "Glampingtält i olika storlekar" },
+  { icon: BedDouble, title: "Dubbelsängar eller enkelsängar" },
+  { icon: Layers, title: "Madrasser" },
+  { icon: BedSingle, title: "Täcken och kuddar" },
+  { icon: Sparkles, title: "Sängkläder – färdigbäddat" },
+  { icon: Rug, title: "Mattor" },
+  { icon: Table2, title: "Sängbord" },
+  { icon: Armchair, title: "Bord och stolar" },
+  { icon: Layers, title: "Filtar" },
+  { icon: Lamp, title: "Mysig belysning" },
+  { icon: Rug, title: "Entrémattor" },
+  { icon: Sparkles, title: "Styling och dekoration" },
+  { icon: Gift, title: "Goodiebags till gästerna" },
+  { icon: Droplets, title: "Handdukar som tillval" },
+  { icon: PlusCircle, title: "Extra sängar vid behov" },
+  { icon: Wrench, title: "Montering och nedmontering" },
+  { icon: Truck, title: "Transport" },
+  { icon: Map, title: "Ett helt samlat glampingområde" },
+];
+
+const galleri = [
+  { src: heroImage.url, alt: "Flera glampingtält uppställda som glampingområde vid bröllopsgård" },
+  { src: dubbelsang, alt: "Färdigbäddad dubbelsäng i glampingtält för bröllopsgäster" },
+  { src: interiorImage.url, alt: "Inredning i glampingtält med säng, matta och sängbord" },
+  { src: campImage.url, alt: "Glampingtält med bord, stolar och mysig belysning i kvällsljus" },
+  { src: glampingUtemoebler, alt: "Utemöbler framför glampingtält på bröllopsgård" },
+  { src: inutiSovplats, alt: "Mysig sovplats inuti ett glampingtält" },
+  { src: bohoStyling, alt: "Bohemisk styling och dekoration i Tentifys glampingtält" },
+  { src: slottMiljo, alt: "Glampingtält i herrgårdsmiljö inför bröllopshelg" },
+  { src: glampingNatur, alt: "Glampingtält i naturnära miljö i Skåne" },
+  { src: enkelsang, alt: "Enkelsäng med sängkläder i glampingtält" },
+  { src: lagerVy.url, alt: "Samlat glampingområde med flera tält vid vattnet" },
+  { src: dettaIngar, alt: "Detaljbild på inredning och utrustning i Tentifys glampingtält" },
+];
+
+const steg = [
   {
-    src: brollopTaltrad.url,
-    alt: "Glampingby med tio uppsatta glampingtält för bröllopsgäster utanför Helsingborg",
+    icon: MessageSquare,
+    title: "Ni kontaktar oss",
+    text: "Berätta om er gård, antal bröllop och ungefär hur många extra sovplatser ni skulle vilja kunna erbjuda.",
   },
   {
-    src: brollopCamp.url,
-    alt: "Glampingtält med stolar, bord och ljusslingor på bröllopsplats i Skåne",
+    icon: ClipboardList,
+    title: "Vi skapar ett upplägg",
+    text: "Vi tar fram ett förslag baserat på platsen, antal tält, antal gäster och vilken nivå på inredning ni önskar.",
   },
   {
-    src: brollopInteriör.url,
-    alt: "Inuti ett glampingtält med bekväm uppblåsbar Deluxe-säng för bröllopsgäster",
+    icon: PackageOpen,
+    title: "Vi bygger upp allt",
+    text: "Tentify transporterar, monterar och inreder glampingområdet inför bröllopet.",
   },
   {
-    src: brollopLagerVy.url,
-    alt: "Glampingby med tält vid vattnet i kvällsljus inför bröllopshelgen",
+    icon: Truck,
+    title: "Vi tar ner allt igen",
+    text: "Efter bröllopet monterar vi ner och transporterar bort allt.",
   },
 ];
 
+const fordelar = [
+  "Ta emot större bröllop",
+  "Erbjud fler gäster övernattning",
+  "Skapa en komplett weekendupplevelse",
+  "Ingen investering i egna tält",
+  "Ingen förvaring av utrustning",
+  "Ingen montering för er personal",
+  "Flexibel kapacitet beroende på bröllop",
+  "Kan användas bara de helger det behövs",
+  "Ger gården ett mer unikt erbjudande",
+  "Möjlighet till långsiktigt samarbete med Tentify",
+];
 
-const galleriBilder = [
-  { src: glampingNatur, alt: "Glampingtält till bröllop i Skåne i naturmiljö" },
-  { src: glampingUtemoebler, alt: "Möblerat glampingtält med utemöbler vid utomhusbröllop" },
-  { src: inutiSovplats, alt: "Mysig sovplats inuti glampingtält för övernattande bröllopsgäster" },
-  { src: dubbelsang, alt: "Glampingtält med bekväm dubbelsäng för bröllopsgäster" },
+const samarbetsformer = [
+  "Bröllopsparet bokar direkt genom Tentify",
+  "Gården bokar hela glampingområdet",
+  "Boendet säljs som ett tillval till bröllopspaketet",
+  "Vi tar fram ett fast samarbetsupplägg för återkommande bröllop",
 ];
 
 const scrollTo = (id: string) => {
@@ -78,13 +133,12 @@ const TaltBrollop = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [form, setForm] = useState({
     name: "",
+    company: "",
     email: "",
     phone: "",
-    date: "",
-    location: "",
-    guests: "",
-    nights: "",
-    type: "privat",
+    city: "",
+    website: "",
+    beds: "",
     message: "",
   });
 
@@ -95,7 +149,7 @@ const TaltBrollop = () => {
     e.preventDefault();
     if (!form.name || !form.email || !form.phone) {
       toast({
-        title: "Fyll i dina kontaktuppgifter",
+        title: "Fyll i era kontaktuppgifter",
         description: "Namn, e-post och telefonnummer behövs för att vi ska kunna återkomma.",
         variant: "destructive",
       });
@@ -105,31 +159,37 @@ const TaltBrollop = () => {
     try {
       const { supabase } = await import("@/integrations/supabase/client");
       const message = [
-        `Typ: ${form.type === "foretag" ? "Bröllopsanläggning / företag" : "Privat bröllop"}`,
-        `Datum: ${form.date || "-"}`,
-        `Plats: ${form.location || "-"}`,
-        `Antal övernattande gäster: ${form.guests || "-"}`,
-        `Antal nätter: ${form.nights || "-"}`,
+        `Företag / bröllopsgård: ${form.company || "-"}`,
+        `Ort: ${form.city || "-"}`,
+        `Webbplats: ${form.website || "-"}`,
+        `Önskat antal extra sovplatser: ${form.beds || "-"}`,
         "",
         form.message || "(inget meddelande)",
       ].join("\n");
 
-      const { error } = await supabase.from("contact_requests").insert([
-        {
-          name: form.name,
-          email: form.email,
-          phone: form.phone,
-          message,
-          source_page: "/talt-brollop",
-        },
-      ]);
+      const payload = {
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        message,
+        source_page: "/talt-brollop",
+      };
+
+      const { error } = await supabase.from("contact_requests").insert([payload]);
       if (error) throw error;
+
+      try {
+        await supabase.functions.invoke("notify-contact-request", { body: payload });
+      } catch (notifyErr) {
+        console.warn("Contact notification not sent:", notifyErr);
+      }
+
       setIsSubmitted(true);
     } catch (err) {
-      console.error("Error submitting wedding quote request:", err);
+      console.error("Error submitting venue partnership request:", err);
       toast({
         title: "Ett fel uppstod",
-        description: "Kunde inte skicka din förfrågan. Försök gärna igen.",
+        description: "Kunde inte skicka er förfrågan. Försök gärna igen.",
         variant: "destructive",
       });
     } finally {
@@ -137,631 +197,404 @@ const TaltBrollop = () => {
     }
   };
 
-  const faqItems = [
-    {
-      question: "Kan man hyra glampingtält till bröllop?",
-      answer:
-        "Ja, glampingtält passar mycket bra till bröllop där gästerna behöver sova nära festen. Vi levererar, ställer upp och inreder tälten så att gästerna kan checka in direkt.",
-    },
-    {
-      question: "Är era tält festtält eller sovtält?",
-      answer:
-        "Tentifys tält används som möblerade sovtält och glampingtält för gäster. De är inte stora partytält för middag och dans.",
-    },
-    {
-      question: "Passar glampingtält för lantligt bröllop?",
-      answer:
-        "Ja, glampingtält passar särskilt bra till lantliga bröllop, trädgårdsbröllop och utomhusbröllop där ni vill skapa en mysig helhetsupplevelse med övernattning på plats.",
-    },
-    {
-      question: "Vad kostar det att hyra tält till bröllop?",
-      answer:
-        "Priset beror på antal tält, plats, datum, antal nätter och vilken inredning som ska ingå. Skicka in en förfrågan så återkommer vi med ett personligt prisförslag.",
-    },
-    {
-      question: "Levererar ni bröllopstält i Skåne?",
-      answer:
-        "Tentify utgår från Skåne och hjälper till med glampingtält till bröllop i bland annat Helsingborg, Malmö, Lund och Skåne med omnejd.",
-    },
-    {
-      question: "Kan en bröllopslokal hyra tält för att få fler övernattande gäster?",
-      answer:
-        "Ja. Slott, gårdar, vingårdar och eventanläggningar kan tillfälligt utöka sin boendekapacitet med kompletta glampingtält, utan permanenta byggprojekt.",
-    },
-  ];
-
   return (
     <>
       <Helmet>
-        <title>Glampingtält till bröllop i Skåne | Boende för bröllopsgäster</title>
+        <title>Glamping & extra boende för bröllopsgårdar | Tentify</title>
         <meta
           name="description"
-          content="Hyr glampingtält till bröllop i Skåne. Komplett glampingby med bäddade sängar, leverans, uppsättning och nedmontering – så kan gästerna stanna hela helgen."
+          content="Utöka antalet sovplatser på er bröllopsgård med Tentify. Vi bygger kompletta glampingområden med tält, sängar, inredning, montering och nedmontering."
         />
         <link rel="canonical" href="https://tentify.se/talt-brollop" />
-        <meta property="og:title" content="Glampingtält till bröllop i Skåne | Boende för bröllopsgäster" />
+        <meta property="og:title" content="Glamping & extra boende för bröllopsgårdar | Tentify" />
         <meta
           property="og:description"
-          content="Hyr glampingtält till bröllop i Skåne. Komplett glampingby med bäddade sängar, leverans, uppsättning och nedmontering."
+          content="Tentify skapar kompletta glampingområden med tält, sängar och inredning på er bröllopsgård – vi monterar, inreder och tar ner allt."
         />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://tentify.se/talt-brollop" />
+        <meta name="twitter:card" content="summary_large_image" />
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: faqItems.map((faq) => ({
-              "@type": "Question",
-              name: faq.question,
-              acceptedAnswer: { "@type": "Answer", text: faq.answer },
-            })),
+            "@type": "Service",
+            name: "Glamping och extra boende för bröllopsgårdar",
+            serviceType: "Glampingtält och tältboende till bröllop",
+            provider: {
+              "@type": "Organization",
+              name: "Tentify",
+              url: "https://tentify.se",
+            },
+            areaServed: "Skåne och södra Sverige",
+            description:
+              "Tentify bygger tillfälliga glampingområden på bröllopsgårdar, herrgårdar, vingårdar och festlokaler med möblerade och färdigbäddade glampingtält.",
           })}
         </script>
       </Helmet>
 
-      <div className="min-h-screen bg-background">
-        <main>
-          {/* Hero med video */}
-          <section className="relative min-h-[85vh] md:min-h-screen flex items-center justify-center overflow-hidden">
-            <div className="absolute inset-0">
-              <video
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                poster={brollopCamp.url}
-                aria-hidden="true"
-                tabIndex={-1}
-                className="w-full h-full object-cover object-[60%_center] md:object-center motion-reduce:hidden"
+      {/* HERO */}
+      <section className="relative min-h-[85vh] flex items-center">
+        <img
+          src={heroImage.url}
+          alt="Glampingtält uppställda i naturnära bröllopsmiljö på en bröllopsgård i Skåne"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-foreground/70 via-foreground/55 to-foreground/75" />
+        <div className="relative container mx-auto px-4 py-24 text-center">
+          <div className="max-w-3xl mx-auto">
+            <span className="inline-flex items-center gap-2 text-sm tracking-widest uppercase text-primary-foreground/80 mb-6">
+              <Sparkles className="w-4 h-4" /> För bröllopsgårdar & venues
+            </span>
+            <h1 className="text-4xl md:text-6xl font-bold text-primary-foreground mb-6 text-balance">
+              Fler sovplatser till er bröllopsgård
+            </h1>
+            <p className="text-lg md:text-xl text-primary-foreground/85 leading-relaxed mb-10">
+              Låt era bröllopspar och gäster stanna hela helgen. Tentify skapar ett
+              komplett glampingboende direkt på er gård.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button className="btn-hero" onClick={() => scrollTo("samarbetsformular")}>
+                Kontakta oss om samarbete
+              </Button>
+              <Button
+                variant="outline"
+                className="px-8 py-4 rounded-lg font-semibold bg-transparent border-primary-foreground/60 text-primary-foreground hover:bg-primary-foreground hover:text-foreground"
+                onClick={() => scrollTo("galleri")}
               >
-                <source src={brollopVideo.url} type="video/mp4" />
-              </video>
-              <img
-                src={brollopCamp.url}
-                alt="Glampingtält uppställda för bröllopsgäster på en gård i Skåne"
-                className="hidden motion-reduce:block absolute inset-0 w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/35 to-black/55" />
+                Se våra tält
+              </Button>
             </div>
+          </div>
+        </div>
+      </section>
 
-            <div className="relative z-10 text-center px-4 max-w-3xl mx-auto py-24">
-              <h1
-                className="text-3xl sm:text-4xl md:text-6xl font-bold text-white mb-6 leading-tight"
-                style={{ textShadow: "0 2px 10px rgba(0,0,0,0.55)" }}
-              >
-                Förläng bröllopet – låt gästerna stanna hela helgen
-              </h1>
-              <p
-                className="text-base sm:text-lg md:text-xl text-white/95 mb-8 leading-relaxed"
-                style={{ textShadow: "0 1px 6px rgba(0,0,0,0.6)" }}
-              >
-                Tentify skapar en färdig glampingby där era gäster kan sova bekvämt nära festen.
-                Vi levererar, inreder, bäddar och tar hand om allt – så att ni kan fokusera på bröllopet.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-stretch sm:items-center">
-                <Button
-                  size="lg"
-                  className="btn-hero text-base sm:text-lg px-8 py-6"
-                  onClick={() => scrollTo("offert")}
-                >
-                  Få prisförslag
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="text-base sm:text-lg px-8 py-6 bg-white/10 backdrop-blur border-white/70 text-white hover:bg-white hover:text-foreground"
-                  onClick={() => scrollTo("sa-fungerar-det")}
-                >
-                  Se hur det fungerar
-                </Button>
-              </div>
-              <p className="mt-6 text-sm text-white/85">
-                Komplett leverans • Bekväma sängar • Professionell uppsättning • Personlig kontakt
-              </p>
-            </div>
-          </section>
-
-          {/* Personlig sektion */}
-          <section className="py-16 md:py-24 bg-background">
-            <div className="container mx-auto px-4 max-w-6xl grid md:grid-cols-2 gap-10 md:gap-16 items-center">
-              <img
-                src={brollopPerson.url}
-                alt="Nicklas Nangarra, grundare av Tentify, framför färdigställda glampingtält inför ett bröllop"
-                loading="lazy"
-                decoding="async"
-                width={1200}
-                height={1600}
-                className="w-full aspect-[4/5] object-cover rounded-3xl shadow-card"
-              />
-              <div>
-                <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-                  Personlig hjälp från första kontakt till färdiga tält
-                </h2>
-                <p className="text-lg text-muted-foreground leading-relaxed mb-4">
-                  Hej! Jag heter Nicklas Nangarra och det är jag som hjälper er med bokningen, planeringen
-                  och alla praktiska detaljer kring ert bröllop.
-                </p>
-                <p className="text-lg text-muted-foreground leading-relaxed mb-4">
-                  Jag hjälper er att ta fram rätt antal tält, planera placeringen och anpassa lösningen
-                  efter platsen, antalet gäster och era önskemål. Jag finns med från den första kontakten
-                  tills tälten är uppställda och redo för era gäster.
-                </p>
-                <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                  Ni ska kunna fokusera på bröllopet och era gäster – vi tar hand om tälten, leveransen och
-                  logistiken.
-                </p>
-                <p className="text-foreground font-semibold">Nicklas Nangarra</p>
-                <p className="text-muted-foreground">Grundare av Tentify</p>
-                <Button className="btn-hero mt-6" onClick={() => scrollTo("offert")}>
-                  Få en personlig offert
-                </Button>
-              </div>
-
-            </div>
-          </section>
-
-          {/* Case study */}
-          <section className="py-16 md:py-24 bg-gradient-subtle">
-            <div className="container mx-auto px-4 max-w-6xl">
-              <p className="text-sm uppercase tracking-[0.2em] text-primary font-medium mb-3">
-                Ett riktigt Tentify-bröllop
-              </p>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-                Majas bröllopshelg utanför Helsingborg
+      {/* SEKTION 2 */}
+      <section className="py-20 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6 text-balance">
+                Utöka ert boende – utan att bygga ut
               </h2>
-              <p className="text-lg text-muted-foreground leading-relaxed max-w-3xl mb-10">
-                När Maja planerade sitt bröllop ville hon ge gästerna mer än bara en fantastisk fest. Hon
-                ville att de skulle kunna stanna kvar, sova bekvämt och fortsätta umgås tillsammans under
-                hela helgen.
-              </p>
-
+              <div className="space-y-5 text-lg text-muted-foreground leading-relaxed">
+                <p>
+                  Många bröllopsgårdar har fantastiska lokaler men begränsat antal
+                  sovplatser. Med Tentify kan ni enkelt utöka boendekapaciteten under
+                  bröllopshelger och större event.
+                </p>
+                <p>
+                  Vi bygger upp ett komplett glampingområde på er mark och tar hand om hela
+                  processen – från transport och montering till inredning och nedmontering.
+                </p>
+                <p>
+                  På så sätt kan ni erbjuda fler gäster möjligheten att stanna kvar och
+                  skapa en ännu bättre helhetsupplevelse.
+                </p>
+              </div>
+            </div>
+            <div className="relative">
               <img
-                src={caseImages[0].src}
-                alt={caseImages[0].alt}
+                src={campImage.url}
+                alt="Glampingområde med möblerade tält uppbyggt vid en bröllopsgård"
                 loading="lazy"
-                decoding="async"
-                width={1920}
-                height={1080}
-                className="w-full aspect-[16/9] object-cover rounded-3xl shadow-card mb-4"
+                className="w-full h-[420px] object-cover rounded-lg shadow-elegant"
               />
+            </div>
+          </div>
+        </div>
+      </section>
 
-              {/* Galleri */}
-              <div className="grid sm:grid-cols-2 gap-4">
-                {caseImages.slice(1).map((img) => (
+      {/* SEKTION 3 */}
+      <section className="py-20 bg-gradient-subtle">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-14">
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
+                Detta kan vi erbjuda
+              </h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                En komplett och färdig lösning. Tälten kommer fullt möblerade och
+                färdigbäddade – ni behöver inte ordna någonting själva.
+              </p>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {erbjudande.map((item) => (
+                <Card
+                  key={item.title}
+                  className="p-5 flex items-center gap-4 shadow-card hover:shadow-elegant transition-smooth"
+                >
+                  <span className="bg-primary/10 text-primary rounded-lg w-11 h-11 flex items-center justify-center flex-shrink-0">
+                    <item.icon className="w-5 h-5" />
+                  </span>
+                  <span className="font-medium text-foreground">{item.title}</span>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SEKTION 4 – GALLERI */}
+      <section id="galleri" className="py-20 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-14">
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
+                Så ser våra glampingtält ut
+              </h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Möblerat, färdigbäddat och stylat – från exteriör och belysning till
+                sängar, mattor och detaljer.
+              </p>
+            </div>
+            <div className="columns-1 sm:columns-2 lg:columns-3 gap-5 [column-fill:_balance]">
+              {galleri.map((img, i) => (
+                <div
+                  key={img.src + i}
+                  className="mb-5 overflow-hidden rounded-lg shadow-card group"
+                >
                   <img
-                    key={img.src}
                     src={img.src}
                     alt={img.alt}
                     loading="lazy"
-                    decoding="async"
-                    width={1200}
-                    height={900}
-                    className="w-full aspect-[4/3] object-cover rounded-2xl shadow-card"
+                    className="w-full object-cover transition-smooth group-hover:scale-[1.03]"
                   />
-                ))}
-              </div>
-
-
-              {/* Faktaruta */}
-              <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mt-10">
-                {[
-                  { icon: MapPin, label: "Plats", value: "Utanför Helsingborg" },
-                  { icon: Tent, label: "Antal tält", value: "10 kompletta glampingtält" },
-                  { icon: CalendarDays, label: "Övernattning", value: "Två nätter" },
-                  { icon: Truck, label: "Leverans", value: "Uppsättning, inredning och nedmontering" },
-                  { icon: Sparkles, label: "Resultat", value: "Gästerna kunde stanna hela bröllopshelgen" },
-                ].map((f) => (
-                  <Card key={f.label} className="p-5 shadow-card">
-                    <f.icon className="w-6 h-6 text-primary mb-3" aria-hidden="true" />
-                    <p className="text-sm text-muted-foreground mb-1">{f.label}</p>
-                    <p className="text-foreground font-medium leading-snug">{f.value}</p>
-                  </Card>
-                ))}
-              </div>
-
-              <div className="max-w-3xl mt-10 space-y-4 text-lg text-muted-foreground leading-relaxed">
-                <p>
-                  Tentify skapade en komplett glampingby med tio fullt inredda tält för bröllopsgästerna.
-                  Genom att erbjuda boende på plats kunde Maja och hennes gäster förlänga upplevelsen från
-                  en enskild bröllopsdag till en hel helg tillsammans.
-                </p>
-                <p>
-                  Responsen från både Maja och gästerna var mycket positiv. Gästerna slapp ordna transport
-                  hem sent på kvällen och kunde i stället fortsätta umgås, vakna upp tillsammans och dela
-                  ännu fler minnen dagen efter.
-                </p>
-              </div>
-
-              <Card className="mt-8 p-5 flex gap-3 items-start bg-primary/5 border-primary/20 max-w-3xl">
-                <Info className="w-5 h-5 text-primary flex-shrink-0 mt-1" aria-hidden="true" />
-                <p className="text-muted-foreground leading-relaxed">
-                  På vissa bilder syns sängarna innan de sista sängkläderna har lagts på. Av hygieniska
-                  skäl levereras våra sängkläder rena och vakuumförpackade och öppnas först i samband med
-                  att boendet färdigställs inför gästernas ankomst.
-                </p>
-              </Card>
-
-              <Card className="mt-6 p-8 max-w-3xl shadow-card">
-                <Quote className="w-8 h-8 text-primary mb-4" aria-hidden="true" />
-                <blockquote className="text-xl md:text-2xl text-foreground leading-relaxed">
-                  ”Det betydde mycket att gästerna kunde stanna i två nätter och att vi fick uppleva en hel
-                  bröllopshelg tillsammans, i stället för att alla behövde åka hem efter festen.”
-                </blockquote>
-                <p className="mt-4 text-sm text-muted-foreground">
-                  Sammanfattning av kundens upplevelse
-                </p>
-              </Card>
+                </div>
+              ))}
             </div>
-          </section>
+          </div>
+        </div>
+      </section>
 
-          {/* Värde */}
-          <section className="py-16 md:py-24 bg-background">
-            <div className="container mx-auto px-4 max-w-6xl">
+      {/* SEKTION 5 – SÅ FUNGERAR DET */}
+      <section className="py-20 bg-gradient-subtle">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-14">
               <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-                Gör bröllopet till en hel helg
-              </h2>
-              <div className="max-w-3xl space-y-4 text-lg text-muted-foreground leading-relaxed mb-12">
-                <p>
-                  När gästerna kan sova på plats förändras hela upplevelsen. Ingen behöver lämna festen
-                  tidigt, ordna taxi eller fundera på vem som ska köra. Vänner och familj kan fortsätta
-                  umgås efter festen och vakna upp tillsammans morgonen därpå.
-                </p>
-                <p>
-                  Det skapar mer tid tillsammans, mindre stress och ett bröllop som gästerna kommer att
-                  minnas långt efteråt.
-                </p>
-              </div>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {[
-                  { icon: Users, title: "Fler gäster kan stanna", text: "Boende direkt vid bröllopsplatsen." },
-                  { icon: Car, title: "Ingen behöver köra hem", text: "Tryggare och enklare efter festen." },
-                  { icon: Clock, title: "Mer tid tillsammans", text: "Förläng firandet från en kväll till en hel helg." },
-                  { icon: Truck, title: "Vi sköter logistiken", text: "Leverans, uppsättning, inredning och nedmontering." },
-                ].map((c) => (
-                  <Card key={c.title} className="p-6 shadow-card">
-                    <c.icon className="w-7 h-7 text-primary mb-4" aria-hidden="true" />
-                    <h3 className="text-lg font-semibold text-foreground mb-2">{c.title}</h3>
-                    <p className="text-muted-foreground">{c.text}</p>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* B2B – slott, gårdar och bröllopsanläggningar */}
-          <section className="py-16 md:py-24 bg-gradient-subtle">
-            <div className="container mx-auto px-4 max-w-6xl grid lg:grid-cols-2 gap-12 items-center">
-              <div>
-                <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-                  Fler övernattande gäster – utan att bygga fler hotellrum
-                </h2>
-                <p className="text-lg text-muted-foreground leading-relaxed mb-4">
-                  Har ni en fantastisk bröllopslokal men för få övernattningsmöjligheter? Tentify hjälper
-                  slott, gårdar och andra bröllopsanläggningar att tillfälligt utöka sin boendekapacitet
-                  med kompletta glampingtält.
-                </p>
-                <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                  Tälten kan placeras i anslutning till lokalen och anpassas efter varje bröllop, event
-                  eller helg. På så sätt kan ni ta emot fler övernattande gäster, erbjuda ett mer komplett
-                  bröllopspaket och skapa en unik upplevelse – utan permanenta byggprojekt eller stora
-                  investeringar.
-                </p>
-                <ul className="space-y-3 text-muted-foreground text-lg mb-8">
-                  {[
-                    "Tillfällig utökning av boendekapaciteten",
-                    "Kompletta boendepaket för bröllopshelger",
-                    "Återkommande samarbete under bröllopssäsongen",
-                  ].map((item) => (
-                    <li key={item} className="flex items-start gap-2">
-                      <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-1" aria-hidden="true" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <Button
-                  size="lg"
-                  className="btn-hero text-lg px-8"
-                  onClick={() => {
-                    update("type", "foretag");
-                    scrollTo("offert");
-                  }}
-                >
-                  Diskutera ett samarbete
-                </Button>
-              </div>
-              <img
-                src={brollopCamp.url}
-                alt="Glampingtält uppställda vid en bröllopsgård som utökat sin boendekapacitet"
-                loading="lazy"
-                decoding="async"
-                width={1600}
-                height={1200}
-                className="w-full aspect-[4/3] object-cover rounded-3xl shadow-card"
-              />
-            </div>
-          </section>
-
-          {/* Så fungerar det */}
-          <section id="sa-fungerar-det" className="py-16 md:py-24 bg-background scroll-mt-24">
-            <div className="container mx-auto px-4 max-w-6xl">
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-10">
                 Så fungerar det
               </h2>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {[
-                  {
-                    n: "1",
-                    title: "Berätta om bröllopet",
-                    text: "Skicka datum, plats och ungefärligt antal gäster.",
-                  },
-                  {
-                    n: "2",
-                    title: "Vi tar fram en lösning",
-                    text: "Vi rekommenderar antal tält, upplägg och vad som ska ingå.",
-                  },
-                  {
-                    n: "3",
-                    title: "Vi bygger glampingbyn",
-                    text: "Vi levererar, ställer upp och inreder tälten inför gästernas ankomst.",
-                  },
-                  {
-                    n: "4",
-                    title: "Vi tar hand om nedmonteringen",
-                    text: "Efter bröllopet hämtar vi allt igen.",
-                  },
-                ].map((s) => (
-                  <Card key={s.n} className="p-6 shadow-card">
-                    <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary text-primary-foreground font-semibold mb-4">
-                      {s.n}
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {steg.map((s, i) => (
+                <Card key={s.title} className="p-6 shadow-card h-full">
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="bg-primary/10 text-primary rounded-lg w-11 h-11 flex items-center justify-center">
+                      <s.icon className="w-5 h-5" />
                     </span>
-                    <h3 className="text-lg font-semibold text-foreground mb-2">{s.title}</h3>
-                    <p className="text-muted-foreground">{s.text}</p>
-                  </Card>
-                ))}
-              </div>
-              <p className="text-lg text-muted-foreground mt-8 max-w-3xl">
-                Ni behöver inte hämta, bygga eller transportera tälten själva – vi sköter hela logistiken
-                från leverans till nedmontering.
-              </p>
-            </div>
-          </section>
-
-          {/* Vad som ingår */}
-          <section className="py-16 md:py-24 bg-gradient-subtle">
-            <div className="container mx-auto px-4 max-w-6xl">
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-                Vad kan ingå i en komplett lösning?
-              </h2>
-              <p className="text-lg text-muted-foreground leading-relaxed mb-8 max-w-3xl">
-                Exakt innehåll och antal bäddar anpassas efter ert bröllop. Beroende på valt paket kan
-                följande ingå:
-              </p>
-              <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 text-muted-foreground text-lg">
-                {[
-                  "Glampingtält",
-                  "Bekväma uppblåsbara Deluxe-sängar",
-                  "Lakan",
-                  "Täcke och kudde",
-                  "Matta",
-                  "Belysning",
-                  "Nattduksbord",
-                  "Stol och bord",
-                  "Dörrmatta",
-                  "Personlig goodiebag",
-                  "Leverans",
-                  "Uppsättning",
-                  "Nedmontering",
-                ].map((item) => (
-                  <li key={item} className="flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" aria-hidden="true" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-
-              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
-                {galleriBilder.map((b) => (
-                  <img
-                    key={b.src}
-                    src={b.src}
-                    alt={b.alt}
-                    loading="lazy"
-                    decoding="async"
-                    width={800}
-                    height={600}
-                    className="w-full aspect-[4/3] object-cover rounded-2xl shadow-card"
-                  />
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* Prisindikation */}
-          <section className="py-16 md:py-24 bg-background">
-            <div className="container mx-auto px-4 max-w-4xl">
-              <Card className="p-8 md:p-12 shadow-elegant border-primary/20">
-                <div className="flex items-center gap-2 mb-6">
-                  <FileText className="w-5 h-5 text-primary" aria-hidden="true" />
-                  <span className="text-xs uppercase tracking-[0.2em] text-primary font-medium">
-                    Prisindikation
-                  </span>
-                </div>
-
-                <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-8">
-                  Vad kostar glampingtält till bröllopet?
-                </h2>
-
-                <div className="mb-8">
-                  <p className="text-4xl md:text-5xl font-bold text-foreground leading-none">
-                    Från 1 200 kr
-                  </p>
-                  <p className="text-base text-muted-foreground mt-2">per tält och natt</p>
-                </div>
-
-                <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                  Priset är en startnivå och ger en ungefärlig bild av vad det kan kosta att hyra
-                  glampingtält till ett bröllop. Varje bröllop och event planeras individuellt och får
-                  därför en personlig offert.
-                </p>
-
-                <p className="text-foreground font-medium mb-4">Det slutliga priset påverkas bland annat av:</p>
-                <ul className="grid sm:grid-cols-2 gap-3 text-muted-foreground mb-8">
-                  {[
-                    "Antal tält",
-                    "Antal nätter",
-                    "Bröllopets eller eventets plats",
-                    "Avstånd och framkörning",
-                    "Antal bäddar per tält",
-                    "Val av inredning och utrustning",
-                    "Önskemål om uppsättning och nedmontering",
-                    "Eventuella tillval och speciallösningar",
-                  ].map((item) => (
-                    <li key={item} className="flex items-start gap-2">
-                      <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" aria-hidden="true" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-
-                <div className="flex gap-3 items-start bg-primary/5 border border-primary/20 rounded-xl p-5 mb-8">
-                  <Info className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" aria-hidden="true" />
-                  <p className="text-muted-foreground leading-relaxed">
-                    Varje bröllop är unikt. Slutligt pris tas fram genom en personlig offert baserad på
-                    plats, antal tält, antal nätter och valda tillval. Kontakta oss med datum, plats och
-                    antal gäster så tar vi fram ett tydligt prisförslag för just ert bröllop.
-                  </p>
-                </div>
-
-                <Button size="lg" className="btn-hero text-lg px-8" onClick={() => scrollTo("offert")}>
-                  Få en personlig offert
-                </Button>
-              </Card>
-            </div>
-          </section>
-
-
-          {/* Offert */}
-          <section id="offert" className="py-16 md:py-24 bg-background scroll-mt-24">
-            <div className="container mx-auto px-4 max-w-3xl">
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                Berätta om ert bröllop
-              </h2>
-              <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                Skicka datum, plats och ungefärligt antal gäster så återkommer vi med ett förslag på hur vi
-                kan skapa en komplett glampingby för er bröllopshelg.
-              </p>
-
-              <Card className="p-6 md:p-8 shadow-card">
-                {isSubmitted ? (
-                  <div className="text-center py-8">
-                    <CheckCircle className="w-12 h-12 text-primary mx-auto mb-4" aria-hidden="true" />
-                    <h3 className="text-xl font-semibold text-foreground mb-2">Tack för er förfrågan!</h3>
-                    <p className="text-muted-foreground">
-                      Vi har tagit emot informationen om ert bröllop och återkommer med ett personligt
-                      förslag så snart vi kan.
-                    </p>
+                    <span className="text-sm font-semibold text-muted-foreground">
+                      Steg {i + 1}
+                    </span>
                   </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-5">
-                    <div className="grid sm:grid-cols-2 gap-5">
-                      <div>
-                        <Label htmlFor="w-name">Namn *</Label>
-                        <Input id="w-name" value={form.name} onChange={(e) => update("name", e.target.value)} placeholder="Ert namn" required />
-                      </div>
-                      <div>
-                        <Label htmlFor="w-email">E-post *</Label>
-                        <Input id="w-email" type="email" value={form.email} onChange={(e) => update("email", e.target.value)} placeholder="din@email.se" required />
-                      </div>
-                      <div>
-                        <Label htmlFor="w-phone">Telefonnummer *</Label>
-                        <Input id="w-phone" type="tel" value={form.phone} onChange={(e) => update("phone", e.target.value)} placeholder="070-123 45 67" required />
-                      </div>
-                      <div>
-                        <Label htmlFor="w-date">Datum för bröllopet</Label>
-                        <Input id="w-date" type="date" value={form.date} onChange={(e) => update("date", e.target.value)} />
-                      </div>
-                      <div>
-                        <Label htmlFor="w-location">Bröllopsplats</Label>
-                        <Input id="w-location" value={form.location} onChange={(e) => update("location", e.target.value)} placeholder="Ort eller plats" />
-                      </div>
-                      <div>
-                        <Label htmlFor="w-guests">Antal övernattande gäster</Label>
-                        <Input id="w-guests" inputMode="numeric" value={form.guests} onChange={(e) => update("guests", e.target.value)} placeholder="t.ex. 20" />
-                      </div>
-                      <div>
-                        <Label htmlFor="w-nights">Antal nätter</Label>
-                        <Input id="w-nights" inputMode="numeric" value={form.nights} onChange={(e) => update("nights", e.target.value)} placeholder="t.ex. 2" />
-                      </div>
-                      <div>
-                        <Label htmlFor="w-type">Typ av förfrågan</Label>
-                        <select
-                          id="w-type"
-                          value={form.type}
-                          onChange={(e) => update("type", e.target.value)}
-                          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                        >
-                          <option value="privat">Privat bröllop</option>
-                          <option value="foretag">Bröllopsanläggning / företag</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div>
-                      <Label htmlFor="w-message">Meddelande</Label>
-                      <Textarea id="w-message" rows={5} value={form.message} onChange={(e) => update("message", e.target.value)} placeholder="Berätta gärna mer om er plats, era gäster och den känsla ni vill skapa..." />
-                    </div>
-                    <Button type="submit" size="lg" className="btn-hero w-full text-lg" disabled={isSubmitting}>
-                      {isSubmitting ? "Skickar..." : "Få ett kostnadsfritt prisförslag"}
-                    </Button>
-                    <p className="text-sm text-muted-foreground text-center">
-                      Ingen bindning – vi återkommer med ett personligt förslag.
-                    </p>
-                  </form>
-                )}
-              </Card>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">{s.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{s.text}</p>
+                </Card>
+              ))}
             </div>
-          </section>
+          </div>
+        </div>
+      </section>
 
-          {/* FAQ */}
-          <section className="py-16 bg-gradient-subtle">
-            <div className="container mx-auto px-4 max-w-3xl">
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-8 text-center">
-                Vanliga frågor om glamping till bröllop
+      {/* SEKTION 6 – FÖRDELAR */}
+      <section className="py-20 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+            <div className="order-2 lg:order-1">
+              <img
+                src={personImage.url}
+                alt="Bröllopsgäst utanför ett möblerat glampingtält på bröllopsgård"
+                loading="lazy"
+                className="w-full h-[440px] object-cover rounded-lg shadow-elegant"
+              />
+            </div>
+            <div className="order-1 lg:order-2">
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-8 text-balance">
+                Ett bättre erbjudande till era bröllopspar
               </h2>
-              <Accordion type="single" collapsible className="w-full">
-                {faqItems.map((faq, index) => (
-                  <AccordionItem key={index} value={`faq-${index}`}>
-                    <AccordionTrigger className="text-left text-lg">{faq.question}</AccordionTrigger>
-                    <AccordionContent className="text-muted-foreground text-base">
-                      {faq.answer}
-                    </AccordionContent>
-                  </AccordionItem>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {fordelar.map((f) => (
+                  <div key={f} className="flex items-start gap-3">
+                    <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                    <span className="text-foreground">{f}</span>
+                  </div>
                 ))}
-              </Accordion>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-              <p className="text-muted-foreground mt-10 text-center">
-                Läs mer om att{" "}
-                <Link to="/hyra-glampingtalt" className="text-primary underline">
-                  hyra glampingtält
-                </Link>
-                ,{" "}
-                <Link to="/hyra-talt-skane" className="text-primary underline">
-                  hyra tält i Skåne
-                </Link>
-                ,{" "}
-                <Link to="/festival-glamping" className="text-primary underline">
-                  festival glamping
-                </Link>{" "}
-                och{" "}
-                <Link to="/glamping-sweden-rock" className="text-primary underline">
-                  Sweden Rock glamping
-                </Link>
-                .
+      {/* SEKTION 7 – SAMARBETE */}
+      <section className="py-20 bg-gradient-subtle">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <span className="inline-flex items-center gap-2 text-sm tracking-widest uppercase text-primary mb-6">
+              <Handshake className="w-4 h-4" /> Samarbete
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6 text-balance">
+              Vill ni erbjuda Tentify på er bröllopsgård?
+            </h2>
+            <div className="space-y-5 text-lg text-muted-foreground leading-relaxed mb-10">
+              <p>
+                Vi söker gärna långsiktiga samarbeten med bröllopsgårdar och venues i södra
+                Sverige.
+              </p>
+              <p>
+                Vi kan tillsammans skapa ett upplägg där ni erbjuder Tentifys
+                glampingboende som ett tillval eller en del av ert bröllopspaket. Upplägget
+                kan anpassas efter hur just er verksamhet fungerar.
               </p>
             </div>
-          </section>
-        </main>
-      </div>
+            <div className="grid sm:grid-cols-2 gap-4 text-left mb-10">
+              {samarbetsformer.map((s) => (
+                <Card key={s} className="p-5 shadow-card flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                  <span className="text-foreground">{s}</span>
+                </Card>
+              ))}
+            </div>
+            <Button className="btn-hero" onClick={() => scrollTo("samarbetsformular")}>
+              Prata med oss om samarbete
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* SEKTION 8 – FORMULÄR */}
+      <section id="samarbetsformular" className="py-20 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
+                Skicka en samarbetsförfrågan
+              </h2>
+              <p className="text-lg text-muted-foreground">
+                Berätta kort om er gård och hur många extra sovplatser ni skulle vilja
+                kunna erbjuda – vi återkommer med ett förslag.
+              </p>
+            </div>
+
+            <Card className="p-6 md:p-8 shadow-card">
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="grid md:grid-cols-2 gap-5">
+                  <div>
+                    <Label htmlFor="name">Namn *</Label>
+                    <Input
+                      id="name"
+                      value={form.name}
+                      onChange={(e) => update("name", e.target.value)}
+                      placeholder="Ditt namn"
+                      disabled={isSubmitted}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="company">Företag / bröllopsgård</Label>
+                    <Input
+                      id="company"
+                      value={form.company}
+                      onChange={(e) => update("company", e.target.value)}
+                      placeholder="Namn på gården"
+                      disabled={isSubmitted}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="email">E-post *</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={form.email}
+                      onChange={(e) => update("email", e.target.value)}
+                      placeholder="namn@gard.se"
+                      disabled={isSubmitted}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="phone">Telefonnummer *</Label>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      value={form.phone}
+                      onChange={(e) => update("phone", e.target.value)}
+                      placeholder="070-123 45 67"
+                      disabled={isSubmitted}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="city">Ort</Label>
+                    <Input
+                      id="city"
+                      value={form.city}
+                      onChange={(e) => update("city", e.target.value)}
+                      placeholder="Ex. Helsingborg"
+                      disabled={isSubmitted}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="website">Webbplats</Label>
+                    <Input
+                      id="website"
+                      value={form.website}
+                      onChange={(e) => update("website", e.target.value)}
+                      placeholder="www.ergard.se"
+                      disabled={isSubmitted}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="beds">
+                    Hur många extra sovplatser skulle ni vilja kunna erbjuda?
+                  </Label>
+                  <Input
+                    id="beds"
+                    value={form.beds}
+                    onChange={(e) => update("beds", e.target.value)}
+                    placeholder="Ex. 20–40 sovplatser"
+                    disabled={isSubmitted}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="message">Meddelande</Label>
+                  <Textarea
+                    id="message"
+                    rows={5}
+                    value={form.message}
+                    onChange={(e) => update("message", e.target.value)}
+                    placeholder="Berätta om er gård, antal bröllop per år och hur ni tänker kring boende."
+                    disabled={isSubmitted}
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  className="w-full btn-hero"
+                  disabled={isSubmitting || isSubmitted}
+                  aria-disabled={isSubmitting || isSubmitted}
+                  style={isSubmitted ? { opacity: 0.6, pointerEvents: "none" } : {}}
+                >
+                  {isSubmitting
+                    ? "Skickar..."
+                    : isSubmitted
+                      ? "Förfrågan skickad"
+                      : "Skicka samarbetsförfrågan"}
+                </Button>
+              </form>
+
+              {isSubmitted && (
+                <Card className="mt-6 p-6 bg-primary/5 border-primary/20">
+                  <p className="text-foreground leading-relaxed">
+                    Tack för er förfrågan! Vi har tagit emot uppgifterna och återkommer med
+                    ett förslag på hur ett glampingområde kan fungera hos er.
+                  </p>
+                </Card>
+              )}
+            </Card>
+          </div>
+        </div>
+      </section>
     </>
   );
 };
