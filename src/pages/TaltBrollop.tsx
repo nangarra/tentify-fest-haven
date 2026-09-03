@@ -293,7 +293,7 @@ const TaltBrollop = () => {
             </div>
             <div className="relative">
               <img
-                src={campImage.url}
+                src={campImage}
                 alt="Glampingområde med möblerade tält uppbyggt vid en bröllopsgård"
                 loading="lazy"
                 className="w-full h-[420px] object-cover rounded-lg shadow-elegant"
