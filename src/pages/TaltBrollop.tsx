@@ -29,11 +29,11 @@ import {
   Handshake,
 } from "lucide-react";
 
-import heroImage from "@/assets/tentify_brollopstalt_hyra_talt.webp.asset.json";
-import campImage from "@/assets/tentify_brollopstalt.webp.asset.json";
-import interiorImage from "@/assets/tentify_brollopstalt_hyra.webp.asset.json";
-import personImage from "@/assets/tentify_brollop_talt-2.webp.asset.json";
-import lagerVy from "@/assets/brollop-camp-3-2.webp.asset.json";
+import heroImage from "@/assets/glamping-talt-naturmiljo-skane.webp";
+import campImage from "@/assets/tentify-festivaltalt-utomhus-setup.webp";
+import interiorImage from "@/assets/festival-talt-inredning-lyxig-camping.webp";
+import personImage from "@/assets/glampingtalt-familj-festival-upplevelse.webp";
+import lagerVy from "@/assets/gallery/tentify-glamping-slott.webp";
 
 import glampingNatur from "@/assets/glamping-talt-naturmiljo-skane.webp";
 import glampingUtemoebler from "@/assets/glamping-talt-utemoebler-komfort.webp";
