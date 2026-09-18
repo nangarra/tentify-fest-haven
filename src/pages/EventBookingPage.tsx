@@ -431,7 +431,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
 
           <div className="mt-7 flex flex-wrap justify-center gap-x-8 gap-y-3 text-lg md:text-xl text-[hsl(40_14%_88%)]">
             <span className="flex items-center gap-2.5">
-              <Calendar className="w-5 h-5 md:w-6 md:h-6 opacity-80" /> 9–13 juni 2027
+              <Calendar className="w-5 h-5 md:w-6 md:h-6 opacity-80" /> 8–13 juni 2027
             </span>
             <span className="flex items-center gap-2.5">
               <MapPin className="w-5 h-5 md:w-6 md:h-6 opacity-80" /> Sölvesborg
@@ -442,14 +442,14 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
             <ul className="flex flex-col gap-4 md:gap-5">
               {(lang === "sv"
                 ? [
-                    { Icon: Moon, label: "4 nätter" },
+                    { Icon: Moon, label: "5 nätter" },
                     { Icon: Clock, label: "Incheckning från kl. 15.00" },
                     { Icon: BedDouble, label: "Fullt möblerat tält" },
                     { Icon: MapPin, label: "10 minuter från festivalen" },
                     { Icon: Car, label: "Parkering ingår" },
                   ]
                 : [
-                    { Icon: Moon, label: "4 nights" },
+                    { Icon: Moon, label: "5 nights" },
                     { Icon: Clock, label: "Check-in from 3 pm" },
                     { Icon: BedDouble, label: "Fully furnished tent" },
                     { Icon: MapPin, label: "10 minutes from the festival" },

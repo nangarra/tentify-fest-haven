@@ -30,6 +30,10 @@ const slug = (s: string) =>
 export function generateBookingReceiptPdf(booking: AnyBooking) {
   const meta = booking.meta ?? {};
   const address = meta.address ?? {};
+  const isSwedenRock2027 = clean(meta.event).toLowerCase().includes("sweden rock") && clean(meta.event).includes("2027");
+  const checkIn = isSwedenRock2027 ? "8 juni 2027" : clean(meta.checkIn);
+  const checkOut = isSwedenRock2027 ? "13 juni 2027" : clean(meta.checkOut);
+  const nights = isSwedenRock2027 ? "5" : clean(meta.nights);
 
   const total = Number(meta.totalPrice ?? 0) || 0;
   const advance = Math.round(total * 0.2);
@@ -148,9 +152,9 @@ export function generateBookingReceiptPdf(booking: AnyBooking) {
   row("Bokningsnummer", bookingNumber);
   row("Bokningsdatum", new Date(booking.created_at).toLocaleDateString("sv-SE"));
   row("Event", clean(meta.event));
-  row("Incheckning", clean(meta.checkIn));
-  row("Utcheckning", clean(meta.checkOut));
-  row("Antal nätter", clean(meta.nights));
+  row("Incheckning", checkIn);
+  row("Utcheckning", checkOut);
+  row("Antal nätter", nights);
   row("Tälttyp", clean(meta.tentName) || clean(meta.tentType));
   row("Antal gäster", clean(meta.guests));
   const pm = clean(meta.paymentMethod);
