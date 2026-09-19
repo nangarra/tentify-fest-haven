@@ -42,6 +42,8 @@ import heroFallback from "@/assets/glamping-talt-naturmiljo-skane.webp";
 import bedImage from "@/assets/glampingtalt-dubbelsang.webp";
 import bohoImage from "@/assets/gallery/tentify-glamping-boho.webp";
 
+const assetUrl = (path: string) => `https://tentify.se${path}`;
+
 const proofItems = [
   "Färdigbäddade tält",
   "Vi bygger allt",
@@ -208,7 +210,7 @@ const TaltBrollop = () => {
 
       <section className="relative min-h-[88vh] flex items-end overflow-hidden">
         <video className="absolute inset-0 h-full w-full object-cover" autoPlay muted loop playsInline preload="metadata" poster={heroFallback} aria-label="Tentifys glampingby för bröllopsgäster i Skåne">
-          <source src={weddingVideo.url} type="video/mp4" />
+          <source src={assetUrl(weddingVideo.url)} type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-gradient-to-b from-foreground/30 via-foreground/45 to-foreground/85" />
         <div className="relative container mx-auto px-4 pb-10 pt-32 md:pb-14 md:pt-40">
@@ -271,9 +273,9 @@ const TaltBrollop = () => {
               </div>
             </div>
             <div className="mt-12 grid gap-5 md:grid-cols-12">
-              <img src={villageAsset.url} alt="Glampingby vid bröllopsplats utanför Helsingborg" width="1920" height="1440" className="aspect-[4/3] w-full rounded-lg object-cover shadow-elegant md:col-span-7" />
-              <img src={portraitAsset.url} alt="Tentify på plats framför glampingtält för bröllopsgäster" width="1440" height="1920" loading="lazy" decoding="async" className="aspect-[4/3] w-full rounded-lg object-cover object-top shadow-card md:col-span-5" />
-              <img src={rowAsset.url} alt="Glampingtält för bröllopsgäster uppställda intill bröllopsgården" width="1920" height="1440" loading="lazy" decoding="async" className="aspect-[16/9] w-full rounded-lg object-cover shadow-card md:col-span-5" />
+              <img src={assetUrl(villageAsset.url)} alt="Glampingby vid bröllopsplats utanför Helsingborg" width="1920" height="1440" className="aspect-[4/3] w-full rounded-lg object-cover shadow-elegant md:col-span-7" />
+              <img src={assetUrl(portraitAsset.url)} alt="Tentify på plats framför glampingtält för bröllopsgäster" width="1440" height="1920" loading="lazy" decoding="async" className="aspect-[4/3] w-full rounded-lg object-cover object-top shadow-card md:col-span-5" />
+              <img src={assetUrl(rowAsset.url)} alt="Glampingtält för bröllopsgäster uppställda intill bröllopsgården" width="1920" height="1440" loading="lazy" decoding="async" className="aspect-[16/9] w-full rounded-lg object-cover shadow-card md:col-span-5" />
               <blockquote className="flex items-center rounded-lg bg-primary p-8 text-primary-foreground md:col-span-7 md:p-12">
                 <div><Heart className="mb-6 h-7 w-7" fill="currentColor" /><p className="text-xl leading-relaxed md:text-2xl">“Det betydde mycket att gästerna kunde stanna i två nätter och att vi fick uppleva en hel bröllopshelg tillsammans, i stället för att alla behövde åka hem efter festen.”</p><footer className="mt-6 text-sm font-semibold uppercase tracking-widest text-primary-foreground/75">Maja, brud</footer></div>
               </blockquote>
@@ -296,7 +298,7 @@ const TaltBrollop = () => {
             </div>
             <div className="mt-6 rounded-lg border border-border bg-card px-6 py-5 text-center text-muted-foreground"><span className="font-semibold text-foreground">Tillval:</span> handdukar, extra säng och specialstyling.</div>
             <div className="mt-10 grid gap-5 md:grid-cols-3">
-              <img src={interiorAsset.url} alt="Färdigbäddat glampingtält till bröllop i Skåne" width="1920" height="1440" loading="lazy" decoding="async" className="aspect-[4/3] w-full rounded-lg object-cover shadow-card" />
+              <img src={assetUrl(interiorAsset.url)} alt="Färdigbäddat glampingtält till bröllop i Skåne" width="1920" height="1440" loading="lazy" decoding="async" className="aspect-[4/3] w-full rounded-lg object-cover shadow-card" />
               <img src={bedImage} alt="Bekväm dubbelsäng i glampingtält till bröllopsgäster" width="1200" height="900" loading="lazy" decoding="async" className="aspect-[4/3] w-full rounded-lg object-cover shadow-card" />
               <img src={bohoImage} alt="Varm och naturlig inredning i glampingtält för bröllopshelg" width="1200" height="900" loading="lazy" decoding="async" className="aspect-[4/3] w-full rounded-lg object-cover shadow-card" />
             </div>
@@ -319,7 +321,7 @@ const TaltBrollop = () => {
       <section className="bg-background py-20 md:py-28">
         <div className="container mx-auto px-4">
           <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
-            <img src={campAsset.url} alt="Flera glampingtält som extra boende vid bröllopsplats i Skåne" width="1676" height="939" loading="lazy" decoding="async" className="aspect-[16/10] w-full rounded-lg object-cover shadow-elegant" />
+            <img src={assetUrl(campAsset.url)} alt="Flera glampingtält som extra boende vid bröllopsplats i Skåne" width="1676" height="939" loading="lazy" decoding="async" className="aspect-[16/10] w-full rounded-lg object-cover shadow-elegant" />
             <div>
               <p className="mb-4 text-sm font-semibold uppercase tracking-widest text-primary">För bröllopsgårdar & venues</p>
               <h2 className="text-3xl font-bold text-foreground md:text-5xl">Fullbokat boende behöver inte betyda färre gäster.</h2>
