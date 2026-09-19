@@ -56,8 +56,9 @@ const HeroSection = () => {
 
             {/* Supporting copy */}
             <p className="home-hero-copy mt-6">
-              Vi levererar, bygger, möblerar och bäddar färdiga glampingtält i Skåne
-              och södra Sverige – så att ni kan fokusera på upplevelsen, inte logistiken.
+              Vi levererar färdig glamping för bröllop, festivaler och event i
+              Skåne och södra Sverige – komplett uppsatt, möblerat och redo när
+              gästerna kommer.
             </p>
 
             {/* CTAs */}

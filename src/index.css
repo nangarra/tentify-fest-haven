@@ -407,12 +407,12 @@ Animations for Tentify
   background:
     linear-gradient(
       90deg,
-      rgba(18, 17, 12, 0.82) 0%,
-      rgba(18, 17, 12, 0.62) 35%,
-      rgba(18, 17, 12, 0.18) 70%,
-      rgba(18, 17, 12, 0.02) 100%
+      rgba(18, 17, 12, 0.86) 0%,
+      rgba(18, 17, 12, 0.64) 35%,
+      rgba(18, 17, 12, 0.22) 70%,
+      rgba(18, 17, 12, 0.04) 100%
     ),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.08) 40%, rgba(0, 0, 0, 0.3) 100%);
+    linear-gradient(180deg, rgba(0, 0, 0, 0.1) 40%, rgba(0, 0, 0, 0.32) 100%);
 }
 
 @media (max-width: 767px) {
@@ -420,11 +420,11 @@ Animations for Tentify
     background:
       linear-gradient(
         90deg,
-        rgba(18, 17, 12, 0.88) 0%,
-        rgba(18, 17, 12, 0.74) 45%,
-        rgba(18, 17, 12, 0.38) 100%
+        rgba(18, 17, 12, 0.9) 0%,
+        rgba(18, 17, 12, 0.78) 45%,
+        rgba(18, 17, 12, 0.42) 100%
       ),
-      linear-gradient(180deg, rgba(0, 0, 0, 0.16) 40%, rgba(0, 0, 0, 0.44) 100%);
+      linear-gradient(180deg, rgba(0, 0, 0, 0.18) 40%, rgba(0, 0, 0, 0.46) 100%);
   }
 }
 
@@ -467,15 +467,22 @@ Animations for Tentify
 .home-hero-copy {
   max-width: 620px;
   font-size: 1.125rem; /* 18px */
-  line-height: 1.55;
-  color: hsl(40 28% 90%);
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  line-height: 1.75; /* leading-8 */
+  font-weight: 500;
+  color: hsl(40 25% 96%); /* stone-100 */
+  background: rgba(0, 0, 0, 0.28); /* bg-black/28 */
+  backdrop-filter: blur(4px); /* backdrop-blur-sm */
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem; /* rounded-2xl */
+  padding: 1rem 1.25rem; /* px-5 py-4 */
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
 }
 
 @media (min-width: 768px) {
   .home-hero-copy {
     font-size: 1.25rem; /* 20px */
-    line-height: 1.6;
+    line-height: 1.75;
   }
 }
 
