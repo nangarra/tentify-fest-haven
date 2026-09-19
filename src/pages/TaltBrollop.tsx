@@ -46,10 +46,10 @@ const assetUrl = (path: string) =>
   `https://id-preview--28d4af79-d39e-43d1-91d7-9c68d8d777fc.lovable.app${path}`;
 
 const proofItems = [
-  "Färdigbäddade tält",
-  "Vi bygger allt",
-  "Sov nära festen",
-  "Från 1 200 kr / tält & natt",
+  { icon: BedDouble, label: "Färdigbäddade tält" },
+  { icon: Truck, label: "Vi bygger allt" },
+  { icon: Users, label: "Sov nära festen" },
+  { icon: Tent, label: "Från 1 200 kr", detail: "tält & natt" },
 ];
 
 const beforeTags = ["Taxi", "Hotell", "Chaufförer", "Gäster lämnar tidigt", "Planering", "Transport", "Splittrat sällskap"];
@@ -209,30 +209,50 @@ const TaltBrollop = () => {
         <script type="application/ld+json">{JSON.stringify(breadcrumbSchema)}</script>
       </Helmet>
 
-      <section className="relative min-h-[88vh] flex items-end overflow-hidden">
+      <section className="wedding-hero relative flex min-h-[88svh] overflow-hidden">
         <video className="absolute inset-0 h-full w-full object-cover" autoPlay muted loop playsInline preload="metadata" poster={assetUrl(weddingPoster.url)} aria-label="Tentifys glampingby för bröllopsgäster i Skåne">
           <source src={assetUrl(weddingVideo.url)} type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-foreground/30 via-foreground/45 to-foreground/85" />
-        <div className="relative container mx-auto px-4 pb-10 pt-32 md:pb-14 md:pt-40">
-          <div className="max-w-4xl">
-            <p className="mb-5 text-sm font-semibold uppercase tracking-widest text-primary-foreground/85">Glamping till bröllop</p>
-            <h1 className="max-w-3xl text-5xl font-bold leading-tight text-primary-foreground md:text-7xl">
-              Låt inte festen ta slut.
-              <span className="mt-2 block font-normal">Låt gästerna stanna kvar.</span>
+        <div className="wedding-hero-overlay absolute inset-0" aria-hidden="true" />
+        <div className="relative container mx-auto flex w-full max-w-7xl flex-col justify-center px-6 pb-28 pt-36 md:px-8 md:pb-32 md:pt-40">
+          <div className="wedding-hero-copy max-w-[720px]">
+            <p className="mb-6 flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-primary-foreground/85 before:h-px before:w-8 before:bg-accent/80 md:text-sm">
+              Glamping till bröllop
+            </p>
+            <h1 className="text-[3.15rem] font-extrabold leading-[0.98] text-primary-foreground sm:text-6xl md:text-7xl lg:text-[5.25rem]">
+              <span className="block">Låt inte festen</span>
+              <span className="block">ta slut.</span>
+              <span className="mt-5 block font-bold text-accent md:mt-6">Låt gästerna</span>
+              <span className="block font-bold text-accent">stanna kvar.</span>
             </h1>
-            <div className="mt-7 max-w-2xl space-y-3 text-lg leading-relaxed text-primary-foreground/90 md:text-xl">
+            <div className="mt-7 max-w-[620px] space-y-4 text-base leading-relaxed text-primary-foreground/90 sm:text-lg md:mt-8 md:text-xl">
               <p>Skapa en komplett glampingby direkt vid bröllopsplatsen där vänner och familj kan sova bekvämt, fortsätta umgås och vakna upp tillsammans dagen efter.</p>
-              <p className="font-semibold text-primary-foreground">Bröllopet blir inte bara en kväll. Det blir en hel helg.</p>
+              <p className="font-semibold leading-snug text-primary-foreground">
+                <span className="block">Bröllopet blir inte bara en kväll.</span>
+                <span className="block">Det blir en hel helg.</span>
+              </p>
             </div>
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <Button className="btn-hero" onClick={() => scrollTo("offert")}>Få ett prisförslag</Button>
-              <Button variant="outline" className="border-primary-foreground/70 bg-transparent text-primary-foreground hover:bg-primary-foreground hover:text-foreground" onClick={() => scrollTo("majas-brollop")}>Se ett riktigt Tentify-bröllop</Button>
+            <div className="mt-8 flex flex-col gap-4 md:mt-10 md:flex-row md:gap-5">
+              <Button className="w-full min-h-14 rounded-xl bg-accent px-7 py-4 text-base font-semibold text-accent-foreground transition-transform hover:-translate-y-0.5 hover:bg-accent/90 md:w-auto md:min-w-52" onClick={() => scrollTo("offert")}>
+                Få ett prisförslag <ArrowRight aria-hidden="true" />
+              </Button>
+              <Button variant="outline" className="w-full min-h-14 rounded-xl border-primary-foreground/70 bg-primary-foreground/5 px-7 py-4 text-base font-semibold text-primary-foreground backdrop-blur-sm hover:bg-primary-foreground/10 hover:text-primary-foreground md:w-auto" onClick={() => scrollTo("majas-brollop") }>
+                Se ett riktigt Tentify-bröllop <ArrowDown aria-hidden="true" />
+              </Button>
             </div>
           </div>
-          <div className="mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-primary-foreground/20 bg-primary-foreground/20 backdrop-blur-sm md:grid-cols-4">
-            {proofItems.map((item) => <div key={item} className="bg-foreground/55 px-4 py-4 text-center text-sm font-medium text-primary-foreground">{item}</div>)}
+          <div className="wedding-proof mt-10 grid grid-cols-2 overflow-hidden rounded-2xl border border-primary-foreground/20 backdrop-blur-md md:mt-12 md:grid-cols-4">
+            {proofItems.map(({ icon: Icon, label, detail }) => (
+              <div key={label} className="wedding-proof-item flex min-h-24 items-center gap-3 px-4 py-4 md:justify-center md:px-5">
+                <Icon className="size-5 shrink-0 text-accent" strokeWidth={1.7} aria-hidden="true" />
+                <p className="text-[15px] font-medium leading-snug text-primary-foreground/90 md:text-base">
+                  <span className="block">{label}</span>
+                  {detail && <span className="block text-primary-foreground/75">{detail}</span>}
+                </p>
+              </div>
+            ))}
           </div>
+          <ArrowDown className="wedding-scroll-indicator absolute bottom-5 left-1/2 size-5 -translate-x-1/2 text-primary-foreground/55" aria-hidden="true" />
         </div>
       </section>
 

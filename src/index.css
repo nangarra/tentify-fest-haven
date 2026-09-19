@@ -190,6 +190,61 @@ Animations for Tentify
   .emoji-float {
     animation: emoji-bounce 3.5s ease-in-out infinite;
   }
+
+  .wedding-hero-overlay {
+    background:
+      linear-gradient(180deg, hsl(0 0% 0% / 0.15) 0%, hsl(0 0% 0% / 0.04) 45%, hsl(0 0% 0% / 0.32) 100%),
+      linear-gradient(90deg, hsl(30 15% 7% / 0.82) 0%, hsl(30 15% 7% / 0.62) 38%, hsl(30 15% 7% / 0.18) 70%, hsl(30 15% 7% / 0.05) 100%);
+  }
+
+  .wedding-hero-copy {
+    text-shadow: 0 2px 18px hsl(0 0% 0% / 0.25);
+  }
+
+  .wedding-proof {
+    background: hsl(40 16% 11% / 0.58);
+  }
+
+  .wedding-proof-item:nth-child(even) {
+    border-left: 1px solid hsl(0 0% 100% / 0.16);
+  }
+
+  .wedding-proof-item:nth-child(n + 3) {
+    border-top: 1px solid hsl(0 0% 100% / 0.16);
+  }
+
+  .wedding-scroll-indicator {
+    animation: wedding-scroll 2.4s ease-in-out infinite;
+  }
+}
+
+@keyframes wedding-scroll {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, 5px); }
+}
+
+@media (min-width: 768px) {
+  .wedding-proof-item:nth-child(n + 3) {
+    border-top: 0;
+  }
+
+  .wedding-proof-item + .wedding-proof-item {
+    border-left: 1px solid hsl(0 0% 100% / 0.16);
+  }
+}
+
+@media (max-width: 767px) {
+  .wedding-hero-overlay {
+    background:
+      linear-gradient(180deg, hsl(0 0% 0% / 0.24) 0%, hsl(0 0% 0% / 0.13) 42%, hsl(0 0% 0% / 0.48) 100%),
+      linear-gradient(90deg, hsl(30 15% 7% / 0.88) 0%, hsl(30 15% 7% / 0.72) 65%, hsl(30 15% 7% / 0.38) 100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wedding-scroll-indicator {
+    animation: none;
+  }
 }
 
 /* ===================================================================
