@@ -42,7 +42,8 @@ import heroFallback from "@/assets/glamping-talt-naturmiljo-skane.webp";
 import bedImage from "@/assets/glampingtalt-dubbelsang.webp";
 import bohoImage from "@/assets/gallery/tentify-glamping-boho.webp";
 
-const assetUrl = (path: string) => `https://tentify.se${path}`;
+const assetUrl = (path: string) =>
+  `https://id-preview--28d4af79-d39e-43d1-91d7-9c68d8d777fc.lovable.app${path}`;
 
 const proofItems = [
   "Färdigbäddade tält",
