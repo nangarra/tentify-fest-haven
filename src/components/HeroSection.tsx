@@ -86,8 +86,6 @@ const HeroSection = () => {
             </div>
           </div>
         </div>
-      </div>
-      <span className="sr-only" onClick={scrollToBooking} aria-hidden="true" />
     </section>
   );
 };
