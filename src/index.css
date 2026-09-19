@@ -407,10 +407,10 @@ Animations for Tentify
   background:
     linear-gradient(
       90deg,
-      rgba(18, 17, 12, 0.92) 0%,
-      rgba(18, 17, 12, 0.76) 35%,
-      rgba(18, 17, 12, 0.34) 70%,
-      rgba(18, 17, 12, 0.08) 100%
+      rgba(15, 13, 10, 0.88) 0%,
+      rgba(15, 13, 10, 0.74) 32%,
+      rgba(15, 13, 10, 0.40) 55%,
+      rgba(15, 13, 10, 0.08) 82%
     ),
     linear-gradient(180deg, rgba(0, 0, 0, 0.16) 40%, rgba(0, 0, 0, 0.42) 100%);
 }
@@ -451,7 +451,7 @@ Animations for Tentify
   font-weight: 700;
   letter-spacing: -0.02em;
   color: hsl(40 35% 96%);
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
+  text-shadow: 0 3px 20px rgba(0, 0, 0, 0.38);
   text-wrap: balance;
 }
 
@@ -461,22 +461,21 @@ Animations for Tentify
   line-height: 1.15;
   font-weight: 600;
   color: hsl(0 0% 100%); /* white */
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
+  text-shadow: 0 3px 20px rgba(0, 0, 0, 0.38);
 }
 
 .home-hero-copy {
   max-width: 620px;
   font-size: 1.125rem; /* 18px */
-  line-height: 1.75; /* leading-8 */
+  line-height: 1.55;
   font-weight: 500;
-  color: hsl(40 25% 96%); /* stone-100 */
-  background: rgba(0, 0, 0, 0.28); /* bg-black/28 */
-  backdrop-filter: blur(4px); /* backdrop-blur-sm */
-  -webkit-backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 1rem; /* rounded-2xl */
-  padding: 1rem 1.25rem; /* px-5 py-4 */
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+  color: rgba(255, 255, 255, 0.96);
+  background: rgba(24, 20, 16, 0.62);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 1.125rem; /* 18px */
+  padding: 1.125rem 1.375rem;
 }
 
 @media (min-width: 768px) {
