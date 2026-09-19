@@ -398,3 +398,170 @@ Animations for Tentify
   border: 1px solid hsl(var(--sr-chrome) / 0.22);
   box-shadow: inset 0 1px 0 hsl(var(--sr-chrome-hi) / 0.12);
 }
+
+/* ===================================================================
+   Homepage hero — left-aligned, premium Nordic. Video unchanged;
+   readability handled by CSS gradients only.
+   =================================================================== */
+.home-hero-overlay {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(18, 17, 12, 0.82) 0%,
+      rgba(18, 17, 12, 0.62) 35%,
+      rgba(18, 17, 12, 0.18) 70%,
+      rgba(18, 17, 12, 0.02) 100%
+    ),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.08) 40%, rgba(0, 0, 0, 0.3) 100%);
+}
+
+@media (max-width: 767px) {
+  .home-hero-overlay {
+    background:
+      linear-gradient(
+        90deg,
+        rgba(18, 17, 12, 0.88) 0%,
+        rgba(18, 17, 12, 0.74) 45%,
+        rgba(18, 17, 12, 0.38) 100%
+      ),
+      linear-gradient(180deg, rgba(0, 0, 0, 0.16) 40%, rgba(0, 0, 0, 0.44) 100%);
+  }
+}
+
+.home-hero-eyebrow {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: hsl(40 30% 92%);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.home-hero-eyebrow-line {
+  display: inline-block;
+  width: 2.5rem;
+  height: 2px;
+  background: hsl(42 50% 62%);
+  flex-shrink: 0;
+}
+
+.home-hero-title {
+  font-size: clamp(2.6rem, 5.6vw, 4.5rem); /* ~42px mobile → 72px desktop */
+  line-height: 1.02;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: hsl(40 35% 96%);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
+  text-wrap: balance;
+}
+
+.home-hero-highlight {
+  margin-top: 0.75rem;
+  font-size: clamp(1.35rem, 2.6vw, 2rem);
+  line-height: 1.15;
+  font-weight: 600;
+  color: hsl(42 45% 68%); /* warm beige / muted gold */
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
+}
+
+.home-hero-copy {
+  max-width: 620px;
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.55;
+  color: hsl(40 28% 90%);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+@media (min-width: 768px) {
+  .home-hero-copy {
+    font-size: 1.25rem; /* 20px */
+    line-height: 1.6;
+  }
+}
+
+/* CTAs */
+.home-hero-cta-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 1rem 2rem;
+  border-radius: 0.6rem;
+  background: hsl(42 45% 62%);
+  color: hsl(28 30% 16%);
+  font-weight: 600;
+  font-size: 1.0625rem;
+  box-shadow: 0 6px 20px -8px rgba(0, 0, 0, 0.5);
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.home-hero-cta-primary:hover {
+  background: hsl(42 50% 68%);
+  transform: translateY(-1px);
+}
+
+.home-hero-cta-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2rem;
+  border-radius: 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(6px);
+  color: hsl(40 30% 96%);
+  font-weight: 600;
+  font-size: 1.0625rem;
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+.home-hero-cta-secondary:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: hsl(0 0% 100%);
+}
+
+/* Proof bar — one translucent container, warm accents */
+.home-hero-proof {
+  background: rgba(35, 31, 22, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(8px);
+  border-radius: 18px;
+  padding: 1.1rem 1.5rem;
+}
+
+.home-hero-proof-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.35rem 0.75rem;
+  min-width: 0;
+}
+
+@media (min-width: 768px) {
+  .home-hero-proof-item + .home-hero-proof-item {
+    border-left: 1px solid rgba(255, 255, 255, 0.14);
+  }
+}
+
+@media (max-width: 767px) {
+  .home-hero-proof-item:nth-child(n + 3) {
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+  }
+  .home-hero-proof-item {
+    padding-left: 0.25rem;
+  }
+}
+
+.home-hero-proof-icon {
+  width: 1.1rem;
+  height: 1.1rem;
+  color: hsl(42 50% 68%);
+  flex-shrink: 0;
+}
+
+.home-hero-proof-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: 1.3;
+  color: hsl(40 30% 92%);
+}
