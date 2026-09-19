@@ -48,9 +48,7 @@ const HeroSection = () => {
 
             {/* Headline */}
             <h1 className="home-hero-title">
-              Glamping som står klart
-              <br />
-              när gästerna kommer.
+              Glamping som står klart när gästerna kommer.
             </h1>
             <p className="home-hero-highlight">
               För bröllop, festivaler och event.
