@@ -1,51 +1,16 @@
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, BedDouble, Truck, PartyPopper, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import heroImage1 from "@/assets/lyxigt-glampingtalt-festival-tentify.webp";
-import heroImage2 from "@/assets/festival-talt-inredning-lyxig-camping.webp";
-import heroImage3 from "@/assets/glamping-talt-utomhusmobler-festival.webp";
-import heroImage4 from "@/assets/festival-glamping-talt-inuti-komfort.webp";
 
-const heroImages = [
-  {
-    src: heroImage1,
-    alt: "Lyxigt glampingtält för festival med Tentify - komplett setup med möbler och komfort"
-  },
-  {
-    src: heroImage2,
-    alt: "Inredning i festival glampingtält - bekväm säng och inredning för lyxig camping"
-  },
-  {
-    src: heroImage3,
-    alt: "Glamping tält med utomhusmöbler för festival - komplett med stolar och bord"
-  },
-  {
-    src: heroImage4,
-    alt: "Festival glamping tält inuti - komfort och lyx för din festivalupplevelse"
-  }
+const proofPoints = [
+  { icon: BedDouble, label: "Färdigbäddade tält" },
+  { icon: Truck, label: "Vi levererar & bygger" },
+  { icon: PartyPopper, label: "Bröllop • Festival • Event" },
+  { icon: MapPin, label: "Bas i Skåne" },
 ];
 
 const HeroSection = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroImages.length);
-    }, 5000);
-
-    return () => clearInterval(timer);
-  }, []);
-
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % heroImages.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + heroImages.length) % heroImages.length);
-  };
-
   const scrollToBooking = () => {
     const element = document.getElementById("boka-talt");
     if (element) {
@@ -54,10 +19,10 @@ const HeroSection = () => {
   };
 
   return (
-    <section id="hem" className="relative h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Video */}
+    <section id="hem" className="relative min-h-screen flex items-center overflow-hidden">
+      {/* Background Video (unchanged) */}
       <div className="absolute inset-0">
-        <video 
+        <video
           autoPlay
           muted
           loop
@@ -68,54 +33,68 @@ const HeroSection = () => {
           title="Tentify hero video"
         >
           <source src="/tentify_.mp4" type="video/mp4" />
-          {/* Fallback for browsers that don't support video */}
           <img
             src={heroImage1}
-            alt="Lyxigt glampingtält för festival med Tentify - komplett setup med möbler och komfort"
+            alt="Inrett glampingtält uppsatt av Tentify i Skåne"
             className="w-full h-full object-cover"
           />
         </video>
-        {/* Video overlay for better text contrast */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/25 to-black/35" />
+        {/* Readability overlays (CSS only) */}
+        <div className="home-hero-overlay" aria-hidden="true" />
       </div>
 
-      {/* Hero Content */}
-      <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-        <h1 
-          className="text-4xl md:text-6xl font-bold text-white mb-6"
-          style={{ 
-            textShadow: '0 2px 8px rgba(0,0,0,0.55), 0 1px 2px rgba(0,0,0,0.6)' 
-          }}
-        >
-          Hyr glampingtält till festival, bröllop och event
-        </h1>
-        <p
-          className="text-lg md:text-xl text-white/95 mb-8 max-w-2xl mx-auto"
-          style={{ textShadow: '0 1px 4px rgba(0,0,0,0.6)' }}
-        >
-          Tentify skapar färdiga glampingupplevelser med inredda tält, sovplatser och mysig känsla.
-          Vi levererar, sätter upp och förbereder allt så att gästerna kan komma fram och njuta.
-        </p>
+      {/* Hero Content — left aligned */}
+      <div className="relative z-10 w-full">
+        <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-10 py-24 md:py-32">
+          <div className="max-w-[680px]">
+            {/* Eyebrow */}
+            <div className="flex items-center gap-3 mb-6">
+              <span className="home-hero-eyebrow-line" aria-hidden="true" />
+              <span className="home-hero-eyebrow">Glamping i Skåne &amp; södra Sverige</span>
+            </div>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Button
-            asChild
-            size="lg"
-            className="btn-hero text-lg px-10 py-6 hover:scale-105 transition-bounce"
-          >
-            <Link to="/hyr-glamping">Hyr glampingtält</Link>
-          </Button>
-          <Button
-            asChild
-            size="lg"
-            variant="outline"
-            className="text-lg px-10 py-6 bg-white/10 backdrop-blur border-white/70 text-white hover:bg-white hover:text-foreground transition-bounce"
-          >
-            <Link to="/glamping-sweden-rock">Glamping Sweden Rock</Link>
-          </Button>
+            {/* Headline */}
+            <h1 className="home-hero-title">
+              Glamping som står klart
+              <br />
+              när gästerna kommer.
+            </h1>
+            <p className="home-hero-highlight">
+              För bröllop, festivaler och event.
+            </p>
+
+            {/* Supporting copy */}
+            <p className="home-hero-copy mt-6">
+              Vi levererar, bygger, möblerar och bäddar färdiga glampingtält i Skåne
+              och södra Sverige – så att ni kan fokusera på upplevelsen, inte logistiken.
+            </p>
+
+            {/* CTAs */}
+            <div className="flex flex-col sm:flex-row gap-4 mt-9">
+              <Link to="/hyr-glamping" className="home-hero-cta-primary">
+                Se våra glampingtält
+                <ArrowRight className="w-5 h-5 shrink-0" aria-hidden="true" />
+              </Link>
+              <Link to="/glamping-sweden-rock" className="home-hero-cta-secondary">
+                Glamping @ Sweden Rock
+              </Link>
+            </div>
+
+            {/* Proof bar */}
+            <div className="home-hero-proof mt-12 md:mt-16">
+              <dl className="grid grid-cols-2 md:grid-cols-4">
+                {proofPoints.map(({ icon: Icon, label }) => (
+                  <div key={label} className="home-hero-proof-item">
+                    <Icon className="home-hero-proof-icon" aria-hidden="true" />
+                    <dt className="home-hero-proof-label">{label}</dt>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </div>
         </div>
       </div>
-
+      <span className="sr-only" onClick={scrollToBooking} aria-hidden="true" />
     </section>
   );
 };
