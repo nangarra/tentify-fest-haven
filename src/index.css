@@ -460,7 +460,7 @@ Animations for Tentify
   font-size: clamp(1.35rem, 2.6vw, 2rem);
   line-height: 1.15;
   font-weight: 600;
-  color: hsl(42 45% 68%); /* warm beige / muted gold */
+  color: hsl(0 0% 100%); /* white */
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
 }
 
