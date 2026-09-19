@@ -11,13 +11,6 @@ const proofPoints = [
 ];
 
 const HeroSection = () => {
-  const scrollToBooking = () => {
-    const element = document.getElementById("boka-talt");
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
   return (
     <section id="hem" className="relative min-h-screen flex items-center overflow-hidden">
       {/* Background Video (unchanged) */}
