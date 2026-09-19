@@ -32,13 +32,13 @@ import {
   Users,
 } from "lucide-react";
 
-import weddingVideo from "@/assets/tentify_brolopp-2.mp4.asset.json";
+import weddingVideo from "@/assets/tentify-brollop-hero.mp4.asset.json";
+import weddingPoster from "@/assets/tentify-brollop-hero-poster.webp.asset.json";
 import portraitAsset from "@/assets/tentify_brollop_talt-2.webp.asset.json";
 import villageAsset from "@/assets/tentify_brollopstalt_hyra_talt.webp.asset.json";
 import rowAsset from "@/assets/tentify_brollopstalt.webp.asset.json";
 import interiorAsset from "@/assets/tentify_brollopstalt_hyra.webp.asset.json";
 import campAsset from "@/assets/brollop-camp-3-2.webp.asset.json";
-import heroFallback from "@/assets/glamping-talt-naturmiljo-skane.webp";
 import bedImage from "@/assets/glampingtalt-dubbelsang.webp";
 import bohoImage from "@/assets/gallery/tentify-glamping-boho.webp";
 
@@ -210,7 +210,7 @@ const TaltBrollop = () => {
       </Helmet>
 
       <section className="relative min-h-[88vh] flex items-end overflow-hidden">
-        <video className="absolute inset-0 h-full w-full object-cover" autoPlay muted loop playsInline preload="metadata" poster={heroFallback} aria-label="Tentifys glampingby för bröllopsgäster i Skåne">
+        <video className="absolute inset-0 h-full w-full object-cover" autoPlay muted loop playsInline preload="metadata" poster={assetUrl(weddingPoster.url)} aria-label="Tentifys glampingby för bröllopsgäster i Skåne">
           <source src={assetUrl(weddingVideo.url)} type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-gradient-to-b from-foreground/30 via-foreground/45 to-foreground/85" />
