@@ -707,26 +707,32 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                     className="mt-1"
                   />
                   <p className="text-foreground/90">
-                    <label htmlFor="booking-terms">I have read and accept </label>
+                    <label htmlFor="booking-terms">
+                      {lang === "sv" ? "Jag har läst och accepterar " : "I have read and accept "}
+                    </label>
                     <SwedenRockBookingTerms
+                      lang={lang}
                       trigger={
                         <Button
                           type="button"
                           variant="link"
                           className="h-auto p-0 align-baseline font-medium text-primary underline underline-offset-4"
                         >
-                          Tentify&apos;s Booking &amp; Accommodation Terms
+                          {lang === "sv" ? "Tentifys boknings- & boendevillkor" : "Tentify's Booking & Accommodation Terms"}
                         </Button>
                       }
                     />
                     <label htmlFor="booking-terms">
-                      , including that the 20% deposit is non-refundable if I cancel my booking.
+                      {lang === "sv"
+                        ? ", inklusive att förskottsbetalningen på 20 % inte återbetalas vid avbokning."
+                        : ", including that the 20% deposit is non-refundable if I cancel my booking."}
                     </label>
                   </p>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  20% is paid at booking and is non-refundable if you cancel. The remaining balance is paid on
-                  arrival.
+                  {lang === "sv"
+                    ? "20 % betalas vid bokning och återbetalas inte vid avbokning. Resterande belopp betalas vid ankomst."
+                    : "20% is paid at booking and is non-refundable if you cancel. The remaining balance is paid on arrival."}
                 </p>
               </div>
 
