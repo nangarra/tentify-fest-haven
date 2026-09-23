@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import type { Lang } from "@/pages/EventBookingPage";
+import type { Lang } from "@/config/festivals";
 
 type SwedenRockBookingTermsProps = {
   trigger: React.ReactNode;
