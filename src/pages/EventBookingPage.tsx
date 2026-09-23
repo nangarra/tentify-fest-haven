@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -51,6 +52,7 @@ import {
 } from "@/config/festivals";
 import { t } from "@/lib/booking-i18n";
 import { PAYMENT_INFO } from "@/config/payment-info";
+import SwedenRockBookingTerms from "@/components/SwedenRockBookingTerms";
 import srLogo from "@/assets/glamping_Swedenrock_tentify_2027.webp.asset.json";
 
 const addOnIcons: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -132,6 +134,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingId, setBookingId] = useState<string | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<"swish" | "stripe">("swish");
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   const checkoutTopRef = useRef<HTMLDivElement | null>(null);
   const confirmationTopRef = useRef<HTMLDivElement | null>(null);
@@ -228,7 +231,8 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
     phone.trim() &&
     address.trim() &&
     postalCode.trim() &&
-    city.trim();
+    city.trim() &&
+    termsAccepted;
 
   const toggleAddOn = (id: string) => {
     setSelectedAddOns((prev) => {
@@ -242,7 +246,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   const remainingAmount = total - depositAmount;
 
   const handleConfirm = async () => {
-    if (!canConfirm || !selectedTent) return;
+    if (!canConfirm || !termsAccepted || !selectedTent) return;
 
     // Re-check availability just before saving so we don't oversell.
     try {
@@ -323,6 +327,8 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
             address: { country, address, postalCode, city },
             eventDates: `${festival.checkIn.sv} – ${festival.checkOut.sv}`,
             language: lang,
+            termsAccepted: true,
+            termsAcceptedAt: new Date().toISOString(),
           },
         });
       if (error) throw error;
@@ -690,6 +696,39 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                   </button>
                 </div>
               </Card>
+
+              <div className="space-y-3">
+                <div className="flex items-start gap-3 text-sm leading-6">
+                  <Checkbox
+                    id="booking-terms"
+                    checked={termsAccepted}
+                    onCheckedChange={(checked) => setTermsAccepted(checked === true)}
+                    aria-required="true"
+                    className="mt-1"
+                  />
+                  <p className="text-foreground/90">
+                    <label htmlFor="booking-terms">I have read and accept </label>
+                    <SwedenRockBookingTerms
+                      trigger={
+                        <Button
+                          type="button"
+                          variant="link"
+                          className="h-auto p-0 align-baseline font-medium text-primary underline underline-offset-4"
+                        >
+                          Tentify&apos;s Booking &amp; Accommodation Terms
+                        </Button>
+                      }
+                    />
+                    <label htmlFor="booking-terms">
+                      , including that the 20% deposit is non-refundable if I cancel my booking.
+                    </label>
+                  </p>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  20% is paid at booking and is non-refundable if you cancel. The remaining balance is paid on
+                  arrival.
+                </p>
+              </div>
 
               <Button size="lg" className="w-full" onClick={handleConfirm} disabled={!canConfirm || isSubmitting}>
                 {isSubmitting
