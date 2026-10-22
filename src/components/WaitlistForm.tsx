@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 interface WaitlistFormProps {
-  variant?: "sold-out" | "pre-booking";
+  variant?: "sold-out" | "pre-booking" | "interest";
 }
 
 const WaitlistForm = ({ variant = "sold-out" }: WaitlistFormProps) => {
@@ -60,7 +60,7 @@ const WaitlistForm = ({ variant = "sold-out" }: WaitlistFormProps) => {
       <Card className="p-8 bg-primary/5 border-primary/20 text-center">
         <div className="text-4xl mb-4">✅</div>
         <p className="text-lg font-semibold text-foreground">
-          Tack, vi kontaktar dig om platser öppnar upp.
+          Tack! Vi mailar dig så fort vi öppnar upp för fler platser.
         </p>
       </Card>
     );
@@ -68,7 +68,7 @@ const WaitlistForm = ({ variant = "sold-out" }: WaitlistFormProps) => {
 
   return (
     <Card className="p-8 bg-muted/50 border-border">
-      <div className="text-center mb-6">
+      {variant !== "interest" && <div className="text-center mb-6">
         <h3 className="text-xl font-bold text-foreground mb-3">
           {variant === "pre-booking"
             ? "Anmäl dig till väntelistan för Sweden Rock 2027"
@@ -79,8 +79,7 @@ const WaitlistForm = ({ variant = "sold-out" }: WaitlistFormProps) => {
             ? "Lämna dina uppgifter så kontaktar vi dig så snart bokningen öppnar eller platser släpps."
             : "Men du kan ställa dig på vår väntelista. Om någon avbokar eller om fler platser öppnas kontaktar vi dig direkt."}
         </p>
-      </div>
-
+      </div>}
 
       <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto">
         <div>
@@ -127,7 +126,7 @@ const WaitlistForm = ({ variant = "sold-out" }: WaitlistFormProps) => {
           className="w-full"
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Skickar..." : "Ställ mig på väntelistan"}
+          {isSubmitting ? "Skickar..." : (variant === "interest" ? "Anmäl intresse" : "Ställ mig på väntelistan")}
         </Button>
       </form>
     </Card>

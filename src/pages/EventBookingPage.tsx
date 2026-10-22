@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import WaitlistForm from "@/components/WaitlistForm";
 import { Link, useParams, Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -409,6 +410,20 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
 
   return (
     <div className="min-h-screen bg-background">
+      {festival.id === "sweden-rock-2027" && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-background/80 p-4 backdrop-blur-md">
+          <div className="my-auto w-full max-w-lg space-y-4">
+            <div className="rounded-2xl border border-border bg-card p-6 text-center shadow-xl">
+              <h2 className="mb-3 text-2xl font-bold text-foreground">Högt tryck på vår glamping</h2>
+              <p className="text-muted-foreground">
+                För att kunna erbjuda fler platser jobbar vi nu på att bygga ut vårt glampingområde.
+                Anmäl ditt intresse nedan så mailar vi dig så fort vi öppnar upp för fler platser.
+              </p>
+            </div>
+            <WaitlistForm variant="interest" />
+          </div>
+        </div>
+      )}
       {/* Hero */}
       <section className="theme-sweden-rock relative bg-background text-foreground">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_10%,hsl(220_6%_16%)_0%,hsl(0_0%_5%)_55%,hsl(0_0%_0%)_100%)]" />
