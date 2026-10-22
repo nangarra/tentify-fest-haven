@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import WaitlistForm from "@/components/WaitlistForm";
 import { Link, useParams, Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
