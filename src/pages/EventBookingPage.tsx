@@ -572,6 +572,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                 <h2 className="text-2xl font-bold mb-4">{t("reviewBooking", lang)}</h2>
                 <div className="rounded-lg border bg-muted/30 p-4 md:p-5 space-y-2 text-sm">
                   <SummaryRow label={t("step1", lang)} value={selectedTent.name[lang]} />
+                  <SummaryRow label="Grundpris" value={fmt(selectedTent.price, festival.currency)} />
                   <SummaryRow
                     label={`${t("checkin", lang)} → ${t("checkout", lang)}`}
                     value={`${festival.checkIn[lang]} → ${festival.checkOut[lang]}`}
@@ -586,12 +587,9 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                   {extraGuestsCost > 0 && (
                     <SummaryRow label={t("extraGuest", lang)} value={fmt(extraGuestsCost, festival.currency)} />
                   )}
-                  {addOnLines.length > 0 && (
-                    <SummaryRow
-                      label={t("step3", lang)}
-                      value={addOnLines.map((l) => l.addOn.name[lang]).join(", ")}
-                    />
-                  )}
+                  {addOnLines.map(({ addOn, total: lineTotal }) => (
+                    <SummaryRow key={addOn.id} label={addOn.name.sv} value={fmt(lineTotal, festival.currency)} />
+                  ))}
                   <Separator className="my-2" />
                   <SummaryRow
                     label={t("total", lang)}
@@ -1049,6 +1047,7 @@ const AddOnCard = ({
         )}
       </div>
       <p className="text-sm text-muted-foreground mb-4">{addOn.description[lang]}</p>
+      {addOn.id === "electricity" && <p className="text-sm text-muted-foreground mb-4">850 kr per tält för hela vistelsen, oavsett antal gäster.</p>}
 
       {addOn.includedItems && addOn.includedItems.length > 0 && (
         <div className="mb-4 rounded-md bg-muted/40 p-3 text-left">

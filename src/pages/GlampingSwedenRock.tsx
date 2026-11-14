@@ -29,11 +29,11 @@ import hero2027Img from "@/assets/sweden-rock-2027-hero.png.asset.json";
 
 
 const upgrades = [
-  "Härlig hotellfrukost",
+  "Lyxfrukost – 699 kr/person",
   "Uppgraderad säng",
-  "Bäddset",
-  "Kylskåp",
-  "Extra komfort och praktiska tillval",
+  "Bäddset – 500 kr/person",
+  "El till tältet – 850 kr",
+  "Handduk (hyra) – 100 kr/person",
 ];
 
 const scrollTo = (id: string) => {
@@ -281,9 +281,8 @@ const GlampingSwedenRock = () => {
                 Tillval och uppgraderingar
               </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                Inför Sweden Rock 2027 planerar vi att erbjuda flera tillval för dig som vill
-                göra festivalboendet ännu bekvämare. Exakta paket och priser presenteras när
-                bokningen öppnar.
+                Välj tillval för att göra festivalboendet ännu bekvämare. Priserna gäller
+                hela vistelsen. El är frivilligt och ingår inte i grundpriset.
               </p>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">

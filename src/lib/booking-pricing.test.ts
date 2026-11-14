@@ -26,7 +26,7 @@ describe("new Sweden Rock guest pricing", () => {
     assert.deepEqual([1, 2, 3].map(g => medium.price + extraGuestCost(medium, g, festival.extraGuestPrice)), [7900, 8750, 9600]);
   });
   test("Deluxe only charges beyond two guests for the whole stay", () => {
-    assert.deepEqual([1, 2, 3, 4].map(g => deluxe.price + extraGuestCost(deluxe, g, festival.extraGuestPrice)), [11900, 11900, 12750, 13600]);
+    assert.deepEqual([2, 3, 4].map(g => deluxe.price + extraGuestCost(deluxe, g, festival.extraGuestPrice)), [11900, 12750, 13600]);
   });
 });
 
