@@ -86,7 +86,7 @@ const faq = [
   },
   {
     q: "Var ligger tälten?",
-    a: "Exakt platsinformation uppdateras inför 2027 när campingen och upplägget är fastställt.",
+    a: "Ingemans Camping, Truckvägen 1, Sölvesborg, cirka 800 meter från festivalentrén. Incheckning tisdag 8 juni 2027 från kvällen. Utcheckning söndag 13 juni 2027 senast kl. 12.00.",
   },
 ];
 
@@ -299,7 +299,7 @@ const GlampingSwedenRock = () => {
             <p className="mt-8 text-center text-sm text-muted-foreground max-w-3xl mx-auto">
               Utöver det som ingår i grundpaketet kommer vi även att erbjuda utvalda tillval
               och uppgraderingar, till exempel hotellfrukost, uppgraderad säng, bäddset och
-              kylskåp.
+              el till tältet (850 kr, 230 V och max 230 W).
             </p>
           </div>
         </section>

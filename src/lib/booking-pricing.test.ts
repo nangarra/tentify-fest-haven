@@ -3,6 +3,7 @@ import { describe, test } from "node:test";
 import { strict as assert } from "node:assert";
 import { SWEDEN_ROCK_2027 } from "../config/festivals";
 import { extraGuestCost } from "./booking-pricing";
+import { calculateBooking, assertQuotedTotal, savedDeposit, STAY } from "../../supabase/functions/_shared/booking-pricing";
 
 describe("new Sweden Rock guest pricing", () => {
   const festival = SWEDEN_ROCK_2027;
@@ -26,5 +27,49 @@ describe("new Sweden Rock guest pricing", () => {
   });
   test("Deluxe only charges beyond two guests for the whole stay", () => {
     assert.deepEqual([1, 2, 3, 4].map(g => deluxe.price + extraGuestCost(deluxe, g, festival.extraGuestPrice)), [11900, 11900, 12750, 13600]);
+  });
+});
+
+describe("verified festival pricing", () => {
+  test("Medium example includes one extra guest, electricity and two towels", () => {
+    const q = calculateBooking("medium", 2, ["electricity", "towel"]);
+    assert.equal(q.totalPrice, 9800);
+    assert.equal(q.deposit, 1960);
+    assert.equal(q.extraGuestsCost, 850);
+    assert.deepEqual(q.addOns.map(a => a.total), [850, 200]);
+  });
+  test("Deluxe example includes one extra guest, electricity and three towels", () => {
+    const q = calculateBooking("deluxe", 3, ["electricity", "towel"]);
+    assert.equal(q.totalPrice, 13900);
+    assert.equal(q.deposit, 2780);
+  });
+  test("guest minimums and maximums are enforced on the server", () => {
+    for (const [tent, guests] of [["medium", 0], ["medium", 4], ["deluxe", 1], ["deluxe", 5]] as const) {
+      assert.throws(() => calculateBooking(tent, guests, []));
+    }
+  });
+  test("electricity is not selected by default and costs 850 per tent", () => {
+    assert.equal(calculateBooking("medium", 1, []).addOns.length, 0);
+    for (const guests of [2, 3, 4]) assert.equal(calculateBooking("deluxe", guests, ["electricity"]).addOnsTotal, 850);
+    assert.equal(calculateBooking("medium", 1, ["electricity"]).totalPrice - calculateBooking("medium", 1, []).totalPrice, 850);
+  });
+  test("Comfort Pack, fridge, duplicates and manipulated amounts are rejected", () => {
+    for (const ids of [["comfort-pack"], ["fridge"], ["electricity", "electricity"]]) assert.throws(() => calculateBooking("medium", 1, ids));
+    assert.throws(() => assertQuotedTotal(calculateBooking("medium", 1, []), 1));
+  });
+  test("towels, breakfast and bedding retain per-person pricing at new rates", () => {
+    assert.deepEqual(calculateBooking("deluxe", 2, ["towel", "breakfast", "bedding"]).addOns.map(a => [a.unitPrice, a.qty, a.total]), [[100, 2, 200], [699, 2, 1398], [500, 2, 1000]]);
+  });
+  test("historic payments use saved amounts rather than current prices", () => {
+    const old = { totalPrice: 8450, deposit: 1690, addOns: [{ id: "comfort-pack", total: 499 }], checkIn: "9 juni 2027" };
+    const before = JSON.stringify(old);
+    assert.equal(savedDeposit(old), 1690);
+    assert.equal(JSON.stringify(old), before);
+  });
+  test("new stay information has the agreed camping and dates", () => {
+    assert.equal(STAY.location, "Ingemans Camping, Truckvägen 1, Sölvesborg");
+    assert.equal(STAY.checkIn, "Tisdag 8 juni 2027, från kvällen");
+    assert.equal(STAY.checkOut, "Söndag 13 juni 2027, senast kl. 12.00");
+    assert.equal(STAY.nights, 5);
   });
 });
