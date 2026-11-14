@@ -51,6 +51,7 @@ import {
   type TentType,
 } from "@/config/festivals";
 import { t } from "@/lib/booking-i18n";
+import { extraGuestCost } from "@/lib/booking-pricing";
 import { PAYMENT_INFO } from "@/config/payment-info";
 import SwedenRockBookingTerms from "@/components/SwedenRockBookingTerms";
 import srLogo from "@/assets/glamping_Swedenrock_tentify_2027.webp.asset.json";
@@ -109,7 +110,9 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   const [selectedTentId, setSelectedTentId] = useState<string | null>(
     festival.tents.find((tt) => tt.id === "medium")?.id ?? festival.tents[0]?.id ?? null,
   );
-  const [guests, setGuests] = useState<number>(1);
+  const [guests, setGuests] = useState<number>(() =>
+    (festival.tents.find((tt) => tt.id === "medium") ?? festival.tents[0])?.includedGuests ?? 1,
+  );
   const [selectedAddOns, setSelectedAddOns] = useState<Set<string>>(new Set());
 
   // Per-tent-type real availability from backend.
@@ -201,12 +204,13 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
     [selectedTentId, festival],
   );
   const maxGuests = selectedTent?.maxGuests ?? 4;
+  const includedGuests = selectedTent?.includedGuests ?? 1;
 
   useEffect(() => {
     if (guests > maxGuests) setGuests(maxGuests);
   }, [maxGuests, guests]);
 
-  const extraGuestsCost = Math.max(0, guests - 1) * festival.extraGuestPrice;
+  const extraGuestsCost = extraGuestCost(selectedTent, guests, festival.extraGuestPrice);
   const addOnLines = useMemo(
     () =>
       festival.addOns
@@ -310,6 +314,8 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
             tentName: selectedTent.name.sv,
             tentBasePrice: selectedTent.price,
             guests,
+            includedGuests,
+            extraGuestPrice: festival.extraGuestPrice,
             extraGuestsCost,
             addOns: addOnMeta,
             addOnsTotal,
@@ -496,6 +502,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                       onSelect={() => {
                         if (soldOutByType[tent.id]) return;
                         setSelectedTentId(tent.id);
+                        if (tent.id !== selectedTentId) setGuests(tent.includedGuests);
                       }}
                     />
                   ))}
@@ -512,16 +519,18 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                       <div>
                         <div className="font-semibold">{t("numGuests", lang)}</div>
                         <div className="text-sm text-muted-foreground">
-                          {t("extraGuest", lang)}: {fmt(festival.extraGuestPrice, festival.currency)} {t("perPerson", lang)}
+                          {includedGuests} {t(includedGuests === 1 ? "includedGuestPrice" : "includedGuestsPrice", lang)} {festival.extraGuestPrice} kr {t("perPerson", lang)}.
                           {selectedTent &&
                             ` · ${t("max", lang)} ${maxGuests} ${t("in", lang)} ${selectedTent.name[lang]}`}
                         </div>
+                        <div className="text-sm text-muted-foreground">{t("wholeStay", lang)}</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
                       <Button
                         variant="outline"
                         size="icon"
+                        aria-label={lang === "sv" ? "Färre gäster" : "Fewer guests"}
                         onClick={() => setGuests((g) => Math.max(1, g - 1))}
                         disabled={guests <= 1}
                       >
@@ -531,6 +540,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                       <Button
                         variant="outline"
                         size="icon"
+                        aria-label={lang === "sv" ? "Fler gäster" : "More guests"}
                         onClick={() => setGuests((g) => Math.min(maxGuests, g + 1))}
                         disabled={guests >= maxGuests}
                       >
@@ -625,6 +635,10 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                     value={String(festival.nights)}
                   />
                   <SummaryRow label={t("guestsLabel", lang)} value={String(guests)} />
+                  <SummaryRow label={t("included", lang)} value={`${includedGuests} ${includedGuests === 1 ? t("guest", lang) : t("guests", lang)}`} />
+                  {extraGuestsCost > 0 && (
+                    <SummaryRow label={t("extraGuest", lang)} value={fmt(extraGuestsCost, festival.currency)} />
+                  )}
                   {addOnLines.length > 0 && (
                     <SummaryRow
                       label={t("step3", lang)}
@@ -1170,6 +1184,7 @@ const BookingSummary = ({
             <div className="font-medium">{t("guestsLabel", lang)}</div>
             <div className="text-xs text-muted-foreground">
               {guests} {guests === 1 ? t("guest", lang) : t("guests", lang)}
+              {` · ${selectedTent.includedGuests} ${t("included", lang).toLowerCase()}`}
             </div>
           </div>
           <span>{extraGuestsCost > 0 ? `+${fmt(extraGuestsCost, festival.currency)}` : t("included", lang)}</span>
