@@ -42,8 +42,8 @@ const scrollTo = (id: string) => {
 
 
 const included = [
-  { icon: Bed, text: "Sovplats för två gäster (täcke, kudde, bäddmadrass)" },
-  { icon: Users, text: "Plats för upp till fyra gäster i tältet" },
+  { icon: Bed, text: "Medium: 1 person ingår i grundpriset. Deluxe: 2 personer ingår i grundpriset." },
+  { icon: Users, text: "Medium har plats för upp till 3 gäster, Deluxe för upp till 4 gäster" },
   { icon: Sparkles, text: "Mysig inredning – matta, belysning och detaljer" },
   { icon: Tent, text: "Tältet står färdigt när ni kommer" },
   { icon: PackageCheck, text: "Extra madrasser, täcken och kuddar som tillval" },
@@ -51,7 +51,7 @@ const included = [
 
 const whyGlamping = [
   { icon: PackageCheck, title: "Slipp packa tält", text: "Tältet står redo när du kommer – inget släp, ingen montering." },
-  { icon: Moon, title: "Sov bekvämare", text: "Täcke, kudde och bäddmadrass ingår för två personer." },
+  { icon: Moon, title: "Sov bekvämare", text: "1 person ingår i Medium och 2 personer i Deluxe. Extra gäst kostar 850 kr per person för hela vistelsen." },
   { icon: Music, title: "Mer festival, mindre stress", text: "Fokusera på musiken, vännerna och upplevelsen." },
 ];
 
@@ -266,8 +266,8 @@ const GlampingSwedenRock = () => {
             </div>
             <div className="mt-8 bg-accent/20 border border-accent/40 rounded-lg p-5 text-center">
               <p className="font-medium text-foreground">
-                Två sovplatser ingår. Upp till fyra gäster per tält är möjligt mot tillval
-                av extra madrasser och täcken.
+                Medium: 1 person ingår i grundpriset. Deluxe: 2 personer ingår i grundpriset.
+                Extra gäst kostar 850 kr per person för hela vistelsen, inte per natt.
               </p>
             </div>
           </div>

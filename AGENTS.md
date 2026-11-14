@@ -1,0 +1,1 @@
+- Keep included guest counts in festival tent configuration and calculate new-booking guest surcharges through the shared pricing helper; persisted booking prices must never be recalculated from current product rules.
