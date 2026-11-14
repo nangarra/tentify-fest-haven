@@ -6,3 +6,4 @@
 - [x] Lägg till metadata, internlänkar och strukturerad FAQ/Breadcrumb/Service-data
 - [x] Verifiera desktop, mobil, media, interaktioner och formulär
 - [x] Lägg till och verifiera obligatoriska Sweden Rock-bokningsvillkor i sista steget
+- [ ] Öppna Sweden Rock-bokningen igen och dölj minikyl; verifiera tältval och sammanfattning
