@@ -8,6 +8,13 @@
       "when": 1794644654752,
       "tag": "0000_verified_festival_booking",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794644819483,
+      "tag": "0001_validate_legacy_inflight_booking_prices",
+      "breakpoints": true
     }
   ]
 }
