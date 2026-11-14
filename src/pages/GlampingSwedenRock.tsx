@@ -29,11 +29,11 @@ import hero2027Img from "@/assets/sweden-rock-2027-hero.png.asset.json";
 
 
 const upgrades = [
-  "Härlig hotellfrukost",
+  "Lyxfrukost – 699 kr/person",
   "Uppgraderad säng",
-  "Bäddset",
-  "Kylskåp",
-  "Extra komfort och praktiska tillval",
+  "Bäddset – 500 kr/person",
+  "El till tältet – 850 kr",
+  "Handduk (hyra) – 100 kr/person",
 ];
 
 const scrollTo = (id: string) => {
@@ -86,7 +86,7 @@ const faq = [
   },
   {
     q: "Var ligger tälten?",
-    a: "Exakt platsinformation uppdateras inför 2027 när campingen och upplägget är fastställt.",
+    a: "Ingemans Camping, Truckvägen 1, Sölvesborg, cirka 800 meter från festivalentrén. Incheckning tisdag 8 juni 2027 från kvällen. Utcheckning söndag 13 juni 2027 senast kl. 12.00.",
   },
 ];
 
@@ -281,9 +281,8 @@ const GlampingSwedenRock = () => {
                 Tillval och uppgraderingar
               </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                Inför Sweden Rock 2027 planerar vi att erbjuda flera tillval för dig som vill
-                göra festivalboendet ännu bekvämare. Exakta paket och priser presenteras när
-                bokningen öppnar.
+                Välj tillval för att göra festivalboendet ännu bekvämare. Priserna gäller
+                hela vistelsen. El är frivilligt och ingår inte i grundpriset.
               </p>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
@@ -299,7 +298,7 @@ const GlampingSwedenRock = () => {
             <p className="mt-8 text-center text-sm text-muted-foreground max-w-3xl mx-auto">
               Utöver det som ingår i grundpaketet kommer vi även att erbjuda utvalda tillval
               och uppgraderingar, till exempel hotellfrukost, uppgraderad säng, bäddset och
-              kylskåp.
+              el till tältet (850 kr, 230 V och max 230 W).
             </p>
           </div>
         </section>

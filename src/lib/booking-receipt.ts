@@ -30,14 +30,13 @@ const slug = (s: string) =>
 export function generateBookingReceiptPdf(booking: AnyBooking) {
   const meta = booking.meta ?? {};
   const address = meta.address ?? {};
-  const isSwedenRock2027 = clean(meta.event).toLowerCase().includes("sweden rock") && clean(meta.event).includes("2027");
-  const checkIn = isSwedenRock2027 ? "8 juni 2027" : clean(meta.checkIn);
-  const checkOut = isSwedenRock2027 ? "13 juni 2027" : clean(meta.checkOut);
-  const nights = isSwedenRock2027 ? "5" : clean(meta.nights);
+   const checkIn = clean(meta.checkIn);
+   const checkOut = clean(meta.checkOut);
+   const nights = clean(meta.nights);
 
   const total = Number(meta.totalPrice ?? 0) || 0;
-  const advance = Math.round(total * 0.2);
-  const remaining = total - advance;
+   const advance = Number(meta.deposit ?? Math.round(total * 0.2));
+   const remaining = Number(meta.remainingAmount ?? total - advance);
 
   const bookingNumber = clean(meta.bookingNumber) || booking.id;
 
@@ -152,6 +151,7 @@ export function generateBookingReceiptPdf(booking: AnyBooking) {
   row("Bokningsnummer", bookingNumber);
   row("Bokningsdatum", new Date(booking.created_at).toLocaleDateString("sv-SE"));
   row("Event", clean(meta.event));
+  row("Campingplats", clean(meta.location));
   row("Incheckning", checkIn);
   row("Utcheckning", checkOut);
   row("Antal nätter", nights);

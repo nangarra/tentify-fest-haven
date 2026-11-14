@@ -38,6 +38,7 @@ import {
   Moon,
   Clock,
   Car,
+  Zap,
 
 
 } from "lucide-react";
@@ -63,7 +64,7 @@ const addOnIcons: Record<string, React.ComponentType<{ className?: string }>> = 
   breakfast: Coffee,
   towel: Bath,
   fridge: Refrigerator,
-  "comfort-pack": Package,
+  electricity: Zap,
   "festival-survival-pack": Backpack,
 };
 
@@ -105,7 +106,7 @@ const EventBookingPage = () => {
 };
 
 export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
-  const [lang, setLang] = useState<Lang>("sv");
+  const lang: Lang = "sv";
   const [step, setStep] = useState<Step>("booking");
   const [selectedTentId, setSelectedTentId] = useState<string | null>(
     festival.tents.find((tt) => tt.id === "medium")?.id ?? festival.tents[0]?.id ?? null,
@@ -208,7 +209,8 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
 
   useEffect(() => {
     if (guests > maxGuests) setGuests(maxGuests);
-  }, [maxGuests, guests]);
+    if (guests < includedGuests) setGuests(includedGuests);
+  }, [maxGuests, includedGuests, guests]);
 
   const extraGuestsCost = extraGuestCost(selectedTent, guests, festival.extraGuestPrice);
   const addOnLines = useMemo(
@@ -278,87 +280,34 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
 
     setIsSubmitting(true);
     try {
-      const addOnMeta = addOnLines.map((l) => ({
-        id: l.addOn.id,
-        name: l.addOn.name.sv,
-        qty: l.addOn.perPerson ? guests : 1,
-        unitPrice: l.addOn.price,
-        total: l.total,
-      }));
-      const message =
-        `${festival.name}\n` +
-        `Tält: ${selectedTent.name.sv} (${selectedTent.size})\n` +
-        `Gäster: ${guests}\n` +
-        `Incheckning: ${festival.checkIn.sv}\nUtcheckning: ${festival.checkOut.sv}\n` +
-        `Nätter: ${festival.nights}\n` +
-        `Tillval: ${addOnLines.map((l) => `${l.addOn.name.sv} (${l.total} kr)`).join(", ") || "Inga"}\n` +
-        `Totalt: ${total} kr\n` +
-        `Förskott 20%: ${depositAmount} kr\n` +
-        `Betalmetod: ${paymentMethod === "stripe" ? "Kort (Stripe)" : "Swish"}\n` +
-        `Status: ${paymentMethod === "stripe" ? "Väntar på kortbetalning" : "Väntar på Swish-betalning (manuell bekräftelse)"}`;
-
-      const newBookingId = crypto.randomUUID();
-      const { error } = await supabase
-        .from("bookings")
-        .insert({
-          id: newBookingId,
-          name: `${firstName} ${lastName}`.trim(),
-          email,
-          phone,
-          message,
-          meta: {
-            festival: festival.id,
-            event: festival.name,
-            tentType: selectedTent.id,
-            tentBatch: selectedTent.id,
-            tentName: selectedTent.name.sv,
-            tentBasePrice: selectedTent.price,
-            guests,
-            includedGuests,
-            extraGuestPrice: festival.extraGuestPrice,
-            extraGuestsCost,
-            addOns: addOnMeta,
-            addOnsTotal,
-            totalPrice: total,
-            deposit: depositAmount,
-            depositPercent: 20,
-            remainingAmount: total - depositAmount,
-            paymentOption: paymentMethod === "stripe" ? "stripe_advance" : "swish_advance",
-            paymentMethod,
-            paymentStatus: paymentMethod === "stripe" ? "awaiting_stripe" : "awaiting_swish",
-            bookingStatus: "pending_confirmation",
-            checkIn: festival.checkIn.sv,
-            checkOut: festival.checkOut.sv,
-            nights: festival.nights,
-            address: { country, address, postalCode, city },
-            eventDates: `${festival.checkIn.sv} – ${festival.checkOut.sv}`,
-            language: lang,
-            termsAccepted: true,
-            termsAcceptedAt: new Date().toISOString(),
-          },
-        });
-      if (error) throw error;
-      setBookingId(newBookingId);
-
-      await supabase.rpc("decrease_tent_inventory", {
-        p_festival: festival.id,
-        p_tent_type: selectedTent.id,
+      const { data, error } = await supabase.functions.invoke("create-festival-booking", {
+        body: {
+          pricingVersion: festival.pricingVersion, tentType: selectedTent.id,
+          guests, addOnIds: Array.from(selectedAddOns), totalPrice: total,
+          paymentMethod, termsAccepted,
+          customer: { firstName, lastName, email, phone, country, address, postalCode, city },
+        },
       });
+      if (error || data?.error || !data?.bookingId) {
+        throw new Error(data?.error ?? "Kunde inte spara bokningen. Försök igen.");
+      }
+      const newBookingId = data.bookingId as string;
+      setBookingId(newBookingId);
       setAvailabilityByType((prev) => ({
-        ...prev,
-        [selectedTent.id]: Math.max(0, (prev[selectedTent.id] ?? 0) - 1),
+        ...prev, [selectedTent.id]: Math.max(0, (prev[selectedTent.id] ?? 0) - 1),
       }));
 
       if (paymentMethod === "stripe") {
         const origin = window.location.origin;
         console.log("[stripe] invoking edge function", { newBookingId, depositAmount });
         try {
-          const { data, error: fnError } = await supabase.functions.invoke(
+          const { data: checkoutData, error: fnError } = await supabase.functions.invoke(
             "create-stripe-checkout",
             {
               body: {
                 bookingId: newBookingId,
-                amount: depositAmount,
+                paymentToken: data.paymentToken,
+                amount: data.quote.deposit,
                 currency: "sek",
                 description: `${festival.name} – ${selectedTent.name.sv} (20% förskott)`,
                 customerEmail: email,
@@ -367,16 +316,15 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
               },
             },
           );
-          console.log("[stripe] response", { data, fnError });
           if (fnError) {
             toast.error(`Stripe-fel: ${fnError.message ?? "okänt fel"}`);
             return;
           }
-          if (!data?.url) {
-            toast.error(`Stripe returnerade ingen URL: ${JSON.stringify(data)}`);
+          if (!checkoutData?.url) {
+            toast.error("Kunde inte öppna kortbetalningen. Försök igen.");
             return;
           }
-          window.location.href = data.url as string;
+          window.location.href = checkoutData.url as string;
         } catch (err: any) {
           console.error("[stripe] invoke threw", err);
           toast.error(`Kunde inte nå Stripe: ${err?.message ?? err}`);
@@ -419,9 +367,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
       <section className="theme-sweden-rock relative bg-background text-foreground">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_10%,hsl(220_6%_16%)_0%,hsl(0_0%_5%)_55%,hsl(0_0%_0%)_100%)]" />
 
-        <div className="absolute top-4 right-4 z-20">
-          <LanguageToggle lang={lang} onChange={setLang} />
-        </div>
+
         <div className="relative z-10 container mx-auto px-4 pt-14 pb-12 md:pt-20 md:pb-16 text-center">
           <img
             src={srLogo.url}
@@ -430,17 +376,16 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
             loading="eager"
           />
           <h1 className="mt-8 text-3xl sm:text-4xl md:text-5xl font-bold text-[hsl(40_18%_92%)] leading-[1.2] tracking-tight text-balance">
-            {lang === "sv" ? "Glamping till Sweden Rock" : "Glamping at Sweden Rock"}
+            {festival.displayTitle.sv}
           </h1>
           <p className="mt-5 text-lg md:text-xl text-[hsl(40_12%_84%)] max-w-2xl mx-auto leading-relaxed text-balance">
-            {lang === "sv"
-              ? "Boka ditt färdiga boende till Sweden Rock Festival 2027"
-              : "Book your ready-made stay for Sweden Rock Festival 2027"}
+            {festival.subtitle.sv}
           </p>
           <p className="mt-2 text-base md:text-lg text-[hsl(40_14%_88%)] max-w-2xl mx-auto leading-relaxed text-balance">
-            {lang === "sv" ? "Plats: Ingemars Camping" : "Location: Ingemars Camping"}
+            Plats: {festival.location.sv}
           </p>
 
+          <p className="mt-2 text-base text-muted-foreground max-w-2xl mx-auto">Njut av festivalen och kom tillbaka till ditt eget bekväma tält, redo för en god natts sömn.</p>
           <div className="mt-7 flex flex-wrap justify-center gap-x-8 gap-y-3 text-lg md:text-xl text-[hsl(40_14%_88%)]">
             <span className="flex items-center gap-2.5">
               <Calendar className="w-5 h-5 md:w-6 md:h-6 opacity-80" /> 8–13 juni 2027
@@ -455,9 +400,10 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
               {(lang === "sv"
                 ? [
                     { Icon: Moon, label: "5 nätter" },
-                    { Icon: Clock, label: "Incheckning från kl. 15.00" },
+                    { Icon: Clock, label: "Incheckning: Tisdag 8 juni, från kvällen" },
+                    { Icon: Clock, label: "Utcheckning: Söndag 13 juni, kl. 12.00" },
                     { Icon: BedDouble, label: "Fullt möblerat tält" },
-                    { Icon: MapPin, label: "10 minuter från festivalen" },
+                    { Icon: MapPin, label: "Cirka 800 meter från festivalentrén" },
                     { Icon: Car, label: "Parkering ingår" },
                   ]
                 : [
@@ -519,7 +465,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                       <div>
                         <div className="font-semibold">{t("numGuests", lang)}</div>
                         <div className="text-sm text-muted-foreground">
-                          {includedGuests} {t(includedGuests === 1 ? "includedGuestPrice" : "includedGuestsPrice", lang)} {festival.extraGuestPrice} kr {t("perPerson", lang)}.
+                          {includedGuests} {includedGuests === 1 ? "person ingår" : "personer ingår"} i grundpriset. Extra gäst: +850 kr/person.
                           {selectedTent &&
                             ` · ${t("max", lang)} ${maxGuests} ${t("in", lang)} ${selectedTent.name[lang]}`}
                         </div>
@@ -531,8 +477,8 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                         variant="outline"
                         size="icon"
                         aria-label={lang === "sv" ? "Färre gäster" : "Fewer guests"}
-                        onClick={() => setGuests((g) => Math.max(1, g - 1))}
-                        disabled={guests <= 1}
+                        onClick={() => setGuests((g) => Math.max(includedGuests, g - 1))}
+                        disabled={guests <= includedGuests}
                       >
                         <Minus className="w-4 h-4" />
                       </Button>
@@ -626,6 +572,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                 <h2 className="text-2xl font-bold mb-4">{t("reviewBooking", lang)}</h2>
                 <div className="rounded-lg border bg-muted/30 p-4 md:p-5 space-y-2 text-sm">
                   <SummaryRow label={t("step1", lang)} value={selectedTent.name[lang]} />
+                  <SummaryRow label="Grundpris" value={fmt(selectedTent.price, festival.currency)} />
                   <SummaryRow
                     label={`${t("checkin", lang)} → ${t("checkout", lang)}`}
                     value={`${festival.checkIn[lang]} → ${festival.checkOut[lang]}`}
@@ -634,17 +581,15 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                     label={t("nightsLabel", lang)}
                     value={String(festival.nights)}
                   />
+                  <SummaryRow label="Plats" value={festival.location.sv} />
                   <SummaryRow label={t("guestsLabel", lang)} value={String(guests)} />
                   <SummaryRow label={t("included", lang)} value={`${includedGuests} ${includedGuests === 1 ? t("guest", lang) : t("guests", lang)}`} />
                   {extraGuestsCost > 0 && (
                     <SummaryRow label={t("extraGuest", lang)} value={fmt(extraGuestsCost, festival.currency)} />
                   )}
-                  {addOnLines.length > 0 && (
-                    <SummaryRow
-                      label={t("step3", lang)}
-                      value={addOnLines.map((l) => l.addOn.name[lang]).join(", ")}
-                    />
-                  )}
+                  {addOnLines.map(({ addOn, total: lineTotal }) => (
+                    <SummaryRow key={addOn.id} label={addOn.name.sv} value={fmt(lineTotal, festival.currency)} />
+                  ))}
                   <Separator className="my-2" />
                   <SummaryRow
                     label={t("total", lang)}
@@ -790,6 +735,14 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
               )}
 
               <div className="rounded-lg border bg-muted/30 p-5 mb-4 text-sm space-y-2">
+                <SummaryRow label="Plats" value={festival.location.sv} />
+                <SummaryRow label="Incheckning" value={festival.checkIn.sv} />
+                <SummaryRow label="Utcheckning" value={festival.checkOut.sv} />
+                <SummaryRow label="Tält" value={selectedTent.name.sv} />
+                <SummaryRow label="Gäster" value={String(guests)} />
+                <SummaryRow label="Grundpris" value={fmt(selectedTent.price, festival.currency)} />
+                {extraGuestsCost > 0 && <SummaryRow label="Extra gäster" value={fmt(extraGuestsCost, festival.currency)} />}
+                {addOnLines.map(({ addOn, total: lineTotal }) => <SummaryRow key={addOn.id} label={addOn.name.sv} value={fmt(lineTotal, festival.currency)} />)}
                 <div className="text-xs uppercase tracking-wide text-muted-foreground mb-2">
                   {t("paymentInfo", lang)}
                 </div>
@@ -996,6 +949,7 @@ const TentCard = ({
           </div>
         </div>
         <p className="text-sm text-muted-foreground mb-3">{tent.description[lang]}</p>
+        <p className="text-sm text-muted-foreground mb-3">{tent.includedGuests} {tent.includedGuests === 1 ? "person ingår" : "personer ingår"} i grundpriset. Extra gäst: +850 kr/person. El ingår inte; kan köpas till för 850 kr per tält.</p>
 
         {totalT > 0 && !selected && (
           <p className="text-xs font-medium mb-4">
@@ -1093,6 +1047,7 @@ const AddOnCard = ({
         )}
       </div>
       <p className="text-sm text-muted-foreground mb-4">{addOn.description[lang]}</p>
+      {addOn.id === "electricity" && <p className="text-sm text-muted-foreground mb-4">850 kr per tält för hela vistelsen, oavsett antal gäster.</p>}
 
       {addOn.includedItems && addOn.includedItems.length > 0 && (
         <div className="mb-4 rounded-md bg-muted/40 p-3 text-left">

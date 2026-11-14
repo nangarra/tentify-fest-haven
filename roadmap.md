@@ -8,7 +8,7 @@
 - [x] Lägg till och verifiera obligatoriska Sweden Rock-bokningsvillkor i sista steget
 - [x] Öppna Sweden Rock-bokningen igen och dölj minikyl; verifiera tältval och sammanfattning
 - [x] Uppdatera och verifiera inkluderade gäster och 850 kr per extra gäst för nya Sweden Rock-bokningar
-- [ ] Uppdatera Sweden Rock 2027-camping, tider och svenskspråkig bokningsinformation
-- [ ] Inför frivillig el, nya tillvalspriser och ta bort Comfort Pack för nya bokningar
-- [ ] Säkerställ serverberäkning och skydd av historiska samt påbörjade bokningar
-- [ ] Verifiera prisexempel, betalningsunderlag, bekräftelse och mobilflöde
+- [x] Uppdatera Sweden Rock 2027-camping, tider och svenskspråkig bokningsinformation
+- [x] Inför frivillig el, nya tillvalspriser och ta bort Comfort Pack för nya bokningar
+- [x] Säkerställ serverberäkning och skydd av historiska samt påbörjade bokningar
+- [x] Verifiera prisexempel, betalningsunderlag, bekräftelse och mobilflöde
