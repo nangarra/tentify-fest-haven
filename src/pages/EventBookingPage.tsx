@@ -204,6 +204,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
     () => festival.tents.find((x) => x.id === selectedTentId) ?? null,
     [selectedTentId, festival],
   );
+  const electricityAddOn = festival.addOns.find((addOn) => addOn.id === "electricity");
   const maxGuests = selectedTent?.maxGuests ?? 4;
   const includedGuests = selectedTent?.includedGuests ?? 1;
 
