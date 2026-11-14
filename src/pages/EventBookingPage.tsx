@@ -301,7 +301,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
         const origin = window.location.origin;
         console.log("[stripe] invoking edge function", { newBookingId, depositAmount });
         try {
-          const { data, error: fnError } = await supabase.functions.invoke(
+          const { data: checkoutData, error: fnError } = await supabase.functions.invoke(
             "create-stripe-checkout",
             {
               body: {
@@ -316,16 +316,15 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
               },
             },
           );
-          console.log("[stripe] response", { data, fnError });
           if (fnError) {
             toast.error(`Stripe-fel: ${fnError.message ?? "okänt fel"}`);
             return;
           }
-          if (!data?.url) {
-            toast.error(`Stripe returnerade ingen URL: ${JSON.stringify(data)}`);
+          if (!checkoutData?.url) {
+            toast.error("Kunde inte öppna kortbetalningen. Försök igen.");
             return;
           }
-          window.location.href = data.url as string;
+          window.location.href = checkoutData.url as string;
         } catch (err: any) {
           console.error("[stripe] invoke threw", err);
           toast.error(`Kunde inte nå Stripe: ${err?.message ?? err}`);
