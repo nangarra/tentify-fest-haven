@@ -220,6 +220,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_verified_festival_booking: {
+        Args: {
+          p_email: string
+          p_id: string
+          p_message: string
+          p_meta: Json
+          p_name: string
+          p_phone: string
+        }
+        Returns: undefined
+      }
       decrease_tent_inventory: {
         Args: { p_festival: string; p_tent_type: string }
         Returns: undefined
