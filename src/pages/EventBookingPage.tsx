@@ -1023,6 +1023,81 @@ const SummaryRow = ({
 );
 
 
+const ElectricitySelector = ({
+  addOn,
+  selected,
+  onToggle,
+}: {
+  addOn: AddOnType;
+  selected: boolean;
+  onToggle: () => void;
+}) => (
+  <Card
+    className={`mt-5 overflow-hidden transition-all ${
+      selected
+        ? "border-primary bg-primary/5 shadow-md"
+        : "bg-muted/20 hover:border-primary/40 hover:shadow-sm"
+    }`}
+  >
+    <div className="p-5 md:p-6">
+      <div className="flex flex-col md:flex-row md:items-start gap-5">
+        <div className="flex items-start gap-4 flex-1">
+          <div
+            className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
+              selected ? "bg-primary text-primary-foreground" : "bg-primary/10 text-primary"
+            }`}
+          >
+            <Zap className="w-6 h-6" aria-hidden="true" />
+          </div>
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <h3 className="font-semibold text-lg">{addOn.name.sv}</h3>
+              <Badge variant="secondary" className="text-[10px] uppercase tracking-wide">
+                Frivilligt tillval
+              </Badge>
+            </div>
+            <p className="mt-1 font-semibold text-primary">
+              {addOn.price.toLocaleString("sv-SE")} kr per tält · hela vistelsen
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <span className="rounded-full border bg-background px-2.5 py-1 text-xs font-medium">230 V</span>
+              <span className="rounded-full border bg-background px-2.5 py-1 text-xs font-medium">Max 230 W</span>
+            </div>
+            <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+              {addOn.description.sv}
+            </p>
+          </div>
+        </div>
+        <div className="md:w-44 shrink-0 md:pt-1">
+          <Button
+            variant={selected ? "default" : "outline"}
+            className="w-full h-11"
+            onClick={onToggle}
+            aria-pressed={selected}
+            aria-label={selected ? "Ta bort el" : "Lägg till el"}
+          >
+            {selected ? (
+              <>
+                <Check className="w-4 h-4 mr-2" aria-hidden="true" />
+                El tillagd
+                <X className="w-4 h-4 ml-2" aria-hidden="true" />
+              </>
+            ) : (
+              <>
+                <Plus className="w-4 h-4 mr-2" aria-hidden="true" />
+                Lägg till el
+              </>
+            )}
+          </Button>
+          <p className="mt-2 text-xs text-center text-muted-foreground">
+            {selected ? "Klicka igen för att ta bort." : "Välj enkelt innan du bokar."}
+          </p>
+        </div>
+      </div>
+    </div>
+  </Card>
+);
+
 const AddOnCard = ({
   addOn, lang, currency, guests, selected, onToggle,
 }: { addOn: AddOnType; lang: Lang; currency: string; guests: number; selected: boolean; onToggle: () => void }) => {
