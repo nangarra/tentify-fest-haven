@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import HeroSection from "@/components/HeroSection";
+import SwedenRockSpotlight from "@/components/SwedenRockSpotlight";
 import AboutSection from "@/components/AboutSection";
 import IncludedSection from "@/components/IncludedSection";
 import ExtrasSection from "@/components/ExtrasSection";
@@ -20,6 +21,7 @@ const Index = () => {
   return (
     <main className="min-h-screen">
       <HeroSection />
+      <SwedenRockSpotlight />
       <SeoIntroSection />
       <PopularSolutionsSection />
       <BookingWidget slug="sweden-rock-2027" />
