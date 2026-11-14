@@ -15,6 +15,13 @@
       "when": 1794644819483,
       "tag": "0001_validate_legacy_inflight_booking_prices",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794667759702,
+      "tag": "0002_availability_security_definer",
+      "breakpoints": true
     }
   ]
 }
