@@ -534,7 +534,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
               <StepBlock number={4} title={t("step4", lang)}>
                 <div className="grid md:grid-cols-2 gap-4">
                   {festival.addOns
-                    .filter((a) => a.category !== "comfort" && a.id !== "fridge")
+                    .filter((a) => a.category !== "comfort" && a.id !== "fridge" && a.id !== "electricity")
                     .map((a) => (
                       <AddOnCard
                         key={a.id}
