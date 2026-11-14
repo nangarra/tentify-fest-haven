@@ -18,6 +18,9 @@ export const BOOKING_STRINGS = {
 
   numGuests: { sv: "Antal gäster", en: "Number of guests" },
   extraGuest: { sv: "Extra gäst", en: "Extra guest" },
+  includedGuestPrice: { sv: "person ingår i grundpriset. Extra gäst kostar", en: "person is included in the base price. Each extra guest costs" },
+  includedGuestsPrice: { sv: "personer ingår i grundpriset. Extra gäst kostar", en: "people are included in the base price. Each extra guest costs" },
+  wholeStay: { sv: "Gäller hela vistelsen, inte per natt.", en: "Applies to the entire stay, not per night." },
   perPerson: { sv: "per person", en: "per person" },
   max: { sv: "Max", en: "Max" },
   in: { sv: "i", en: "in" },

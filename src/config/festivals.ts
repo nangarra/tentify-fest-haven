@@ -42,6 +42,7 @@ export type TentType = {
   description: Localized;
   price: number;
   maxGuests: number;
+  includedGuests: number;
   image: string;
   /** Optional image gallery shown in the tent card. First image is the main image. */
   gallery?: string[];
@@ -117,19 +118,20 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
   totalTents: 20,
   heroImage: bookingHeroImg.url,
   currency: "SEK",
-  extraGuestPrice: 500,
+  extraGuestPrice: 850,
   tents: [
     {
       id: "medium",
       name: { sv: "Medium tält", en: "Medium Tent" },
       size: "6 m²",
-      bestFor: { sv: "2–3 gäster", en: "2–3 guests" },
+      bestFor: { sv: "1–3 gäster", en: "1–3 guests" },
       description: {
         sv: "Enkel och bekväm festivalglamping. Klart när du kommer.",
         en: "Simple and comfortable festival glamping. Ready when you arrive.",
       },
       price: 7900,
       maxGuests: 3,
+      includedGuests: 1,
       image: mediumTentImg.url,
       gallery: [mediumStudioImg.url, mediumTentImg.url],
 
@@ -147,6 +149,7 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
       },
       price: 11900,
       maxGuests: 4,
+      includedGuests: 2,
       image: mediumStudioLargeImg.url,
       gallery: [mediumStudioLargeImg.url, bekvamtImg.url],
 
