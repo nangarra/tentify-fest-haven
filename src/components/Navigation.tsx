@@ -32,6 +32,23 @@ const Navigation = () => {
         isScrolled ? "navbar-blur shadow-card" : "bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)]"
       }`}
     >
+      {isHomePage && (
+        <Link
+          to="/booking/sweden-rock-2027"
+          className="block bg-primary text-primary-foreground"
+          aria-label="Bokningen för Sweden Rock 2027 är öppen – gå direkt till bokningen"
+        >
+          <div className="container mx-auto px-4 py-2.5 flex flex-col sm:flex-row items-center justify-center gap-x-3 gap-y-1 text-center text-sm">
+            <span className="font-semibold tracking-wide">
+              Bokningen för Sweden Rock 2027 är öppen
+            </span>
+            <span className="inline-flex items-center gap-1.5 font-medium underline underline-offset-4 decoration-primary-foreground/50 hover:decoration-primary-foreground transition-smooth">
+              Klicka här för att boka
+              <ArrowRight className="w-4 h-4" aria-hidden="true" />
+            </span>
+          </div>
+        </Link>
+      )}
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
