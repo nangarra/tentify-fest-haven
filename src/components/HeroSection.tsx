@@ -38,7 +38,7 @@ const HeroSection = () => {
 
       {/* Hero Content — left aligned */}
       <div className="relative z-10 w-full">
-        <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-10 py-24 md:py-32">
+        <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-10 pt-40 pb-24 md:py-32">
           <div className="max-w-[680px]">
             {/* Eyebrow */}
             <div className="flex items-center gap-3 mb-6">
