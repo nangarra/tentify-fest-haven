@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { describe, test } from "node:test";
 import { strict as assert } from "node:assert";
 import { SWEDEN_ROCK_2027 } from "../config/festivals";

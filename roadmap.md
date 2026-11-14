@@ -7,4 +7,4 @@
 - [x] Verifiera desktop, mobil, media, interaktioner och formulär
 - [x] Lägg till och verifiera obligatoriska Sweden Rock-bokningsvillkor i sista steget
 - [x] Öppna Sweden Rock-bokningen igen och dölj minikyl; verifiera tältval och sammanfattning
-- [ ] Uppdatera och verifiera inkluderade gäster och 850 kr per extra gäst för nya Sweden Rock-bokningar
+- [x] Uppdatera och verifiera inkluderade gäster och 850 kr per extra gäst för nya Sweden Rock-bokningar
