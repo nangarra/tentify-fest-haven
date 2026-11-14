@@ -454,6 +454,13 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                     />
                   ))}
                 </div>
+                {electricityAddOn && (
+                  <ElectricitySelector
+                    addOn={electricityAddOn}
+                    selected={selectedAddOns.has(electricityAddOn.id)}
+                    onToggle={() => toggleAddOn(electricityAddOn.id)}
+                  />
+                )}
               </StepBlock>
 
               <StepBlock number={2} title={t("step2", lang)}>
