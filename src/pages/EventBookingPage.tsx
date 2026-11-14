@@ -1033,6 +1033,8 @@ const ElectricitySelector = ({
   onToggle: () => void;
 }) => (
   <Card
+    role="group"
+    aria-label="El till tältet"
     className={`mt-5 overflow-hidden transition-all ${
       selected
         ? "border-primary bg-primary/5 shadow-md"
