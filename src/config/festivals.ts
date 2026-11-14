@@ -1,4 +1,5 @@
 import type { LucideIcon } from "lucide-react";
+import { ADDONS, PRICING_VERSION, STAY } from "../../supabase/functions/_shared/booking-pricing";
 import {
   Armchair,
   Square,
@@ -65,6 +66,7 @@ export type AddOnType = {
 
 
 export type FestivalConfig = {
+  pricingVersion?: string;
   slug: string;
   id: string; // used as festival key in DB / inventory
   name: string;
@@ -91,33 +93,33 @@ const STANDARD_INCLUDED: IncludedItem[] = [
   { Icon: Droplets, label: { sv: "Våtservetter", en: "Wet wipes" } },
   { Icon: Lightbulb, label: { sv: "USB-lampa", en: "USB lamp" } },
   { Icon: DoorOpen, label: { sv: "Dörrmatta", en: "Doormat" } },
-  { Icon: Zap, label: { sv: "El", en: "Electricity" } },
   { Icon: Car, label: { sv: "Parkering", en: "Parking" } },
 ];
 
 export const SWEDEN_ROCK_2027: FestivalConfig = {
+  pricingVersion: PRICING_VERSION,
 
   slug: "sweden-rock-2027",
   id: "sweden-rock-2027",
   name: "Sweden Rock Festival 2027",
   displayTitle: {
-    sv: "Glamping till Sweden Rock 2027",
+    sv: "Glamping på Sweden Rock Festival 2027",
     en: "Sweden Rock 2027 Glamping",
   },
   subtitle: {
-    sv: "Boka ditt färdiga glampingtält nära festivalen. Välj tält, lägg till bekvämligheter och säkra din plats.",
+    sv: "Upplev Sweden Rock med ett bekvämt och färdigställt glampingtält på Ingemans Camping, bara cirka 800 meter från festivalentrén.",
     en: "Book your ready-made glamping tent for Sweden Rock Festival 2027.",
   },
   location: {
-    sv: "Nära Sweden Rock Festival",
+    sv: STAY.location,
     en: "Near Sweden Rock Festival",
   },
-  checkIn: { sv: "8 juni 2027", en: "8 June 2027" },
-  checkOut: { sv: "13 juni 2027", en: "13 June 2027" },
+  checkIn: { sv: STAY.checkIn, en: STAY.checkIn },
+  checkOut: { sv: STAY.checkOut, en: STAY.checkOut },
   nights: 5,
   totalTents: 20,
   heroImage: bookingHeroImg.url,
-  currency: "SEK",
+  currency: "kr",
   extraGuestPrice: 850,
   tents: [
     {
@@ -187,34 +189,34 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
       id: "bedding",
       name: { sv: "Bäddset", en: "Bedding Set" },
       description: {
-        sv: "Bäddset för hela festivalvistelsen. Innehåller täcke, kudde och lakan.",
+        sv: "Gör din vistelse extra bekväm med ett bäddset för en skön natts sömn. För hela festivalvistelsen. Innehåller täcke, kudde och lakan.",
         en: "Bedding set for the full festival stay. Includes duvet, pillow and sheet.",
       },
-      price: 400,
+      price: ADDONS.bedding.price,
       perPerson: true,
       category: "comfort",
       image: beddingImg.url,
     },
     {
       id: "breakfast",
-      name: { sv: "Lyxig festivalfrukost", en: "Luxury Festival Breakfast" },
+      name: { sv: "Lyxfrukost", en: "Luxury Festival Breakfast" },
       description: {
-        sv: "Njut av en premiumfrukost varje morgon under festivalvistelsen.",
+        sv: "Starta festivaldagen på bästa sätt med vårt lyxiga frukostalternativ. Njut av en premiumfrukost varje morgon under festivalvistelsen.",
         en: "Enjoy a premium breakfast every morning of the festival stay.",
       },
-      price: 599,
+      price: ADDONS.breakfast.price,
       perPerson: true,
       category: "food",
       image: breakfastImg.url,
     },
     {
       id: "towel",
-      name: { sv: "Handduk", en: "Towel" },
+      name: { sv: "Handduk (hyra)", en: "Towel" },
       description: {
-        sv: "Lägg till en fräsch handduk för varje gäst.",
+        sv: "Slipp packa med egen handduk! Hyr en handduk under din festivalvistelse.",
         en: "Add a fresh towel for each guest.",
       },
-      price: 50,
+      price: ADDONS.towel.price,
       perPerson: true,
       category: "extra",
       image: towelImg.url,
@@ -231,25 +233,19 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
       category: "extra",
     },
     {
-      id: "comfort-pack",
-      name: { sv: "Comfort Pack", en: "Comfort Pack" },
+      id: "electricity",
+      name: { sv: "El till tältet", en: "El till tältet" },
       description: {
-        sv: "Gör tältet ännu bekvämare med extra saker för vila och häng.",
-        en: "Make your tent even cosier with extras for resting and hanging out.",
+        sv: "Begränsad elförsörjning med 230 V och max 230 W per tält. Passar för laddning av mobiltelefoner, datorer, powerbanks och andra mindre elektroniska enheter. Elen är inte avsedd för strömkrävande utrustning som vattenkokare, värmeelement, kokplattor eller annan matlagningsutrustning. Behöver du tillgång till kraftigare el eller möjlighet att värma mat kan vi i vissa fall hjälpa till vid vårt serviceområde på campingen.",
+        en: "230 V, max 230 W per tent.",
       },
-      price: 499,
+      price: ADDONS.electricity.price,
       perPerson: false,
-      category: "package",
-      badge: { sv: "Bekvämlighetspaket", en: "Comfort package" },
-      includedItems: [
-        { sv: "Extra stol", en: "Extra chair" },
-        { sv: "Extra kudde", en: "Extra pillow" },
-        { sv: "Extra filt", en: "Extra blanket" },
-      ],
+      category: "extra",
     },
     {
       id: "festival-survival-pack",
-      name: { sv: "Festival Survival Pack", en: "Festival Survival Pack" },
+      name: { sv: "Festivalpaket", en: "Festival Survival Pack" },
       description: {
         sv: "Ett praktiskt festivalpaket med saker som gör vistelsen enklare och skönare.",
         en: "A practical festival pack with essentials that make your stay easier.",
