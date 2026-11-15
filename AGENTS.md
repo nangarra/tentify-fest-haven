@@ -1,2 +1,3 @@
 - Keep included guest counts in festival tent configuration and calculate new-booking guest surcharges through the shared pricing helper; persisted booking prices must never be recalculated from current product rules.
 - Version new festival pricing in the shared edge-function catalogue and retain prior version rates for in-flight bookings; create bookings through server-verified atomic inventory checks that accept supported versions and use saved deposits for checkout, preserving unversioned legacy flows and records.
+- Keep required booking-selection gates in a tested helper shared by all continue controls and their navigation handler, so mobile and desktop enforce the same answers.
