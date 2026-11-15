@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -53,6 +54,7 @@ import {
 } from "@/config/festivals";
 import { t } from "@/lib/booking-i18n";
 import { extraGuestCost } from "@/lib/booking-pricing";
+import { hasElectricityAnswer, type ElectricityChoice } from "@/lib/booking-selections";
 import { PAYMENT_INFO } from "@/config/payment-info";
 import SwedenRockBookingTerms from "@/components/SwedenRockBookingTerms";
 import srLogo from "@/assets/glamping_Swedenrock_tentify_2027.webp.asset.json";
@@ -115,6 +117,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
     (festival.tents.find((tt) => tt.id === "medium") ?? festival.tents[0])?.includedGuests ?? 1,
   );
   const [selectedAddOns, setSelectedAddOns] = useState<Set<string>>(new Set());
+  const [electricityChoice, setElectricityChoice] = useState<ElectricityChoice>(null);
 
   // Per-tent-type real availability from backend.
   const initialAvailability = useMemo(() => {
@@ -155,6 +158,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   };
 
   const goToCheckout = () => {
+    if (!canCheckout) return;
     setStep("checkout");
     requestAnimationFrame(() => {
       requestAnimationFrame(() => smoothScrollTo(checkoutTopRef.current));
@@ -229,7 +233,8 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
   const total = tentPrice + extraGuestsCost + addOnsTotal;
   const depositAmount = Math.round(total * 0.2); // 20% förskott via Swish
 
-  const canCheckout = !!selectedTent && guests > 0 && !soldOut;
+  const electricityAnswered = hasElectricityAnswer(!!electricityAddOn, electricityChoice);
+  const canCheckout = !!selectedTent && guests > 0 && !soldOut && electricityAnswered;
   const canConfirm =
     canCheckout &&
     firstName.trim() &&
@@ -357,6 +362,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
       addOnLines={addOnLines}
       total={total}
       canCheckout={canCheckout}
+      electricityAnswered={electricityAnswered}
       step={step}
       onCheckout={goToCheckout}
     />
@@ -454,16 +460,27 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                     />
                   ))}
                 </div>
-                {electricityAddOn && (
-                  <ElectricitySelector
-                    addOn={electricityAddOn}
-                    selected={selectedAddOns.has(electricityAddOn.id)}
-                    onToggle={() => toggleAddOn(electricityAddOn.id)}
-                  />
-                )}
               </StepBlock>
 
-              <StepBlock number={2} title={t("step2", lang)}>
+              {electricityAddOn && (
+                <StepBlock number={2} title="El till tältet">
+                  <ElectricitySelector
+                    addOn={electricityAddOn}
+                    choice={electricityChoice}
+                    onChoose={(choice) => {
+                      setElectricityChoice(choice);
+                      setSelectedAddOns((prev) => {
+                        const next = new Set(prev);
+                        if (choice === "yes") next.add(electricityAddOn.id);
+                        else next.delete(electricityAddOn.id);
+                        return next;
+                      });
+                    }}
+                  />
+                </StepBlock>
+              )}
+
+              <StepBlock number={electricityAddOn ? 3 : 2} title={t("step2", lang)}>
                 <Card className="p-5 md:p-6">
                   <div className="flex flex-wrap items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
@@ -513,7 +530,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                 </Card>
               </StepBlock>
 
-              <StepBlock number={3} title={t("step3", lang)}>
+              <StepBlock number={electricityAddOn ? 4 : 3} title={t("step3", lang)}>
                 <div className="grid md:grid-cols-2 gap-4">
                   {festival.addOns
                     .filter((a) => a.category === "comfort")
@@ -531,7 +548,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                 </div>
               </StepBlock>
 
-              <StepBlock number={4} title={t("step4", lang)}>
+              <StepBlock number={electricityAddOn ? 5 : 4} title={t("step4", lang)}>
                 <div className="grid md:grid-cols-2 gap-4">
                   {festival.addOns
                     .filter((a) => a.category !== "comfort" && a.id !== "fridge" && a.id !== "electricity")
@@ -811,6 +828,9 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
       {/* Mobile sticky */}
       {step !== "confirmation" && (
         <div className="lg:hidden sticky bottom-0 z-40 bg-background border-t shadow-lg">
+          {step === "booking" && !electricityAnswered && (
+            <p className="px-4 pt-2 text-center text-xs text-muted-foreground">Välj ja eller nej till el i steg 2 för att fortsätta.</p>
+          )}
           <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-3">
             <div>
               <div className="text-xs text-muted-foreground">{t("total", lang)}</div>
@@ -1025,18 +1045,18 @@ const SummaryRow = ({
 
 const ElectricitySelector = ({
   addOn,
-  selected,
-  onToggle,
+  choice,
+  onChoose,
 }: {
   addOn: AddOnType;
-  selected: boolean;
-  onToggle: () => void;
+  choice: ElectricityChoice;
+  onChoose: (choice: "yes" | "no") => void;
 }) => (
   <Card
     role="group"
     aria-label="El till tältet"
-    className={`mt-5 overflow-hidden transition-all ${
-      selected
+    className={`overflow-hidden transition-all ${
+      choice === "yes"
         ? "border-primary bg-primary/5 shadow-md"
         : "bg-muted/20 hover:border-primary/40 hover:shadow-sm"
     }`}
@@ -1046,7 +1066,7 @@ const ElectricitySelector = ({
         <div className="flex items-start gap-4 flex-1">
           <div
             className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
-              selected ? "bg-primary text-primary-foreground" : "bg-primary/10 text-primary"
+              choice === "yes" ? "bg-primary text-primary-foreground" : "bg-primary/10 text-primary"
             }`}
           >
             <Zap className="w-6 h-6" aria-hidden="true" />
@@ -1070,30 +1090,24 @@ const ElectricitySelector = ({
             </p>
           </div>
         </div>
-        <div className="md:w-44 shrink-0 md:pt-1">
-          <Button
-            variant={selected ? "default" : "outline"}
-            className="w-full h-11"
-            onClick={onToggle}
-            aria-pressed={selected}
-            aria-label={selected ? "Ta bort el" : "Lägg till el"}
+        <div className="md:w-48 shrink-0 md:pt-1">
+          <RadioGroup
+            aria-label="Vill du lägga till el?"
+            value={choice ?? ""}
+            onValueChange={(value) => {
+              if (value === "yes" || value === "no") onChoose(value);
+            }}
           >
-            {selected ? (
-              <>
-                <Check className="w-4 h-4 mr-2" aria-hidden="true" />
-                El tillagd
-                <X className="w-4 h-4 ml-2" aria-hidden="true" />
-              </>
-            ) : (
-              <>
-                <Plus className="w-4 h-4 mr-2" aria-hidden="true" />
-                Lägg till el
-              </>
-            )}
-          </Button>
-          <p className="mt-2 text-xs text-center text-muted-foreground">
-            {selected ? "Klicka igen för att ta bort." : "Välj enkelt innan du bokar."}
-          </p>
+            <Label htmlFor="electricity-yes" className={`flex items-center gap-3 rounded-md border p-3 min-h-12 cursor-pointer ${choice === "yes" ? "border-primary bg-primary/10" : "bg-background"}`}>
+              <RadioGroupItem id="electricity-yes" value="yes" />
+              Ja, lägg till el
+            </Label>
+            <Label htmlFor="electricity-no" className={`flex items-center gap-3 rounded-md border p-3 min-h-12 cursor-pointer ${choice === "no" ? "border-primary bg-primary/10" : "bg-background"}`}>
+              <RadioGroupItem id="electricity-no" value="no" />
+              Nej, utan el
+            </Label>
+          </RadioGroup>
+          {choice === null && <p className="mt-2 text-xs text-muted-foreground">Välj ja eller nej för att fortsätta.</p>}
         </div>
       </div>
     </div>
@@ -1192,11 +1206,11 @@ const AddOnCard = ({
 
 
 const BookingSummary = ({
-  festival, lang, selectedTent, guests, extraGuestsCost, addOnLines, total, canCheckout, step, onCheckout,
+  festival, lang, selectedTent, guests, extraGuestsCost, addOnLines, total, canCheckout, electricityAnswered, step, onCheckout,
 }: {
   festival: FestivalConfig; lang: Lang; selectedTent: TentType | null; guests: number;
   extraGuestsCost: number; addOnLines: { addOn: AddOnType; total: number }[]; total: number;
-  canCheckout: boolean; step: Step; onCheckout: () => void;
+  canCheckout: boolean; electricityAnswered: boolean; step: Step; onCheckout: () => void;
 }) => (
   <Card className="p-6">
     <h3 className="text-lg font-bold mb-1">{t("yourBooking", lang)}</h3>
@@ -1260,9 +1274,12 @@ const BookingSummary = ({
     )}
 
     {step === "booking" && (
+      <>
+      {!electricityAnswered && <p className="mt-5 text-sm text-muted-foreground">Välj ja eller nej till el i steg 2 för att fortsätta.</p>}
       <Button className="w-full mt-6" size="lg" disabled={!canCheckout} onClick={onCheckout}>
         {t("continueCheckout", lang)}
       </Button>
+      </>
     )}
   </Card>
 );
