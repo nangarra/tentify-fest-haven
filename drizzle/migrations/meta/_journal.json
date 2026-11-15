@@ -22,6 +22,20 @@
       "when": 1794667759702,
       "tag": "0002_availability_security_definer",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1794719010870,
+      "tag": "0003_protect_all_versioned_festival_bookings",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1794719150142,
+      "tag": "0004_accept_festival_pricing_v3",
+      "breakpoints": true
     }
   ]
 }

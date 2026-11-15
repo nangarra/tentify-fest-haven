@@ -32,7 +32,7 @@ const upgrades = [
   "Lyxfrukost – 699 kr/person",
   "Uppgraderad säng",
   "Bäddset – 500 kr/person",
-  "El till tältet – 850 kr",
+  "El till tältet – 849 kr",
   "Handduk (hyra) – 100 kr/person",
 ];
 
@@ -51,7 +51,7 @@ const included = [
 
 const whyGlamping = [
   { icon: PackageCheck, title: "Slipp packa tält", text: "Tältet står redo när du kommer – inget släp, ingen montering." },
-  { icon: Moon, title: "Sov bekvämare", text: "1 person ingår i Medium och 2 personer i Deluxe. Extra gäst kostar 850 kr per person för hela vistelsen." },
+  { icon: Moon, title: "Sov bekvämare", text: "1 person ingår i Medium och 2 personer i Deluxe. Extra gäst kostar 799 kr per person för hela vistelsen." },
   { icon: Music, title: "Mer festival, mindre stress", text: "Fokusera på musiken, vännerna och upplevelsen." },
 ];
 
@@ -267,7 +267,7 @@ const GlampingSwedenRock = () => {
             <div className="mt-8 bg-accent/20 border border-accent/40 rounded-lg p-5 text-center">
               <p className="font-medium text-foreground">
                 Medium: 1 person ingår i grundpriset. Deluxe: 2 personer ingår i grundpriset.
-                Extra gäst kostar 850 kr per person för hela vistelsen, inte per natt.
+                Extra gäst kostar 799 kr per person för hela vistelsen, inte per natt.
               </p>
             </div>
           </div>
@@ -298,7 +298,7 @@ const GlampingSwedenRock = () => {
             <p className="mt-8 text-center text-sm text-muted-foreground max-w-3xl mx-auto">
               Utöver det som ingår i grundpaketet kommer vi även att erbjuda utvalda tillval
               och uppgraderingar, till exempel hotellfrukost, uppgraderad säng, bäddset och
-              el till tältet (850 kr, 230 V och max 230 W).
+              el till tältet (849 kr, 230 V och max 230 W).
             </p>
           </div>
         </section>

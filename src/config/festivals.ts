@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { ADDONS, PRICING_VERSION, STAY } from "../../supabase/functions/_shared/booking-pricing";
+import { ADDONS, EXTRA_GUEST_PRICE, PRICING_VERSION, STAY } from "../../supabase/functions/_shared/booking-pricing";
 import {
   Armchair,
   Square,
@@ -120,7 +120,7 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
   totalTents: 20,
   heroImage: bookingHeroImg.url,
   currency: "kr",
-  extraGuestPrice: 850,
+  extraGuestPrice: EXTRA_GUEST_PRICE,
   tents: [
     {
       id: "medium",

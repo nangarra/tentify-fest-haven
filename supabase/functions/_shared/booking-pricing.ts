@@ -1,4 +1,9 @@
-export const PRICING_VERSION = "sweden-rock-2027-v2";
+export const LEGACY_PRICING_VERSION = "sweden-rock-2027-v2";
+export const PRICING_VERSION = "sweden-rock-2027-v3";
+export const EXTRA_GUEST_PRICE = 799;
+export function isSupportedPricingVersion(version: unknown): version is string {
+  return version === PRICING_VERSION || version === LEGACY_PRICING_VERSION;
+}
 export const STAY = {
   location: "Ingemans Camping, Truckvägen 1, Sölvesborg",
   distance: "Cirka 800 meter från festivalentrén",
@@ -16,11 +21,13 @@ export const ADDONS: Record<string, { name: string; price: number; perPerson: bo
   bedding: { name: "Bäddset", price: 500, perPerson: true },
   breakfast: { name: "Lyxfrukost", price: 699, perPerson: true },
   towel: { name: "Handduk (hyra)", price: 100, perPerson: true },
-  electricity: { name: "El till tältet", price: 850, perPerson: false },
+  electricity: { name: "El till tältet", price: 849, perPerson: false },
   "festival-survival-pack": { name: "Festivalpaket", price: 499, perPerson: true },
 };
 
-export function calculateBooking(tentId: string, guests: number, addonIds: string[]) {
+export function calculateBooking(tentId: string, guests: number, addonIds: string[], pricingVersion = PRICING_VERSION) {
+  if (!isSupportedPricingVersion(pricingVersion)) throw new Error("Ogiltig prisversion.");
+  const extraGuestPrice = pricingVersion === LEGACY_PRICING_VERSION ? 850 : EXTRA_GUEST_PRICE;
   const tent = TENTS[tentId as keyof typeof TENTS];
   if (!tent || !Number.isInteger(guests) || guests < tent.includedGuests || guests > tent.maxGuests) {
     throw new Error("Ogiltigt antal gäster eller tälttyp.");
@@ -32,15 +39,16 @@ export function calculateBooking(tentId: string, guests: number, addonIds: strin
     const item = ADDONS[id];
     if (!item) throw new Error("Tillvalet kan inte bokas.");
     const qty = item.perPerson ? guests : 1;
-    return { id, name: item.name, qty, unitPrice: item.price, total: item.price * qty };
+    const unitPrice = id === "electricity" && pricingVersion === LEGACY_PRICING_VERSION ? 850 : item.price;
+    return { id, name: item.name, qty, unitPrice, total: unitPrice * qty };
   });
-  const extraGuestsCost = (guests - tent.includedGuests) * 850;
+  const extraGuestsCost = (guests - tent.includedGuests) * extraGuestPrice;
   const addOnsTotal = addOns.reduce((sum, a) => sum + a.total, 0);
   const totalPrice = tent.price + extraGuestsCost + addOnsTotal;
   const deposit = Math.round(totalPrice * 0.2);
   return {
-    pricingVersion: PRICING_VERSION, tentType: tentId, tentBatch: tentId, tentName: tent.name,
-    tentBasePrice: tent.price, guests, includedGuests: tent.includedGuests, extraGuestPrice: 850,
+    pricingVersion, tentType: tentId, tentBatch: tentId, tentName: tent.name,
+    tentBasePrice: tent.price, guests, includedGuests: tent.includedGuests, extraGuestPrice,
     extraGuestsCost, addOns, addOnsTotal, totalPrice, deposit, depositPercent: 20,
     remainingAmount: totalPrice - deposit, ...STAY,
   };
