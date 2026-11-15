@@ -3,7 +3,7 @@ import { describe, test } from "node:test";
 import { strict as assert } from "node:assert";
 import { SWEDEN_ROCK_2027 } from "../config/festivals";
 import { extraGuestCost } from "./booking-pricing";
-import { calculateBooking, assertQuotedTotal, savedDeposit, STAY } from "../../supabase/functions/_shared/booking-pricing";
+import { calculateBooking, assertQuotedTotal, savedDeposit, STAY, LEGACY_PRICING_VERSION } from "../../supabase/functions/_shared/booking-pricing";
 
 describe("new Sweden Rock guest pricing", () => {
   const festival = SWEDEN_ROCK_2027;
@@ -21,37 +21,37 @@ describe("new Sweden Rock guest pricing", () => {
     assert.equal(deluxe.price, 11900);
     assert.equal(deluxe.maxGuests, 4);
   });
-  test("Medium charges 850 per extra guest for the whole stay", () => {
-    assert.equal(festival.extraGuestPrice, 850);
-    assert.deepEqual([1, 2, 3].map(g => medium.price + extraGuestCost(medium, g, festival.extraGuestPrice)), [7900, 8750, 9600]);
+  test("Medium charges 799 per extra guest for the whole stay", () => {
+    assert.equal(festival.extraGuestPrice, 799);
+    assert.deepEqual([1, 2, 3].map(g => medium.price + extraGuestCost(medium, g, festival.extraGuestPrice)), [7900, 8699, 9498]);
   });
   test("Deluxe only charges beyond two guests for the whole stay", () => {
-    assert.deepEqual([2, 3, 4].map(g => deluxe.price + extraGuestCost(deluxe, g, festival.extraGuestPrice)), [11900, 12750, 13600]);
+    assert.deepEqual([2, 3, 4].map(g => deluxe.price + extraGuestCost(deluxe, g, festival.extraGuestPrice)), [11900, 12699, 13498]);
   });
 });
 
 describe("verified festival pricing", () => {
   test("Medium example includes one extra guest, electricity and two towels", () => {
     const q = calculateBooking("medium", 2, ["electricity", "towel"]);
-    assert.equal(q.totalPrice, 9800);
-    assert.equal(q.deposit, 1960);
-    assert.equal(q.extraGuestsCost, 850);
-    assert.deepEqual(q.addOns.map(a => a.total), [850, 200]);
+    assert.equal(q.totalPrice, 9748);
+    assert.equal(q.deposit, 1950);
+    assert.equal(q.extraGuestsCost, 799);
+    assert.deepEqual(q.addOns.map(a => a.total), [849, 200]);
   });
   test("Deluxe example includes one extra guest, electricity and three towels", () => {
     const q = calculateBooking("deluxe", 3, ["electricity", "towel"]);
-    assert.equal(q.totalPrice, 13900);
-    assert.equal(q.deposit, 2780);
+    assert.equal(q.totalPrice, 13848);
+    assert.equal(q.deposit, 2770);
   });
   test("guest minimums and maximums are enforced on the server", () => {
     for (const [tent, guests] of [["medium", 0], ["medium", 4], ["deluxe", 1], ["deluxe", 5]] as const) {
       assert.throws(() => calculateBooking(tent, guests, []));
     }
   });
-  test("electricity is not selected by default and costs 850 per tent", () => {
+  test("electricity is not selected by default and costs 849 per tent", () => {
     assert.equal(calculateBooking("medium", 1, []).addOns.length, 0);
-    for (const guests of [2, 3, 4]) assert.equal(calculateBooking("deluxe", guests, ["electricity"]).addOnsTotal, 850);
-    assert.equal(calculateBooking("medium", 1, ["electricity"]).totalPrice - calculateBooking("medium", 1, []).totalPrice, 850);
+    for (const guests of [2, 3, 4]) assert.equal(calculateBooking("deluxe", guests, ["electricity"]).addOnsTotal, 849);
+    assert.equal(calculateBooking("medium", 1, ["electricity"]).totalPrice - calculateBooking("medium", 1, []).totalPrice, 849);
   });
   test("Comfort Pack, fridge, duplicates and manipulated amounts are rejected", () => {
     for (const ids of [["comfort-pack"], ["fridge"], ["electricity", "electricity"]]) assert.throws(() => calculateBooking("medium", 1, ids));
@@ -71,5 +71,17 @@ describe("verified festival pricing", () => {
     assert.equal(STAY.checkIn, "Tisdag 8 juni 2027, från kvällen");
     assert.equal(STAY.checkOut, "Söndag 13 juni 2027, senast kl. 12.00");
     assert.equal(STAY.nights, 5);
+  });
+});
+ describe("previous version compatibility", () => {
+  test("v2 bookings retain 850 kr guest and electricity rates", () => {
+    const q = calculateBooking("medium", 2, ["electricity", "towel"], LEGACY_PRICING_VERSION);
+    assert.equal(q.extraGuestPrice, 850);
+    assert.equal(q.addOns[0].unitPrice, 850);
+    assert.equal(q.totalPrice, 9800);
+    assert.equal(savedDeposit(q), 1960);
+  });
+  test("unknown pricing versions are rejected", () => {
+    assert.throws(() => calculateBooking("medium", 1, [], "unknown"));
   });
 });

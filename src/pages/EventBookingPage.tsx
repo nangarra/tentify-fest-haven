@@ -473,7 +473,7 @@ export const BookingFlow = ({ festival }: { festival: FestivalConfig }) => {
                       <div>
                         <div className="font-semibold">{t("numGuests", lang)}</div>
                         <div className="text-sm text-muted-foreground">
-                          {includedGuests} {includedGuests === 1 ? "person ingår" : "personer ingår"} i grundpriset. Extra gäst: +850 kr/person.
+                          {includedGuests} {includedGuests === 1 ? "person ingår" : "personer ingår"} i grundpriset. Extra gäst: +799 kr/person.
                           {selectedTent &&
                             ` · ${t("max", lang)} ${maxGuests} ${t("in", lang)} ${selectedTent.name[lang]}`}
                         </div>
@@ -957,7 +957,7 @@ const TentCard = ({
           </div>
         </div>
         <p className="text-sm text-muted-foreground mb-3">{tent.description[lang]}</p>
-        <p className="text-sm text-muted-foreground mb-3">{tent.includedGuests} {tent.includedGuests === 1 ? "person ingår" : "personer ingår"} i grundpriset. Extra gäst: +850 kr/person. El ingår inte; kan köpas till för 850 kr per tält.</p>
+        <p className="text-sm text-muted-foreground mb-3">{tent.includedGuests} {tent.includedGuests === 1 ? "person ingår" : "personer ingår"} i grundpriset. Extra gäst: +799 kr/person. El ingår inte; kan köpas till för 849 kr per tält.</p>
 
         {totalT > 0 && !selected && (
           <p className="text-xs font-medium mb-4">
@@ -1132,7 +1132,7 @@ const AddOnCard = ({
         )}
       </div>
       <p className="text-sm text-muted-foreground mb-4">{addOn.description[lang]}</p>
-      {addOn.id === "electricity" && <p className="text-sm text-muted-foreground mb-4">850 kr per tält för hela vistelsen, oavsett antal gäster.</p>}
+      {addOn.id === "electricity" && <p className="text-sm text-muted-foreground mb-4">849 kr per tält för hela vistelsen, oavsett antal gäster.</p>}
 
       {addOn.includedItems && addOn.includedItems.length > 0 && (
         <div className="mb-4 rounded-md bg-muted/40 p-3 text-left">

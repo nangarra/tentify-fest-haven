@@ -22,6 +22,13 @@
       "when": 1794667759702,
       "tag": "0002_availability_security_definer",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1794719010870,
+      "tag": "0003_protect_all_versioned_festival_bookings",
+      "breakpoints": true
     }
   ]
 }
