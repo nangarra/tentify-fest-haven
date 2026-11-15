@@ -1,7 +1,7 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import Stripe from 'npm:stripe@17.5.0';
 import { createClient } from 'npm:@supabase/supabase-js@2';
-import { savedDeposit, calculateBooking, PRICING_VERSION } from '../_shared/booking-pricing.ts';
+import { savedDeposit, calculateBooking, isSupportedPricingVersion } from '../_shared/booking-pricing.ts';
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -51,9 +51,9 @@ Deno.serve(async (req) => {
     const { data: booking, error: bookingError } = await db.from('bookings').select('meta,email,status').eq('id', bookingId).single();
     if (bookingError || !booking || booking.status === 'cancelled') throw new Error('Ogiltigt bokningsunderlag.');
     const meta = booking.meta ?? {};
-    if (meta.pricingVersion === PRICING_VERSION) {
+    if (isSupportedPricingVersion(meta.pricingVersion)) {
       if (!paymentToken || paymentToken !== meta.paymentToken) throw new Error('Ogiltigt betalningsunderlag.');
-      const verified = calculateBooking(meta.tentType, meta.guests, (meta.addOns ?? []).map((a: { id: string }) => a.id));
+      const verified = calculateBooking(meta.tentType, meta.guests, (meta.addOns ?? []).map((a: { id: string }) => a.id), meta.pricingVersion);
       if (verified.totalPrice !== meta.totalPrice) throw new Error('Ogiltigt bokningspris.');
     }
     const verifiedAmount = savedDeposit(meta);

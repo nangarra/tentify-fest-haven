@@ -1,6 +1,6 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
-import { calculateBooking, assertQuotedTotal, PRICING_VERSION } from "../_shared/booking-pricing.ts";
+import { calculateBooking, assertQuotedTotal, isSupportedPricingVersion } from "../_shared/booking-pricing.ts";
 
 Deno.serve(async req => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
@@ -9,10 +9,10 @@ Deno.serve(async req => {
   });
   try {
     const body = await req.json();
-    if (body.pricingVersion !== PRICING_VERSION || body.termsAccepted !== true) {
+    if (!isSupportedPricingVersion(body.pricingVersion) || body.termsAccepted !== true) {
       return respond({ error: "Bokningsvillkoren måste godkännas och prisversionen vara giltig." }, 400);
     }
-    const quote = calculateBooking(body.tentType, body.guests, body.addOnIds);
+    const quote = calculateBooking(body.tentType, body.guests, body.addOnIds, body.pricingVersion);
     assertQuotedTotal(quote, body.totalPrice);
     const { customer } = body;
     for (const key of ["firstName", "lastName", "email", "phone", "address", "postalCode", "city"]) {

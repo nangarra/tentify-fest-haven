@@ -12,3 +12,4 @@
 - [x] Inför frivillig el, nya tillvalspriser och ta bort Comfort Pack för nya bokningar
 - [x] Säkerställ serverberäkning och skydd av historiska samt påbörjade bokningar
 - [x] Verifiera prisexempel, betalningsunderlag, bekräftelse och mobilflöde
+- [ ] Ändra nya Sweden Rock-priser till extragäst 799 kr och el 849 kr/tält; skydda äldre prisversioner och verifiera
