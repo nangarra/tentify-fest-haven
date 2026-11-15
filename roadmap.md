@@ -13,4 +13,4 @@
 - [x] Säkerställ serverberäkning och skydd av historiska samt påbörjade bokningar
 - [x] Verifiera prisexempel, betalningsunderlag, bekräftelse och mobilflöde
 - [x] Ändra nya Sweden Rock-priser till extragäst 799 kr och el 849 kr/tält; skydda äldre prisversioner och verifiera
-- [ ] Gör el till steg 2 med obligatoriskt ja/nej före fortsättning; numrera om och verifiera dator/mobil.
+- [x] Gör el till steg 2 med obligatoriskt ja/nej före fortsättning; numrera om och verifiera dator/mobil.
