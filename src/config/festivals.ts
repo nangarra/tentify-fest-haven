@@ -156,7 +156,7 @@ export const SWEDEN_ROCK_2027: FestivalConfig = {
       gallery: [mediumStudioLargeImg.url, bekvamtImg.url],
 
       includedStandard: STANDARD_INCLUDED,
-      totalCount: 10,
+      totalCount: 9,
     },
   ],
 
