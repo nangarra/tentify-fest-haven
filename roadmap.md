@@ -14,3 +14,4 @@
 - [x] Verifiera prisexempel, betalningsunderlag, bekräftelse och mobilflöde
 - [x] Ändra nya Sweden Rock-priser till extragäst 799 kr och el 849 kr/tält; skydda äldre prisversioner och verifiera
 - [x] Gör el till steg 2 med obligatoriskt ja/nej före fortsättning; numrera om och verifiera dator/mobil.
+- [x] Ändra Deluxe-inventarie till 9 totalt (3 bokade, 6 tillgängliga) och verifiera tillgänglighet
